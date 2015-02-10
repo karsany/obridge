@@ -43,4 +43,13 @@ public class Packages {
         this.packageObjects = packageObjects;
     }
 
+    @Override
+    public String toString() {
+        return "Packages{" +
+                "entityObjects='" + entityObjects + '\'' +
+                ", converterObjects='" + converterObjects + '\'' +
+                ", procedureContextObjects='" + procedureContextObjects + '\'' +
+                ", packageObjects='" + packageObjects + '\'' +
+                '}';
+    }
 }

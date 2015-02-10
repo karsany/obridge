@@ -43,4 +43,13 @@ public class OBridgeConfiguration {
         this.packages = packages;
     }
 
+    @Override
+    public String toString() {
+        return "OBridgeConfiguration{" +
+                "jdbcUrl='" + jdbcUrl + '\'' +
+                ", sourceRoot='" + sourceRoot + '\'' +
+                ", rootPackageName='" + rootPackageName + '\'' +
+                ", packages=" + packages +
+                '}';
+    }
 }
