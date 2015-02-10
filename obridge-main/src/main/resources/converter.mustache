@@ -1,0 +1,84 @@
+package {{converterPackageName}};
+
+import java.sql.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+import {{objectPackage}}.*;
+
+public final class {{javaClassName}}Converter {
+
+    private final static String TYPE_NAME      = "{{typeName}}";
+    private final static String TYPE_NAME_LIST = "{{typeName}}_LIST";
+
+    private {{javaClassName}}Converter(){
+    }
+
+    public static Struct getStruct({{javaClassName}} o, Connection connection) throws SQLException {
+
+        if(o == null) {
+            return null;
+        }
+
+        List<Object> struct = new ArrayList<Object>();
+
+    {{#attributeList}}
+        {{& structAdder}}
+    {{/attributeList}}
+
+        return connection.createStruct(TYPE_NAME, struct.toArray());
+    }
+
+    public static Array getListArray(List<{{javaClassName}}> o, Connection connection) throws SQLException {
+
+        if(o == null) {
+            return connection.createArrayOf(TYPE_NAME, new Object[0]);
+        }
+
+
+        List<Object> array = new ArrayList<Object>(o.size());
+
+        for({{javaClassName}} e : o) {
+            array.add({{javaClassName}}Converter.getStruct(e, connection));
+        }
+
+        return connection.createArrayOf(TYPE_NAME, array.toArray());
+    }
+
+    public static {{javaClassName}} getObject(Struct struct) throws SQLException {
+
+        if(struct.getAttributes() == null || struct.getAttributes().length == 0) {
+            return null;
+        }
+
+        {{javaClassName}} result = new {{javaClassName}}();
+
+        Object[] attr = struct.getAttributes();
+
+        {{#attributeList}}
+        if(attr[{{attrNoIndex}}] != null)
+            {{& objectAdder}}
+        {{/attributeList}}
+
+        return result;
+    }
+
+    public static List<{{javaClassName}}> getObjectList(Array array) throws SQLException {
+        List<{{javaClassName}}> result = new ArrayList<{{javaClassName}}>();
+        ResultSet rs = null;
+
+        try {
+            rs = array.getResultSet();
+            while (rs.next()) {
+                result.add({{javaClassName}}Converter.getObject((Struct)rs.getObject(2)));
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
+
+        return result;
+    }
+
+}

@@ -1,0 +1,37 @@
+{{#packageName}}
+package {{packageName}};
+{{/packageName}}
+
+{{#imports}}
+import {{.}};
+{{/imports}}
+
+{{#comment}}
+/**
+{{& comment}}
+*/
+{{/comment}}
+public class {{className}} {
+
+{{#otherCode}}
+    {{& .}}
+{{/otherCode}}
+
+{{#fields}}
+    private {{& fieldType}} {{fieldName}};
+{{/fields}}
+
+{{#fields}}
+    public {{& fieldType}} get{{fieldNameInitCap}}() {
+        return this.{{fieldName}};
+    }
+
+    {{#settable}}
+    public void set{{fieldNameInitCap}}({{& fieldType}} {{fieldName}}) {
+        this.{{fieldName}} = {{fieldName}};
+    }
+    {{/settable}}
+
+{{/fields}}
+
+}

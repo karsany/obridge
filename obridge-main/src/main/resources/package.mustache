@@ -1,0 +1,49 @@
+package {{javaPackageName}};
+
+import java.sql.*;
+import {{contextPackage}}.*;
+import {{converterPackage}}.*;
+import {{objectPackage}}.*;
+import java.util.List;
+
+
+public class {{javaClassName}} {
+
+{{#procedureList}}
+    public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall("{{& callString}}");
+        {{#argumentList}}
+            {{#inParam}}
+        {{paramSet}}
+            {{/inParam}}
+        {{/argumentList}}
+        {{#argumentList}}
+            {{#outParam}}
+        {{& regOutput}}
+            {{/outParam}}
+        {{/argumentList}}
+        ocs.execute();
+        {{#argumentList}}
+            {{#outParam}}
+        {{paramGet}}
+            {{/outParam}}
+        {{/argumentList}}
+        ocs.close();
+    }
+
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{& javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) throws SQLException {
+        {{storedProcedureClassName}} ctx = new {{storedProcedureClassName}}();
+        {{#argumentList}}
+            {{#inParam}}
+        ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
+            {{/inParam}}
+        {{/argumentList}}
+
+        {{javaProcedureName}}(ctx, connection);
+
+        return ctx;
+    }
+
+{{/procedureList}}
+
+}
