@@ -75,7 +75,8 @@ public class Procedure {
     }
 
     public String getJavaProcedureName() {
-        return StringHelper.toCamelCaseSmallBegin(this.procedureName + "_" + this.overload);
+        String r = StringHelper.toCamelCaseSmallBegin(this.procedureName + "_" + this.overload);
+        return StringHelper.unJavaKeyword(r);
     }
 
     public String getStoredProcedureClassName() {

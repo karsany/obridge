@@ -1,12 +1,10 @@
 package org.obridge.model.data;
 
-
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
 
 /**
- * User: fkarsany
- * Date: 2013.11.18.
+ * User: fkarsany Date: 2013.11.18.
  */
 public class ProcedureArgument {
 
@@ -27,7 +25,6 @@ public class ProcedureArgument {
         this.inParam = inParam;
         this.outParam = outParam;
         this.sequence = sequence;
-
 
     }
 
@@ -88,13 +85,23 @@ public class ProcedureArgument {
     }
 
     public String getJavaPropertyName() {
+
+        String r = null;
+
         if (this.argumentName == null) {
             return "functionReturn";
         } else if (this.argumentName.startsWith("P_")) {
-            return StringHelper.toCamelCaseSmallBegin(this.argumentName.substring(2));
+            r = this.argumentName.substring(2);
         } else {
-            return StringHelper.toCamelCaseSmallBegin(this.argumentName);
+            r = this.argumentName;
         }
+
+        if (Character.isDigit(r.charAt(0))) {
+            r = "P_" + r;
+        }
+
+        return StringHelper.unJavaKeyword(StringHelper.toCamelCaseSmallBegin(r));
+
     }
 
     public String getJavaPropertyNameBig() {
@@ -197,17 +204,16 @@ public class ProcedureArgument {
 
     }
 
-
     @Override
     public String toString() {
-        return "ProcedureArgument{" +
-                "argumentName='" + argumentName + '\'' +
-                ", dataType='" + dataType + '\'' +
-                ", typeName='" + typeName + '\'' +
-                ", defaulted='" + defaulted + '\'' +
-                ", inParam=" + inParam +
-                ", outParam=" + outParam +
-                ", sequence=" + sequence +
-                '}';
+        return "ProcedureArgument{"
+                + "argumentName='" + argumentName + '\''
+                + ", dataType='" + dataType + '\''
+                + ", typeName='" + typeName + '\''
+                + ", defaulted='" + defaulted + '\''
+                + ", inParam=" + inParam
+                + ", outParam=" + outParam
+                + ", sequence=" + sequence
+                + '}';
     }
 }
