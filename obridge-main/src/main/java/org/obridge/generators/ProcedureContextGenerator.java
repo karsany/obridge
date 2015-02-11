@@ -1,5 +1,6 @@
 package org.obridge.generators;
 
+import java.beans.PropertyVetoException;
 import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.io.FileUtils;
 import org.obridge.dao.ProcedureDao;
@@ -13,21 +14,22 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import org.obridge.context.OBridgeConfiguration;
+import org.obridge.util.DataSourceProvider;
 
 /**
  * Created by fkarsany on 2015.01.28..
  */
 public class ProcedureContextGenerator {
 
-    public static void generate(OBridgeConfiguration c) throws SQLException, IOException {
+    public static void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
         OracleDataSource oracleDataSource = new OracleDataSource();
         oracleDataSource.setURL(c.getJdbcUrl());
 
-        String packageName = c.getRootPackageName()+ "." + c.getPackages().getProcedureContextObjects();
+        String packageName = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
         String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-        String outputDir = c.getSourceRoot()+ "/" + packageName.replace(".", "/") + "/";
+        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-        ProcedureDao procedureDao = new ProcedureDao(oracleDataSource);
+        ProcedureDao procedureDao = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
         List<Procedure> allProcedures = procedureDao.getAllProcedures();
 

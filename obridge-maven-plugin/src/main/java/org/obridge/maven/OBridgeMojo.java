@@ -1,5 +1,6 @@
 package org.obridge.maven;
 
+import java.beans.PropertyVetoException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -12,10 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
 @Mojo(name = "generate", requiresProject = true)
 public class OBridgeMojo extends AbstractMojo {
-
 
     @Parameter(defaultValue = "${basedir}\\src\\main\\java")
     private String baseDir;
@@ -25,7 +24,6 @@ public class OBridgeMojo extends AbstractMojo {
 
     @Parameter(property = "obridge.configuration", defaultValue = "${basedir}\\obridge.xml")
     private File configurationFile;
-
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -47,10 +45,11 @@ public class OBridgeMojo extends AbstractMojo {
 
             o.generate(config);
 
-
         } catch (IOException e) {
             getLog().error(e);
         } catch (SQLException e) {
+            getLog().error(e);
+        } catch (PropertyVetoException e) {
             getLog().error(e);
         }
 
@@ -58,9 +57,9 @@ public class OBridgeMojo extends AbstractMojo {
 
     @Override
     public String toString() {
-        return "OBridgeMojo{" +
-                "baseDir='" + baseDir + '\'' +
-                ", configurationFile=" + configurationFile +
-                '}';
+        return "OBridgeMojo{"
+                + "baseDir='" + baseDir + '\''
+                + ", configurationFile=" + configurationFile
+                + '}';
     }
 }
