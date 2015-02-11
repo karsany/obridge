@@ -57,7 +57,7 @@ public class ProcedureDao {
                 + "               object_name,\n"
                 + "               nvl(overload, -1)\n"
                 + "          From user_arguments\n"
-                + "         Where data_type = 'REF CURSOR') or procedure_name = 'ASSERT')\n",
+                + "         Where data_type in ( 'REF CURSOR' , 'PL/SQL RECORD', 'PL/SQL TABLE' )) or procedure_name = 'ASSERT')\n",
                 new RowMapper<Procedure>() {
                     @Override
                     public Procedure mapRow(ResultSet resultSet, int i) throws SQLException {
