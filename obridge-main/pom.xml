@@ -53,6 +53,11 @@
             <version>1.4.3</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

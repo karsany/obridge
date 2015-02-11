@@ -1,5 +1,6 @@
 package org.obridge.generators;
 
+import java.beans.PropertyVetoException;
 import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.io.FileUtils;
 import org.obridge.dao.TypeDao;
@@ -12,21 +13,19 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import org.obridge.context.OBridgeConfiguration;
+import org.obridge.util.DataSourceProvider;
 
 /**
  * Created by fkarsany on 2015.01.28..
  */
 public class EntityObjectGenerator {
 
-    public static void generate(OBridgeConfiguration c) throws SQLException, IOException {
-
-        OracleDataSource oracleDataSource = new OracleDataSource();
-        oracleDataSource.setURL(c.getJdbcUrl());
+    public static void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
 
         String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
         String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-        TypeDao td = new TypeDao(oracleDataSource);
+        TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
         List<String> types = td.getTypeList();
 

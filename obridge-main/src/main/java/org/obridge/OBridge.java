@@ -1,6 +1,7 @@
 package org.obridge;
 
 import com.thoughtworks.xstream.XStream;
+import java.beans.PropertyVetoException;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.generators.ConverterObjectGenerator;
 import org.obridge.generators.EntityObjectGenerator;
@@ -17,7 +18,7 @@ import java.sql.SQLException;
  */
 public class OBridge {
 
-    public void generate(OBridgeConfiguration c) throws SQLException, IOException {
+    public void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
         // generate objects
         EntityObjectGenerator.generate(c);
 
@@ -38,11 +39,11 @@ public class OBridge {
         return (OBridgeConfiguration) config;
     }
 
-    public void generate(File f) throws IOException, SQLException {
+    public void generate(File f) throws IOException, SQLException, PropertyVetoException {
         this.generate(loadConfiguration(f));
     }
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args) throws SQLException, IOException, PropertyVetoException {
         new OBridge().generate(new File(args[0]));
     }
 }
