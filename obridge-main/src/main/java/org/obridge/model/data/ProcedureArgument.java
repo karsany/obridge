@@ -133,7 +133,7 @@ public class ProcedureArgument {
         if (this.typeName != null) {
             return getJavaTypeName();
         } else {
-            return new TypeMapper().getMappedType(this.dataType, 0);
+            return new TypeMapper().getMappedType(this.dataType, 1);
         }
     }
 
