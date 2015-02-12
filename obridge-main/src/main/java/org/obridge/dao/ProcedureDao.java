@@ -79,7 +79,7 @@ public class ProcedureDao {
 
     public List<ProcedureArgument> getProcedureArguments(String packageName, String procedureName, String overLoadNo) {
         List<ProcedureArgument> procedureArguments = jdbcTemplate.query(
-                "          Select argument_name, data_type, type_name, defaulted, in_out, rownum sequen\n"
+                "          Select argument_name, data_type, type_name, defaulted, in_out, position sequen\n"
                 + "        From user_arguments t\n"
                 + "       Where nvl(t.package_name, '###') = nvl(upper(?), '###')\n"
                 + "         And t.object_name = upper(?)\n"
