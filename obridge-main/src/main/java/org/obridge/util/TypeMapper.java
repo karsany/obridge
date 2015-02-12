@@ -10,7 +10,9 @@ public class TypeMapper {
 
     public static final String ORACLE_CHAR = "CHAR";
     public static final String ORACLE_VARCHAR2 = "VARCHAR2";
-    public static final String ORACLE_CLOG = "CLOB";
+    public static final String ORACLE_NCHAR = "NCHAR";
+    public static final String ORACLE_NVARCHAR2 = "NVARCHAR2";    
+    public static final String ORACLE_CLOB = "CLOB";
     public static final String ORACLE_NUMBER = "NUMBER";
     public static final String ORACLE_BINARY_INTEGER = "BINARY_INTEGER";
     public static final String ORACLE_REF_CURSOR = "REF CURSOR";
@@ -38,7 +40,9 @@ public class TypeMapper {
         mappingData = new HashMap<String, String>();
         mappingData.put(ORACLE_CHAR, JAVA_STRING);
         mappingData.put(ORACLE_VARCHAR2, JAVA_STRING);
-        mappingData.put(ORACLE_CLOG, JAVA_STRING);
+        mappingData.put(ORACLE_NCHAR, JAVA_STRING);
+        mappingData.put(ORACLE_NVARCHAR2, JAVA_STRING);
+        mappingData.put(ORACLE_CLOB, JAVA_STRING);
         mappingData.put(ORACLE_NUMBER, JAVA_BIGDECIMAL);
         mappingData.put(ORACLE_BINARY_INTEGER, JAVA_INTEGER);
         mappingData.put(ORACLE_REF_CURSOR, JAVA_RESULTSET);
