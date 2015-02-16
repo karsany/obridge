@@ -11,7 +11,8 @@
 	<modules>
 		<module>obridge-main</module>
 		<module>obridge-maven-plugin</module>
-	</modules>
+    <module>obridge-generator-test</module>
+  </modules>
 
 	<build>
 		<pluginManagement>

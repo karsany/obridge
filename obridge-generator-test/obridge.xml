@@ -1,0 +1,9 @@
+<configuration>
+    <jdbcUrl>jdbc:oracle:thin:obridge/obridge@localhost:1521:xe</jdbcUrl> <!-- jdbc connection string for obridge -->
+    <packages>
+        <entityObjects>generated.objects</entityObjects> <!-- object types are going to this package -->
+        <converterObjects>generated.converters</converterObjects> <!-- converter util classes are going to this package -->
+        <procedureContextObjects>generated.context</procedureContextObjects> <!-- procedure parameter entities are going to this package -->
+        <packageObjects>generated.packages</packageObjects> <!-- procedure calling utility classes are going to this package -->
+    </packages>
+</configuration>
