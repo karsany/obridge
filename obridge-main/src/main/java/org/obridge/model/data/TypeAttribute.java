@@ -136,7 +136,7 @@ public class TypeAttribute {
         } else if ("OBJECT".equals(typeCode)) {
             return String.format("result.set%s(%sConverter.getObject((Struct)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
         } else if ("DATE".equals(attrTypeName)) {
-            return String.format("result.set%s((Date)attr[%d]); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
+            return String.format("result.set%s(new Date(((Timestamp)attr[%d]).getTime())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if ("TIMESTAMP".equals(attrTypeName)) {
             return String.format("result.set%s((Timestamp)attr[%d]); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if ("CLOB".equals(attrTypeName)) {
