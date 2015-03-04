@@ -1,8 +1,8 @@
 package org.obridge.dao;
 
 import org.obridge.model.data.TypeAttribute;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.obridge.util.jdbc.JdbcTemplate;
+import org.obridge.util.jdbc.RowMapper;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
