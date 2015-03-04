@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class JdbcTemplate {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public JdbcTemplate(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -81,7 +81,6 @@ public class JdbcTemplate {
             return ret;
         }
     }
-
 
     public <T> List<T> queryForList(String sql, Class<T> elementType) {
         return query(sql, new RowMapper<T>() {

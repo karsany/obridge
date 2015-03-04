@@ -1,7 +1,7 @@
 package org.obridge.model.data;
 
-import com.google.common.base.Joiner;
 import org.obridge.util.FuncUtils;
+import org.obridge.util.Joiner;
 import org.obridge.util.StringHelper;
 
 import java.util.List;

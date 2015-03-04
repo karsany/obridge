@@ -95,8 +95,8 @@ public class ProcedureDao {
                                 resultSet.getString("data_type"),
                                 resultSet.getString("type_name"),
                                 resultSet.getString("defaulted"),
-                                resultSet.getString("in_out").contains("IN") ? true : false,
-                                resultSet.getString("in_out").contains("OUT") ? true : false,
+                                resultSet.getString("in_out").contains("IN"),
+                                resultSet.getString("in_out").contains("OUT"),
                                 resultSet.getInt("sequen")
                         );
                     }
