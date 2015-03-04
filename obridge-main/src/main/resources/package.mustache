@@ -1,6 +1,7 @@
 package {{javaPackageName}};
 
 import java.sql.*;
+import javax.sql.DataSource;
 import {{contextPackage}}.*;
 import {{converterPackage}}.*;
 import {{objectPackage}}.*;
@@ -40,6 +41,28 @@ public class {{javaClassName}} {
         {{javaProcedureName}}(ctx, connection);
 
         return ctx;
+    }
+
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{& javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
+        Connection conn = null;
+        {{storedProcedureClassName}} ret = null;
+
+        try {
+            conn = dataSource.getConnection();
+            ret = {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return ret;
+        }
     }
 
 {{/procedureList}}
