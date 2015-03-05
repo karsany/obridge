@@ -110,23 +110,19 @@ public class ProcedureArgument {
     }
 
     public String getJavaTypeName() {
-        if (typeName.endsWith("_LIST")) {
-            return "List<" + StringHelper.toCamelCase(typeName.substring(0, typeName.length() - 5)) + ">";
+        if (isList()) {
+            return "List<" + StringHelper.toCamelCase(typeName) + ">";
         } else {
             return StringHelper.toCamelCase(typeName);
         }
     }
 
     public boolean isList() {
-        return typeName.endsWith("_LIST");
+        return dataType.equals("TABLE");
     }
 
     public String getUnderlyingTypeName() {
-        if (typeName.endsWith("_LIST")) {
-            return StringHelper.toCamelCase(typeName.substring(0, typeName.length() - 5));
-        } else {
-            return StringHelper.toCamelCase(typeName);
-        }
+        return StringHelper.toCamelCase(typeName);
     }
 
     public String getJavaDataType() {
@@ -140,6 +136,8 @@ public class ProcedureArgument {
     public String getOracleType() {
         if (dataType.equals("VARCHAR2")) {
             return "VARCHAR";
+        } else if (dataType.equals("NVARCHAR2")) {
+            return "NVARCHAR";
         } else if (dataType.equals("REF CURSOR")) {
             return "CURSOR";
         } else if (dataType.equals("BINARY_INTEGER")) {

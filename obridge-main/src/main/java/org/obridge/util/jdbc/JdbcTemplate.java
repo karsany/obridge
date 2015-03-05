@@ -63,8 +63,7 @@ public class JdbcTemplate {
             return ret;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
+
             try {
                 if (resultSet != null && !resultSet.isClosed()) {
                     resultSet.close();
@@ -75,10 +74,13 @@ public class JdbcTemplate {
                 if (connection != null && !connection.isClosed()) {
                     connection.close();
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
             }
-            return ret;
+
+            throw new RuntimeException(e);
+
         }
     }
 

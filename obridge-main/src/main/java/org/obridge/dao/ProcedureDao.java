@@ -79,14 +79,20 @@ public class ProcedureDao {
 
     public List<ProcedureArgument> getProcedureArguments(String packageName, String procedureName, String overLoadNo) {
         List<ProcedureArgument> procedureArguments = jdbcTemplate.query(
-                "  select argument_name, data_type, type_name, defaulted, in_out, rownum sequen  from (Select argument_name, data_type, type_name, defaulted, in_out\n"
+                "  select argument_name," +
+                        "data_type," +
+                        "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name) type_name," +
+                        "defaulted," +
+                        "in_out," +
+                        "rownum sequen " +
+                        "from (Select argument_name, data_type, type_name, defaulted, in_out\n"
                         + "        From user_arguments t\n"
                         + "       Where nvl(t.package_name, '###') = nvl(upper(?), '###')\n"
                         + "         And t.object_name = upper(?)\n"
                         + "         And nvl(t.overload, '###') = nvl(?, '###')\n"
                         + "         And t.data_level = 0\n"
                         + "         And not(pls_type is null and argument_name is null and data_type is null)"
-                        + "       Order By t.sequence)\n",
+                        + "       Order By t.sequence) p\n",
                 new Object[]{packageName, procedureName, overLoadNo}, new RowMapper<ProcedureArgument>() {
                     @Override
                     public ProcedureArgument mapRow(ResultSet resultSet, int i) throws SQLException {

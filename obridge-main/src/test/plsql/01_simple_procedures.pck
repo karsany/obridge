@@ -26,6 +26,10 @@ Create Or Replace Package simple_procedures Is
                       o    In Out sample_type_one -- object
                       );
 
+  Procedure proc_with_lists(p1 In Out sample_type_one_list,
+                            p2 In Out sample_type_two_group,
+                            p3 In Out sample_type_two_list);
+
 End simple_procedures;
 /
 Create Or Replace Package Body simple_procedures Is
@@ -78,6 +82,13 @@ Create Or Replace Package Body simple_procedures Is
   Begin
     Null;
   End;
+
+  Procedure proc_with_lists(p1 In Out sample_type_one_list,
+                            p2 In Out sample_type_two_group,
+                            p3 In Out sample_type_two_list) Is
+  Begin
+    Null;
+  End proc_with_lists;
 
 End simple_procedures;
 /

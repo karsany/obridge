@@ -85,7 +85,7 @@ public class TypeAttribute {
     public String getJavaDataType() {
         if (multiType == 1) {
             if ("COLLECTION".equals(typeCode)) {
-                return "List<" + StringHelper.toCamelCase(attrTypeName.replace("_LIST", "")) + ">";
+                return "List<" + getJavaCollectionBaseTypeNameBig() + ">";
             } else {
                 return StringHelper.toCamelCase(attrTypeName);
             }
