@@ -1,0 +1,2 @@
+# sample jdbc connection string for obridge unit tests
+connectionString=jdbc:oracle:thin:obridge/obridge@localhost:1521:xe
