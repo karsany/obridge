@@ -163,11 +163,16 @@ public class SimpleProcedures {
             }
 
         ocs.registerOutParameter(11, Types.CLOB); // CL
-                // Set TBL from context tbl
+                    // Set TBL from context tbl
             ocs.setObject(12, SampleTypeOneConverter.getListArray(ctx.getTbl(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(12, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // TBL
                     // Set O from context o
-            ocs.setObject(13, SampleTypeOneConverter.getStruct(ctx.getO(), connection));
+            if (ctx.getO() != null) {
+                ocs.setObject(13, SampleTypeOneConverter.getStruct(ctx.getO(), connection));
+            } else {
+                ocs.setNull(13, Types.STRUCT, "SAMPLE_TYPE_ONE");
+            }
+
         ocs.registerOutParameter(13, Types.STRUCT, "SAMPLE_TYPE_ONE"); // O
         ocs.registerOutParameter(14, Types.INTEGER); // B
         ocs.execute();
@@ -242,8 +247,13 @@ public class SimpleProcedures {
                 "END;" + 
 "");
                     // Set P_PARAM_1 from context param1
-            ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
-                // Set P_PARAM_HELLO from context paramHello
+            if (ctx.getParam1() != null) {
+                ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
+            } else {
+                ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_ONE");
+            }
+
+                    // Set P_PARAM_HELLO from context paramHello
             ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getParamHello(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(3, Types.STRUCT, "SAMPLE_TYPE_TWO"); // P_PARAM_TWO
         ocs.execute();
@@ -387,13 +397,13 @@ public class SimpleProcedures {
                 "   );" + 
                 "END;" + 
 "");
-                // Set P1 from context p1
+                    // Set P1 from context p1
             ocs.setObject(1, SampleTypeOneConverter.getListArray(ctx.getP1(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(1, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // P1
-                // Set P2 from context p2
+                    // Set P2 from context p2
             ocs.setObject(2, SampleTypeTwoConverter.getListArray(ctx.getP2(), connection, "SAMPLE_TYPE_TWO_GROUP"));
         ocs.registerOutParameter(2, Types.ARRAY, "SAMPLE_TYPE_TWO_GROUP"); // P2
-                // Set P3 from context p3
+                    // Set P3 from context p3
             ocs.setObject(3, SampleTypeTwoConverter.getListArray(ctx.getP3(), connection, "SAMPLE_TYPE_TWO_LIST"));
         ocs.registerOutParameter(3, Types.ARRAY, "SAMPLE_TYPE_TWO_LIST"); // P3
         ocs.execute();

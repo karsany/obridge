@@ -53,7 +53,7 @@ public final class SampleTypeListsConverter {
 
     public static SampleTypeLists getObject(Struct struct) throws SQLException {
 
-        if(struct.getAttributes() == null || struct.getAttributes().length == 0) {
+        if(struct == null || struct.getAttributes() == null || struct.getAttributes().length == 0) {
             return null;
         }
 

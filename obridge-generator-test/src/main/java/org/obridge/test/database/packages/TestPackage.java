@@ -121,11 +121,16 @@ public class TestPackage {
             }
 
         ocs.registerOutParameter(11, Types.CLOB); // CL
-                // Set TBL from context tbl
+                    // Set TBL from context tbl
             ocs.setObject(12, SampleTypeOneConverter.getListArray(ctx.getTbl(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(12, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // TBL
                     // Set O from context o
-            ocs.setObject(13, SampleTypeOneConverter.getStruct(ctx.getO(), connection));
+            if (ctx.getO() != null) {
+                ocs.setObject(13, SampleTypeOneConverter.getStruct(ctx.getO(), connection));
+            } else {
+                ocs.setNull(13, Types.STRUCT, "SAMPLE_TYPE_ONE");
+            }
+
         ocs.registerOutParameter(13, Types.STRUCT, "SAMPLE_TYPE_ONE"); // O
         ocs.registerOutParameter(14, Types.INTEGER); // B
         ocs.execute();
@@ -324,6 +329,65 @@ public class TestPackage {
         }
     }
 
+    public static void combinedTypesTest1(TestPackageCombinedTypesTest1 ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" + 
+                "DECLARE " + 
+                "BEGIN " + 
+                "  TEST_PACKAGE.COMBINED_TYPES_TEST_1( " + 
+                "    P_OBJECT_TYPE => :P_OBJECT_TYPE" + 
+                "   ,P_LIST_OF => :P_LIST_OF" + 
+                "   );" + 
+                "END;" + 
+"");
+                    // Set P_OBJECT_TYPE from context objectType
+            if (ctx.getObjectType() != null) {
+                ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getObjectType(), connection));
+            } else {
+                ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_ONE");
+            }
+
+        ocs.registerOutParameter(1, Types.STRUCT, "SAMPLE_TYPE_ONE"); // P_OBJECT_TYPE
+                    // Set P_LIST_OF from context listOf
+            ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getListOf(), connection, "SAMPLE_TYPE_ONE_LIST"));
+        ocs.registerOutParameter(2, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // P_LIST_OF
+        ocs.execute();
+        ctx.setObjectType(SampleTypeOneConverter.getObject((Struct)ocs.getObject(1))); // P_OBJECT_TYPE
+        ctx.setListOf(SampleTypeOneConverter.getObjectList((Array)ocs.getObject(2))); // P_LIST_OF
+        ocs.close();
+    }
+
+    public static TestPackageCombinedTypesTest1 combinedTypesTest1(SampleTypeOne objectType, List<SampleTypeOne> listOf,  Connection connection) throws SQLException {
+        TestPackageCombinedTypesTest1 ctx = new TestPackageCombinedTypesTest1();
+        ctx.setObjectType(objectType);
+        ctx.setListOf(listOf);
+
+        combinedTypesTest1(ctx, connection);
+
+        return ctx;
+    }
+
+    public static TestPackageCombinedTypesTest1 combinedTypesTest1(SampleTypeOne objectType, List<SampleTypeOne> listOf,  DataSource dataSource) {
+        Connection conn = null;
+        TestPackageCombinedTypesTest1 ret = null;
+
+        try {
+            conn = dataSource.getConnection();
+            ret = combinedTypesTest1(objectType, listOf,  conn);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return ret;
+        }
+    }
+
     public static void getSysdate1(TestPackageGetSysdate1 ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
                 "DECLARE " + 
@@ -480,7 +544,12 @@ public class TestPackage {
 "");
         ocs.registerOutParameter(1, Types.NUMERIC); // null
                     // Set P_OBJECT_TYPE from context objectType
-            ocs.setObject(2, SampleTypeOneConverter.getStruct(ctx.getObjectType(), connection));
+            if (ctx.getObjectType() != null) {
+                ocs.setObject(2, SampleTypeOneConverter.getStruct(ctx.getObjectType(), connection));
+            } else {
+                ocs.setNull(2, Types.STRUCT, "SAMPLE_TYPE_ONE");
+            }
+
         ocs.registerOutParameter(2, Types.STRUCT, "SAMPLE_TYPE_ONE"); // P_OBJECT_TYPE
         ocs.execute();
         ctx.setFunctionReturn(ocs.getBigDecimal(1)); // null
@@ -530,7 +599,7 @@ public class TestPackage {
                 "END;" + 
 "");
         ocs.registerOutParameter(1, Types.NUMERIC); // null
-                // Set P_LIST_OF from context listOf
+                    // Set P_LIST_OF from context listOf
             ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getListOf(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(2, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // P_LIST_OF
         ocs.execute();

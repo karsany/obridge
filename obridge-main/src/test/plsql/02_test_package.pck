@@ -18,6 +18,9 @@ Create Or Replace Package test_package Is
 
   Function table_of_test_1(p_list_of In Out sample_type_one_list) Return Number;
 
+  Procedure combined_types_test_1(p_object_type In Out sample_type_one,
+                                  p_list_of     In Out sample_type_one_list);
+
   Procedure all_types(n    In Out Number,
                       bi   In Out Binary_Integer,
                       pi   In Out Pls_Integer,
@@ -100,6 +103,16 @@ Create Or Replace Package Body test_package Is
     Return p_list_of.count;
   
   End table_of_test_1;
+
+  Procedure combined_types_test_1(p_object_type In Out sample_type_one,
+                                  p_list_of     In Out sample_type_one_list) Is
+    i Number;
+  Begin
+    i := object_type_test_1(p_object_type => p_object_type);
+  
+    i := table_of_test_1(p_list_of => p_list_of);
+  
+  End;
 
   Procedure all_types(n    In Out Number,
                       bi   In Out Binary_Integer,
