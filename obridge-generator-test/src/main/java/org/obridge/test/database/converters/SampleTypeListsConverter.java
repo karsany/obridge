@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.math.BigDecimal;
 import org.obridge.test.database.objects.*;
 
+import oracle.jdbc.OracleConnection;
+import oracle.sql.ARRAY;
+import oracle.sql.ArrayDescriptor;
+
+
 public final class SampleTypeListsConverter {
 
     private final static String TYPE_NAME = "SAMPLE_TYPE_LISTS";
@@ -21,19 +26,21 @@ public final class SampleTypeListsConverter {
 
         List<Object> struct = new ArrayList<Object>();
 
-        struct.add(0, SampleTypeOneConverter.getListArray(o.getList1(), connection)); // LIST1
-        struct.add(1, SampleTypeTwoConverter.getListArray(o.getList2(), connection)); // LIST2
-        struct.add(2, SampleTypeTwoConverter.getListArray(o.getList3(), connection)); // LIST3
+        struct.add(0, SampleTypeOneConverter.getListArray(o.getList1(), connection, "SAMPLE_TYPE_ONE_LIST")); // LIST1
+        struct.add(1, SampleTypeTwoConverter.getListArray(o.getList2(), connection, "SAMPLE_TYPE_TWO_GROUP")); // LIST2
+        struct.add(2, SampleTypeTwoConverter.getListArray(o.getList3(), connection, "SAMPLE_TYPE_TWO_LIST")); // LIST3
 
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
 
-    public static Array getListArray(List<SampleTypeLists> o, Connection connection) throws SQLException {
+    public static Array getListArray(List<SampleTypeLists> o, Connection c, String typeName) throws SQLException {
+
+        OracleConnection connection = c.unwrap(OracleConnection.class);
+        ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
 
         if(o == null) {
-            return connection.createArrayOf(TYPE_NAME, new Object[0]);
+            return new ARRAY(arrayDescriptor, connection, new Object[0]);
         }
-
 
         List<Object> array = new ArrayList<Object>(o.size());
 
@@ -41,7 +48,7 @@ public final class SampleTypeListsConverter {
             array.add(SampleTypeListsConverter.getStruct(e, connection));
         }
 
-        return connection.createArrayOf(TYPE_NAME, array.toArray());
+        return new ARRAY(arrayDescriptor, connection, array.toArray());
     }
 
     public static SampleTypeLists getObject(Struct struct) throws SQLException {

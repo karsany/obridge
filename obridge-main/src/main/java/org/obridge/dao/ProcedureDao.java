@@ -84,7 +84,7 @@ public class ProcedureDao {
                         "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name) type_name," +
                         "defaulted," +
                         "in_out," +
-                        "rownum sequen " +
+                        "rownum sequen, p.type_name orig_type_name " +
                         "from (Select argument_name, data_type, type_name, defaulted, in_out\n"
                         + "        From user_arguments t\n"
                         + "       Where nvl(t.package_name, '###') = nvl(upper(?), '###')\n"
@@ -103,7 +103,8 @@ public class ProcedureDao {
                                 resultSet.getString("defaulted"),
                                 resultSet.getString("in_out").contains("IN"),
                                 resultSet.getString("in_out").contains("OUT"),
-                                resultSet.getInt("sequen")
+                                resultSet.getInt("sequen"),
+                                resultSet.getString("orig_type_name")
                         );
                     }
                 }

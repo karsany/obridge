@@ -13,21 +13,21 @@ public class {{javaClassName}} {
 
 {{#procedureList}}
     public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall("{{& callString}}");
-        {{#argumentList}}
+        CallableStatement ocs = connection.prepareCall({{& callString}});
+        {{#bindParams}}
             {{#inParam}}
-        {{paramSet}}
+        {{& paramSet}}
             {{/inParam}}
             {{#outParam}}
         {{& regOutput}}
             {{/outParam}}
-        {{/argumentList}}
+        {{/bindParams}}
         ocs.execute();
-        {{#argumentList}}
+        {{#bindParams}}
             {{#outParam}}
-        {{paramGet}}
+        {{& paramGet}}
             {{/outParam}}
-        {{/argumentList}}
+        {{/bindParams}}
         ocs.close();
     }
 
@@ -51,8 +51,8 @@ public class {{javaClassName}} {
         try {
             conn = dataSource.getConnection();
             ret = {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
-
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {

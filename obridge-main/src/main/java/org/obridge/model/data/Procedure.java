@@ -1,7 +1,7 @@
 package org.obridge.model.data;
 
-import org.obridge.util.FuncUtils;
-import org.obridge.util.Joiner;
+import org.obridge.generators.builders.CallStringBuilder;
+import org.obridge.model.generator.BindParam;
 import org.obridge.util.StringHelper;
 
 import java.util.List;
@@ -16,6 +16,8 @@ public class Procedure {
     private String overload;
     private String methodType;
     private List<ProcedureArgument> argumentList;
+    private List<BindParam> bindParams = null;
+    private String callString;
 
     public Procedure(String objectName, String procedureName, String overload, String methodType, List<ProcedureArgument> argumentList) {
         this.objectName = objectName;
@@ -23,6 +25,7 @@ public class Procedure {
         this.overload = overload;
         this.methodType = methodType;
         this.argumentList = argumentList;
+        initBindParams();
     }
 
     public Procedure(String objectName, String procedureName, String overload, String methodType) {
@@ -30,6 +33,13 @@ public class Procedure {
         this.procedureName = procedureName;
         this.overload = overload;
         this.methodType = methodType;
+        initBindParams();
+    }
+
+    public void initBindParams() {
+        CallStringBuilder callStringBuilder = new CallStringBuilder(this);
+        this.callString = callStringBuilder.build();
+        this.bindParams = callStringBuilder.getBindParams();
     }
 
     public List<ProcedureArgument> getArgumentList() {
@@ -99,18 +109,19 @@ public class Procedure {
     }
 
     public String getCallString() {
-        StringBuilder callString = new StringBuilder();
-        callString.append("{ CALL ");
-        if ("FUNCTION".equals(this.getMethodType())) {
-            callString.append("? := ");
-        }
-        callString.append(this.getObjectName() + "." + this.getProcedureName() + "( ");
-        List<String> argumentNames = FuncUtils.pluck("argumentParameterName", String.class, this.argumentList);
+        return this.callString;
+    }
 
-        callString.append(Joiner.on(" , ").skipNulls().join(argumentNames));
-        callString.append(" ) }");
+    public List<BindParam> getBindParams() {
+        return bindParams;
+    }
 
-        return callString.toString();
+    public void setBindParams(List<BindParam> bindParams) {
+        this.bindParams = bindParams;
+    }
+
+    public void setCallString(String callString) {
+        this.callString = callString;
     }
 
     @Override

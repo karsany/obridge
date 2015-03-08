@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.math.BigDecimal;
 import org.obridge.test.database.objects.*;
 
+import oracle.jdbc.OracleConnection;
+import oracle.sql.ARRAY;
+import oracle.sql.ArrayDescriptor;
+
+
 public final class SampleTypeTwoConverter {
 
     private final static String TYPE_NAME = "SAMPLE_TYPE_TWO";
@@ -23,17 +28,19 @@ public final class SampleTypeTwoConverter {
 
         struct.add(0, o.getField1()); // FIELD1
         struct.add(1, SampleTypeOneConverter.getStruct(o.getField2(), connection)); // FIELD2
-        struct.add(2, SampleTypeOneConverter.getListArray(o.getField3(), connection)); // FIELD3
+        struct.add(2, SampleTypeOneConverter.getListArray(o.getField3(), connection, "SAMPLE_TYPE_ONE_LIST")); // FIELD3
 
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
 
-    public static Array getListArray(List<SampleTypeTwo> o, Connection connection) throws SQLException {
+    public static Array getListArray(List<SampleTypeTwo> o, Connection c, String typeName) throws SQLException {
+
+        OracleConnection connection = c.unwrap(OracleConnection.class);
+        ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
 
         if(o == null) {
-            return connection.createArrayOf(TYPE_NAME, new Object[0]);
+            return new ARRAY(arrayDescriptor, connection, new Object[0]);
         }
-
 
         List<Object> array = new ArrayList<Object>(o.size());
 
@@ -41,7 +48,7 @@ public final class SampleTypeTwoConverter {
             array.add(SampleTypeTwoConverter.getStruct(e, connection));
         }
 
-        return connection.createArrayOf(TYPE_NAME, array.toArray());
+        return new ARRAY(arrayDescriptor, connection, array.toArray());
     }
 
     public static SampleTypeTwo getObject(Struct struct) throws SQLException {

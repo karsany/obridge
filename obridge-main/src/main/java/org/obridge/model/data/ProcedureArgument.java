@@ -1,5 +1,6 @@
 package org.obridge.model.data;
 
+import org.obridge.generators.builders.ParameterGetSetRegisterBuilder;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
 
@@ -15,8 +16,10 @@ public class ProcedureArgument {
     private boolean inParam;
     private boolean outParam;
     private int sequence;
+    private String origTypeName;
+    private int sequenceNumber;
 
-    public ProcedureArgument(String argumentName, String dataType, String typeName, String defaulted, boolean inParam, boolean outParam, int sequence) {
+    public ProcedureArgument(String argumentName, String dataType, String typeName, String defaulted, boolean inParam, boolean outParam, int sequence, String orig_type_name) {
 
         this.argumentName = argumentName;
         this.dataType = dataType;
@@ -26,6 +29,7 @@ public class ProcedureArgument {
         this.outParam = outParam;
         this.sequence = sequence;
 
+        origTypeName = orig_type_name;
     }
 
     public int getSequence() {
@@ -166,38 +170,34 @@ public class ProcedureArgument {
         return argumentName + " => ?";
     }
 
-    public String getParamSet() {
-        if ("OBJECT".equals(dataType)) {
-            return String.format("ocs.setObject(%d, %sConverter.getStruct(ctx.get%s(),connection)); // %s", sequence, getJavaDataType(), getJavaPropertyNameBig(), argumentName);
-        } else if ("TABLE".equals(dataType)) {
-            return String.format("ocs.setObject(%d, %sConverter.getListArray(ctx.get%s(), connection)); // %s", sequence, getUnderlyingTypeName(), getJavaPropertyNameBig(), argumentName);
-        } else if ("Integer".equals(getJavaDataType())) {
-            return String.format("ocs.setInt(%d, ctx.get%s()); // %s", sequence, getJavaPropertyNameBig(), argumentName);
-        } else {
-            return String.format("ocs.set%s(%d, ctx.get%s()); // %s", getJavaDataType(), sequence, getJavaPropertyNameBig(), argumentName);
-        }
+    public String getParamSet(int sequenceNumber) {
+        return new ParameterGetSetRegisterBuilder(this).setParameter(sequenceNumber);
     }
 
-    public String getRegOutput() {
+    public String getRegOutput(int sequenceNumber) {
         if ("OBJECT".equals(dataType) || "TABLE".equals(dataType)) {
-            return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequence, getOracleType(), typeName, argumentName);
+            return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequenceNumber, getOracleType(), origTypeName, argumentName);
+        } else if (getOracleType().equals("BOOLEAN")) {
+            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getOracleType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         } else {
-            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequence, ("Types." + getOracleType()).replace("Types.CURSOR", "-10"), argumentName);
+            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getOracleType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         }
 
     }
 
-    public String getParamGet() {
+    public String getParamGet(int sequenceNumber) {
         if ("OBJECT".equals(dataType)) {
-            return String.format("ctx.set%s(%sConverter.getObject((Struct)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequence, argumentName);
+            return String.format("ctx.set%s(%sConverter.getObject((Struct)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         } else if ("TABLE".equals(dataType)) {
-            return String.format("ctx.set%s(%sConverter.getObjectList((Array)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequence, argumentName);
+            return String.format("ctx.set%s(%sConverter.getObjectList((Array)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
         } else if ("Integer".equals(getJavaDataType())) {
-            return String.format("ctx.set%s(ocs.getInt(%d)); // %s", getJavaPropertyNameBig(), sequence, argumentName);
+            return String.format("ctx.set%s(ocs.getInt(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
+        } else if ("BOOLEAN".equals(getOracleType())) {
+            return String.format("ctx.set%s(null == ocs.getBigDecimal(%d) ? null : BigDecimal.ONE.equals(ocs.getBigDecimal(%d)) ? true : BigDecimal.ZERO.equals(ocs.getBigDecimal(%d)) ? false : null); // %s", getJavaPropertyNameBig(), sequenceNumber, sequenceNumber, sequenceNumber, argumentName);
         } else if ("ResultSet".equals(getJavaDataType())) {
-            return String.format("ctx.set%s(ocs.getCursor(%d)); // %s", getJavaPropertyNameBig(), sequence, argumentName);
+            return String.format("ctx.set%s(ocs.getCursor(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
         } else {
-            return String.format("ctx.set%s(ocs.get%s(%d)); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequence, argumentName);
+            return String.format("ctx.set%s(ocs.get%s(%d)); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         }
 
     }
@@ -212,6 +212,23 @@ public class ProcedureArgument {
                 + ", inParam=" + inParam
                 + ", outParam=" + outParam
                 + ", sequence=" + sequence
-                + '}';
+                + "}\n";
+    }
+
+
+    public void setSequenceNumber(int sequenceNumber) {
+        this.sequenceNumber = sequenceNumber;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public String getOrigTypeName() {
+        return origTypeName;
+    }
+
+    public void setOrigTypeName(String origTypeName) {
+        this.origTypeName = origTypeName;
     }
 }

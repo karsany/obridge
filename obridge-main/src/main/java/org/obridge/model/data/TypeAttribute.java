@@ -113,7 +113,7 @@ public class TypeAttribute {
 
     public String getStructAdder() {
         if ("COLLECTION".equals(typeCode)) {
-            return String.format("struct.add(%d, %sConverter.getListArray(o.get%s(), connection)); // %s", getAttrNoIndex(), getJavaCollectionBaseTypeNameBig(), getJavaPropertyNameBig(), attrName);
+            return String.format("struct.add(%d, %sConverter.getListArray(o.get%s(), connection, \"%s\")); // %s", getAttrNoIndex(), getJavaCollectionBaseTypeNameBig(), getJavaPropertyNameBig(), getAttrTypeName(), attrName);
         } else if ("OBJECT".equals(typeCode)) {
             return String.format("struct.add(%d, %sConverter.getStruct(o.get%s(), connection)); // %s", getAttrNoIndex(), getJavaDataType(), getJavaPropertyNameBig(), attrName);
 //        } else if ("DATE".equals(attrTypeName)) {
