@@ -1,9 +1,8 @@
 package org.obridge.test.database.objects;
 
-import java.sql.Timestamp;
-import java.sql.Date;
-import java.util.List;
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class SampleTypeOne {
 

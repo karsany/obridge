@@ -1,9 +1,9 @@
 package org.obridge.test.database.converters;
 
-import org.obridge.test.database.objects.*;
 import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
+import org.obridge.test.database.objects.SampleTypeOne;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -69,21 +69,21 @@ public final class SampleTypeOneConverter {
         Object[] attr = struct.getAttributes();
 
         if (attr[0] != null)
-            result.setAttrVarchar((String)attr[0]); // ATTR_VARCHAR
+            result.setAttrVarchar((String) attr[0]); // ATTR_VARCHAR
         if (attr[1] != null)
-            result.setAttrClob(((Clob)attr[1]).getSubString(1, (int)((Clob)attr[1]).length())); // ATTR_CLOB
+            result.setAttrClob(((Clob) attr[1]).getSubString(1, (int) ((Clob) attr[1]).length())); // ATTR_CLOB
         if (attr[2] != null)
-            result.setAttrInt(((BigDecimal)attr[2]).intValue()); // ATTR_INT
+            result.setAttrInt(((BigDecimal) attr[2]).intValue()); // ATTR_INT
         if (attr[3] != null)
-            result.setAttrBigdec1((BigDecimal)attr[3]); // ATTR_BIGDEC_1
+            result.setAttrBigdec1((BigDecimal) attr[3]); // ATTR_BIGDEC_1
         if (attr[4] != null)
-            result.setAttrBigdec2((BigDecimal)attr[4]); // ATTR_BIGDEC_2
+            result.setAttrBigdec2((BigDecimal) attr[4]); // ATTR_BIGDEC_2
         if (attr[5] != null)
-            result.setDateA(new Date(((Timestamp)attr[5]).getTime())); // DATE_A
+            result.setDateA(new Date(((Timestamp) attr[5]).getTime())); // DATE_A
         if (attr[6] != null)
-            result.setTimestB((Timestamp)attr[6]); // TIMEST_B
+            result.setTimestB((Timestamp) attr[6]); // TIMEST_B
         if (attr[7] != null)
-            result.setTimestC((Timestamp)attr[7]); // TIMEST_C
+            result.setTimestC((Timestamp) attr[7]); // TIMEST_C
 
         return result;
     }

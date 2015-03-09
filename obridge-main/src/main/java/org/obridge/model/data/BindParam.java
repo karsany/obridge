@@ -1,7 +1,5 @@
 package org.obridge.model.data;
 
-import org.obridge.model.data.ProcedureArgument;
-
 /**
  * Created by fkarsany on 2015.03.06..
  */

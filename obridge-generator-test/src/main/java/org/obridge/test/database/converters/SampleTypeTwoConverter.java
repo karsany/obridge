@@ -1,11 +1,10 @@
 package org.obridge.test.database.converters;
 
-import org.obridge.test.database.objects.*;
 import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
+import org.obridge.test.database.objects.SampleTypeTwo;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,11 +61,11 @@ public final class SampleTypeTwoConverter {
         Object[] attr = struct.getAttributes();
 
         if (attr[0] != null)
-            result.setField1((String)attr[0]); // FIELD1
+            result.setField1((String) attr[0]); // FIELD1
         if (attr[1] != null)
-            result.setField2(SampleTypeOneConverter.getObject((Struct)attr[1])); // FIELD2
+            result.setField2(SampleTypeOneConverter.getObject((Struct) attr[1])); // FIELD2
         if (attr[2] != null)
-            result.setField3(SampleTypeOneConverter.getObjectList((Array)attr[2])); // FIELD3
+            result.setField3(SampleTypeOneConverter.getObjectList((Array) attr[2])); // FIELD3
 
         return result;
     }
