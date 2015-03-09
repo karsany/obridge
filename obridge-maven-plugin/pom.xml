@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.obridge</groupId>
         <artifactId>obridge-parent</artifactId>
-        <version>1.0-alpha2-SNAPSHOT</version>
+        <version>1.0-alpha2</version>
     </parent>
     <groupId>org.obridge</groupId>
     <artifactId>obridge-maven-plugin</artifactId>
-    <version>1.0-alpha2-SNAPSHOT</version>
+    <version>1.0-alpha2</version>
     <name>obridge-maven-plugin</name>
     <packaging>maven-plugin</packaging>
 
@@ -31,7 +30,7 @@
         <dependency>
             <groupId>org.obridge</groupId>
             <artifactId>obridge-main</artifactId>
-            <version>1.0-alpha2-SNAPSHOT</version>
+            <version>1.0-alpha2</version>
         </dependency>
     </dependencies>
 
