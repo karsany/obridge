@@ -1,9 +1,10 @@
 package org.obridge.util;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.lang3.text.WordUtils;
 
 public final class StringHelper {
 

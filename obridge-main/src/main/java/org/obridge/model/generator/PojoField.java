@@ -13,12 +13,12 @@ public class PojoField {
         return fieldName;
     }
 
-    public String getFieldNameInitCap() {
-        return fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-    }
-
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    public String getFieldNameInitCap() {
+        return fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
     }
 
     public String getFieldType() {
@@ -33,12 +33,12 @@ public class PojoField {
         return readonly;
     }
 
-    public boolean isSettable() {
-        return !isReadonly();
-    }
-
     public void setReadonly(boolean readonly) {
         this.readonly = readonly;
+    }
+
+    public boolean isSettable() {
+        return !isReadonly();
     }
 
     @Override

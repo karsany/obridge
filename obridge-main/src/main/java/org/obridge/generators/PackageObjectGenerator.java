@@ -1,18 +1,18 @@
 package org.obridge.generators;
 
-import java.beans.PropertyVetoException;
 import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.io.FileUtils;
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.ProcedureDao;
 import org.obridge.model.data.OraclePackage;
+import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
 
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import org.obridge.context.OBridgeConfiguration;
-import org.obridge.util.DataSourceProvider;
 
 /**
  * Created by fkarsany on 2015.01.28..

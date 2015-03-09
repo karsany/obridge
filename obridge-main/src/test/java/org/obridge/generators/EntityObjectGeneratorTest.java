@@ -2,10 +2,10 @@ package org.obridge.generators;
 
 import org.junit.Test;
 import org.obridge.BaseTest;
-
-import java.io.File;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.context.Packages;
+
+import java.io.File;
 
 public class EntityObjectGeneratorTest extends BaseTest {
 

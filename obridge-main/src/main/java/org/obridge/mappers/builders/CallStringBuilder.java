@@ -1,8 +1,8 @@
-package org.obridge.generators.builders;
+package org.obridge.mappers.builders;
 
 import org.obridge.model.data.Procedure;
 import org.obridge.model.data.ProcedureArgument;
-import org.obridge.model.generator.BindParam;
+import org.obridge.model.data.BindParam;
 
 import java.util.ArrayList;
 import java.util.List;

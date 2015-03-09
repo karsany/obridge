@@ -35,19 +35,19 @@ public class Type {
         return StringHelper.toCamelCase(typeName);
     }
 
-    public void setConverterPackageName(String converterPackageName) {
-        this.converterPackageName = converterPackageName;
-    }
-
     public String getConverterPackageName() {
         return converterPackageName;
     }
 
-    public void setObjectPackage(String objectPackage) {
-        this.objectPackage = objectPackage;
+    public void setConverterPackageName(String converterPackageName) {
+        this.converterPackageName = converterPackageName;
     }
 
     public String getObjectPackage() {
         return objectPackage;
+    }
+
+    public void setObjectPackage(String objectPackage) {
+        this.objectPackage = objectPackage;
     }
 }

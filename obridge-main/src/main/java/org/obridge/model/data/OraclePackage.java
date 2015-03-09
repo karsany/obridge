@@ -44,35 +44,35 @@ public class OraclePackage {
                 + '}';
     }
 
-    public void setJavaPackageName(String javaPackageName) {
-        this.javaPackageName = javaPackageName;
-    }
-
     public String getJavaPackageName() {
         return javaPackageName;
     }
 
-    public void setContextPackage(String contextPackage) {
-        this.contextPackage = contextPackage;
+    public void setJavaPackageName(String javaPackageName) {
+        this.javaPackageName = javaPackageName;
     }
 
     public String getContextPackage() {
         return contextPackage;
     }
 
-    public void setConverterPackage(String converterPackage) {
-        this.converterPackage = converterPackage;
+    public void setContextPackage(String contextPackage) {
+        this.contextPackage = contextPackage;
     }
 
     public String getConverterPackage() {
         return converterPackage;
     }
 
-    public void setObjectPackage(String objectPackage) {
-        this.objectPackage = objectPackage;
+    public void setConverterPackage(String converterPackage) {
+        this.converterPackage = converterPackage;
     }
 
     public String getObjectPackage() {
         return objectPackage;
+    }
+
+    public void setObjectPackage(String objectPackage) {
+        this.objectPackage = objectPackage;
     }
 }

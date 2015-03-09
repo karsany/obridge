@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.XStream;
 import org.obridge.context.OBridgeConfiguration;
 
 /**
- *
  * @author fkarsany
  */
 public class XStreamFactory {

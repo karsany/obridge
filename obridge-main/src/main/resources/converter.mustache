@@ -1,34 +1,34 @@
 package {{converterPackageName}};
 
-import java.sql.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.math.BigDecimal;
 import {{objectPackage}}.*;
-
 import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
+
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public final class {{javaClassName}}Converter {
 
     private final static String TYPE_NAME = "{{typeName}}";
 
-    private {{javaClassName}}Converter(){
+    private {{javaClassName}}Converter() {
     }
 
     public static Struct getStruct({{javaClassName}} o, Connection connection) throws SQLException {
 
-        if(o == null) {
+        if (o == null) {
             return null;
         }
 
         List<Object> struct = new ArrayList<Object>();
 
-    {{#attributeList}}
+        {{#attributeList}}
         {{& structAdder}}
-    {{/attributeList}}
+        {{/attributeList}}
 
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
@@ -38,13 +38,13 @@ public final class {{javaClassName}}Converter {
         OracleConnection connection = c.unwrap(OracleConnection.class);
         ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
 
-        if(o == null) {
+        if (o == null) {
             return new ARRAY(arrayDescriptor, connection, new Object[0]);
         }
 
         List<Object> array = new ArrayList<Object>(o.size());
 
-        for({{javaClassName}} e : o) {
+        for ({{javaClassName}} e : o) {
             array.add({{javaClassName}}Converter.getStruct(e, connection));
         }
 
@@ -53,7 +53,7 @@ public final class {{javaClassName}}Converter {
 
     public static {{javaClassName}} getObject(Struct struct) throws SQLException {
 
-        if(struct == null || struct.getAttributes() == null || struct.getAttributes().length == 0) {
+        if (struct == null || struct.getAttributes() == null || struct.getAttributes().length == 0) {
             return null;
         }
 
@@ -62,7 +62,7 @@ public final class {{javaClassName}}Converter {
         Object[] attr = struct.getAttributes();
 
         {{#attributeList}}
-        if(attr[{{attrNoIndex}}] != null)
+        if (attr[{{attrNoIndex}}] != null)
             {{& objectAdder}}
         {{/attributeList}}
 
@@ -76,7 +76,7 @@ public final class {{javaClassName}}Converter {
         try {
             rs = array.getResultSet();
             while (rs.next()) {
-                result.add({{javaClassName}}Converter.getObject((Struct)rs.getObject(2)));
+                result.add({{javaClassName}}Converter.getObject((Struct) rs.getObject(2)));
             }
         } finally {
             if (rs != null) {

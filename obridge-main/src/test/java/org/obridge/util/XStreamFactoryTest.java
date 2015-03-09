@@ -6,16 +6,16 @@
 package org.obridge.util;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.File;
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.obridge.BaseTest;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.context.Packages;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
- *
  * @author fkarsany
  */
 public class XStreamFactoryTest extends BaseTest {
@@ -34,7 +34,7 @@ public class XStreamFactoryTest extends BaseTest {
         obc.setPackages(new Packages());
 
         String s = x.toXML(obc);
-        
+
         System.out.println(s);
 
         Assert.assertTrue("starts with <configuration>", s.startsWith("<configuration>"));

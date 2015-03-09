@@ -13,11 +13,11 @@ import java.util.List;
 
 public class TypeDaoTest extends BaseTest {
 
-    private TypeDao typeDao;
     private static final String SAMPLE_TYPE_ONE = "SAMPLE_TYPE_ONE";
     private static final String SAMPLE_TYPE_ONE_LIST = "SAMPLE_TYPE_ONE_LIST";
     private static final String SAMPLE_TYPE_TWO = "SAMPLE_TYPE_TWO";
     private static final String NOT_EXISTING_TYPE = "NOT_EXISTING_TYPE";
+    private TypeDao typeDao;
 
     @Before
     public void init2() {

@@ -1,7 +1,6 @@
 package org.obridge.model.data;
 
-import org.obridge.generators.builders.CallStringBuilder;
-import org.obridge.model.generator.BindParam;
+import org.obridge.mappers.builders.CallStringBuilder;
 import org.obridge.util.StringHelper;
 
 import java.util.List;
@@ -37,6 +36,7 @@ public class Procedure {
     }
 
     public void initBindParams() {
+        System.out.println(this.getObjectName() + " " + this.getProcedureName());
         CallStringBuilder callStringBuilder = new CallStringBuilder(this);
         this.callString = callStringBuilder.build();
         this.bindParams = callStringBuilder.getBindParams();
@@ -112,16 +112,16 @@ public class Procedure {
         return this.callString;
     }
 
+    public void setCallString(String callString) {
+        this.callString = callString;
+    }
+
     public List<BindParam> getBindParams() {
         return bindParams;
     }
 
     public void setBindParams(List<BindParam> bindParams) {
         this.bindParams = bindParams;
-    }
-
-    public void setCallString(String callString) {
-        this.callString = callString;
     }
 
     @Override

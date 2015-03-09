@@ -2,7 +2,6 @@ package org.obridge.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.obridge.util.StringHelper;
 
 public class StringHelperTest {
 

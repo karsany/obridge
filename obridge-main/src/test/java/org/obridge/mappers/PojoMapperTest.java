@@ -16,9 +16,9 @@ import java.util.List;
 
 public class PojoMapperTest extends BaseTest {
 
+    private static final String SAMPLE_TYPE_ONE = "SAMPLE_TYPE_ONE";
     private TypeDao typeDao;
     private ProcedureDao procedureDao;
-    private static final String SAMPLE_TYPE_ONE = "SAMPLE_TYPE_ONE";
 
     @Before
     public void init2() {

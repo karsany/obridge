@@ -1,4 +1,4 @@
-package org.obridge.generators.builders;
+package org.obridge.mappers.builders;
 
 import org.obridge.model.data.ProcedureArgument;
 import org.obridge.util.MustacheRunner;

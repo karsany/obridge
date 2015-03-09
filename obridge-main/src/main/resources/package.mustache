@@ -1,42 +1,43 @@
 package {{javaPackageName}};
 
-import java.sql.*;
-import javax.sql.DataSource;
 import {{contextPackage}}.*;
 import {{converterPackage}}.*;
 import {{objectPackage}}.*;
-import java.util.List;
-import java.math.BigDecimal;
 
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.List;
 
 public class {{javaClassName}} {
 
-{{#procedureList}}
+    {{#procedureList}}
+
     public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall({{& callString}});
         {{#bindParams}}
-            {{#inParam}}
+        {{#inParam}}
         {{& paramSet}}
-            {{/inParam}}
-            {{#outParam}}
+        {{/inParam}}
+        {{#outParam}}
         {{& regOutput}}
-            {{/outParam}}
+        {{/outParam}}
         {{/bindParams}}
         ocs.execute();
         {{#bindParams}}
-            {{#outParam}}
+        {{#outParam}}
         {{& paramGet}}
-            {{/outParam}}
+        {{/outParam}}
         {{/bindParams}}
         ocs.close();
     }
 
-    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{& javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) throws SQLException {
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) throws SQLException {
         {{storedProcedureClassName}} ctx = new {{storedProcedureClassName}}();
         {{#argumentList}}
-            {{#inParam}}
+        {{#inParam}}
         ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
-            {{/inParam}}
+        {{/inParam}}
         {{/argumentList}}
 
         {{javaProcedureName}}(ctx, connection);
@@ -44,15 +45,14 @@ public class {{javaClassName}} {
         return ctx;
     }
 
-    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{& javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
         Connection conn = null;
         {{storedProcedureClassName}} ret = null;
 
         try {
             conn = dataSource.getConnection();
-            ret = {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
+            return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -62,10 +62,9 @@ public class {{javaClassName}} {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
 
-{{/procedureList}}
+    {{/procedureList}}
 
 }

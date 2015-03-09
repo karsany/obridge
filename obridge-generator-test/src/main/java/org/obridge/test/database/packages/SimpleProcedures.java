@@ -1,15 +1,16 @@
 package org.obridge.test.database.packages;
 
-import java.sql.*;
-import javax.sql.DataSource;
 import org.obridge.test.database.context.*;
 import org.obridge.test.database.converters.*;
 import org.obridge.test.database.objects.*;
-import java.util.List;
-import java.math.BigDecimal;
 
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.List;
 
 public class SimpleProcedures {
+
 
     public static void a(SimpleProceduresA ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -37,9 +38,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = a( conn);
+            return a( conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -49,9 +49,9 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
+
 
     public static void allTypes(SimpleProceduresAllTypes ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -76,102 +76,102 @@ public class SimpleProcedures {
                 "  :oB := sys.diutil.bool_to_int(B);" + 
                 "END;" + 
 "");
-                    // Set B from context b
-            if (ctx.getB() != null) {
-                ocs.setInt(1, ctx.getB() ? 1 : 0);
-            } else {
-                ocs.setNull(1, Types.INTEGER);
-            }
+        // Set B from context b
+if (ctx.getB() != null) {
+ocs.setInt(1, ctx.getB() ? 1 : 0);
+} else {
+ocs.setNull(1, Types.INTEGER);
+}
 
-                    // Set N from context n
-            if (ctx.getN() != null) {
-                ocs.setBigDecimal(2, ctx.getN());
-            } else {
-                ocs.setNull(2, Types.NUMERIC);
-            }
+        // Set N from context n
+if (ctx.getN() != null) {
+ocs.setBigDecimal(2, ctx.getN());
+} else {
+ocs.setNull(2, Types.NUMERIC);
+}
 
         ocs.registerOutParameter(2, Types.NUMERIC); // N
-                    // Set BI from context bi
-            if (ctx.getBi() != null) {
-                ocs.setInt(3, ctx.getBi());
-            } else {
-                ocs.setNull(3, Types.INTEGER);
-            }
+        // Set BI from context bi
+if (ctx.getBi() != null) {
+ocs.setInt(3, ctx.getBi());
+} else {
+ocs.setNull(3, Types.INTEGER);
+}
 
         ocs.registerOutParameter(3, Types.INTEGER); // BI
-                    // Set PI from context pi
-            if (ctx.getPi() != null) {
-                ocs.setInt(4, ctx.getPi());
-            } else {
-                ocs.setNull(4, Types.INTEGER);
-            }
+        // Set PI from context pi
+if (ctx.getPi() != null) {
+ocs.setInt(4, ctx.getPi());
+} else {
+ocs.setNull(4, Types.INTEGER);
+}
 
         ocs.registerOutParameter(4, Types.INTEGER); // PI
-                    // Set VCH from context vch
-            if (ctx.getVch() != null) {
-                ocs.setString(5, ctx.getVch());
-            } else {
-                ocs.setNull(5, Types.VARCHAR);
-            }
+        // Set VCH from context vch
+if (ctx.getVch() != null) {
+ocs.setString(5, ctx.getVch());
+} else {
+ocs.setNull(5, Types.VARCHAR);
+}
 
         ocs.registerOutParameter(5, Types.VARCHAR); // VCH
-                    // Set NVCH from context nvch
-            if (ctx.getNvch() != null) {
-                ocs.setString(6, ctx.getNvch());
-            } else {
-                ocs.setNull(6, Types.NVARCHAR);
-            }
+        // Set NVCH from context nvch
+if (ctx.getNvch() != null) {
+ocs.setString(6, ctx.getNvch());
+} else {
+ocs.setNull(6, Types.NVARCHAR);
+}
 
         ocs.registerOutParameter(6, Types.NVARCHAR); // NVCH
-                    // Set CH from context ch
-            if (ctx.getCh() != null) {
-                ocs.setString(7, ctx.getCh());
-            } else {
-                ocs.setNull(7, Types.CHAR);
-            }
+        // Set CH from context ch
+if (ctx.getCh() != null) {
+ocs.setString(7, ctx.getCh());
+} else {
+ocs.setNull(7, Types.CHAR);
+}
 
         ocs.registerOutParameter(7, Types.CHAR); // CH
-                    // Set NCH from context nch
-            if (ctx.getNch() != null) {
-                ocs.setString(8, ctx.getNch());
-            } else {
-                ocs.setNull(8, Types.NCHAR);
-            }
+        // Set NCH from context nch
+if (ctx.getNch() != null) {
+ocs.setString(8, ctx.getNch());
+} else {
+ocs.setNull(8, Types.NCHAR);
+}
 
         ocs.registerOutParameter(8, Types.NCHAR); // NCH
-                    // Set D from context d
-            if (ctx.getD() != null) {
-                ocs.setDate(9, ctx.getD());
-            } else {
-                ocs.setNull(9, Types.DATE);
-            }
+        // Set D from context d
+if (ctx.getD() != null) {
+ocs.setDate(9, ctx.getD());
+} else {
+ocs.setNull(9, Types.DATE);
+}
 
         ocs.registerOutParameter(9, Types.DATE); // D
-                    // Set TS from context ts
-            if (ctx.getTs() != null) {
-                ocs.setTimestamp(10, ctx.getTs());
-            } else {
-                ocs.setNull(10, Types.TIMESTAMP);
-            }
+        // Set TS from context ts
+if (ctx.getTs() != null) {
+ocs.setTimestamp(10, ctx.getTs());
+} else {
+ocs.setNull(10, Types.TIMESTAMP);
+}
 
         ocs.registerOutParameter(10, Types.TIMESTAMP); // TS
-                    // Set CL from context cl
-            if (ctx.getCl() != null) {
-                ocs.setString(11, ctx.getCl());
-            } else {
-                ocs.setNull(11, Types.CLOB);
-            }
+        // Set CL from context cl
+if (ctx.getCl() != null) {
+ocs.setString(11, ctx.getCl());
+} else {
+ocs.setNull(11, Types.CLOB);
+}
 
         ocs.registerOutParameter(11, Types.CLOB); // CL
-                    // Set TBL from context tbl
-            ocs.setObject(12, SampleTypeOneConverter.getListArray(ctx.getTbl(), connection, "SAMPLE_TYPE_ONE_LIST"));
+        // Set TBL from context tbl
+ocs.setObject(12, SampleTypeOneConverter.getListArray(ctx.getTbl(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(12, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // TBL
-                    // Set O from context o
-            if (ctx.getO() != null) {
-                ocs.setObject(13, SampleTypeOneConverter.getStruct(ctx.getO(), connection));
-            } else {
-                ocs.setNull(13, Types.STRUCT, "SAMPLE_TYPE_ONE");
-            }
+        // Set O from context o
+if (ctx.getO() != null) {
+ocs.setObject(13, SampleTypeOneConverter.getStruct(ctx.getO(), connection));
+} else {
+ocs.setNull(13, Types.STRUCT, "SAMPLE_TYPE_ONE");
+}
 
         ocs.registerOutParameter(13, Types.STRUCT, "SAMPLE_TYPE_ONE"); // O
         ocs.registerOutParameter(14, Types.INTEGER); // B
@@ -219,9 +219,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = allTypes(n, bi, pi, vch, nvch, ch, nch, d, ts, cl, b, tbl, o,  conn);
+            return allTypes(n, bi, pi, vch, nvch, ch, nch, d, ts, cl, b, tbl, o,  conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -231,9 +230,9 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
+
 
     public static void funcWithTypes(SimpleProceduresFuncWithTypes ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -246,15 +245,15 @@ public class SimpleProcedures {
                 "   );" + 
                 "END;" + 
 "");
-                    // Set P_PARAM_1 from context param1
-            if (ctx.getParam1() != null) {
-                ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
-            } else {
-                ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_ONE");
-            }
+        // Set P_PARAM_1 from context param1
+if (ctx.getParam1() != null) {
+ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
+} else {
+ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_ONE");
+}
 
-                    // Set P_PARAM_HELLO from context paramHello
-            ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getParamHello(), connection, "SAMPLE_TYPE_ONE_LIST"));
+        // Set P_PARAM_HELLO from context paramHello
+ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getParamHello(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(3, Types.STRUCT, "SAMPLE_TYPE_TWO"); // P_PARAM_TWO
         ocs.execute();
         ctx.setParamTwo(SampleTypeTwoConverter.getObject((Struct)ocs.getObject(3))); // P_PARAM_TWO
@@ -277,9 +276,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = funcWithTypes(param1, paramHello,  conn);
+            return funcWithTypes(param1, paramHello,  conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -289,9 +287,9 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
+
 
     public static void overload1(SimpleProceduresOverload1 ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -319,9 +317,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = overload1( conn);
+            return overload1( conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -331,9 +328,9 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
+
 
     public static void overload2(SimpleProceduresOverload2 ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -344,12 +341,12 @@ public class SimpleProcedures {
                 "   );" + 
                 "END;" + 
 "");
-                    // Set A from context a
-            if (ctx.getA() != null) {
-                ocs.setString(1, ctx.getA());
-            } else {
-                ocs.setNull(1, Types.VARCHAR);
-            }
+        // Set A from context a
+if (ctx.getA() != null) {
+ocs.setString(1, ctx.getA());
+} else {
+ocs.setNull(1, Types.VARCHAR);
+}
 
         ocs.execute();
         ocs.close();
@@ -370,9 +367,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = overload2(a,  conn);
+            return overload2(a,  conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -382,9 +378,9 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
+
 
     public static void procWithLists(SimpleProceduresProcWithLists ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -397,14 +393,14 @@ public class SimpleProcedures {
                 "   );" + 
                 "END;" + 
 "");
-                    // Set P1 from context p1
-            ocs.setObject(1, SampleTypeOneConverter.getListArray(ctx.getP1(), connection, "SAMPLE_TYPE_ONE_LIST"));
+        // Set P1 from context p1
+ocs.setObject(1, SampleTypeOneConverter.getListArray(ctx.getP1(), connection, "SAMPLE_TYPE_ONE_LIST"));
         ocs.registerOutParameter(1, Types.ARRAY, "SAMPLE_TYPE_ONE_LIST"); // P1
-                    // Set P2 from context p2
-            ocs.setObject(2, SampleTypeTwoConverter.getListArray(ctx.getP2(), connection, "SAMPLE_TYPE_TWO_GROUP"));
+        // Set P2 from context p2
+ocs.setObject(2, SampleTypeTwoConverter.getListArray(ctx.getP2(), connection, "SAMPLE_TYPE_TWO_GROUP"));
         ocs.registerOutParameter(2, Types.ARRAY, "SAMPLE_TYPE_TWO_GROUP"); // P2
-                    // Set P3 from context p3
-            ocs.setObject(3, SampleTypeTwoConverter.getListArray(ctx.getP3(), connection, "SAMPLE_TYPE_TWO_LIST"));
+        // Set P3 from context p3
+ocs.setObject(3, SampleTypeTwoConverter.getListArray(ctx.getP3(), connection, "SAMPLE_TYPE_TWO_LIST"));
         ocs.registerOutParameter(3, Types.ARRAY, "SAMPLE_TYPE_TWO_LIST"); // P3
         ocs.execute();
         ctx.setP1(SampleTypeOneConverter.getObjectList((Array)ocs.getObject(1))); // P1
@@ -430,9 +426,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = procWithLists(p1, p2, p3,  conn);
+            return procWithLists(p1, p2, p3,  conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -442,9 +437,9 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
+
 
     public static void simpleFunc(SimpleProceduresSimpleFunc ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" + 
@@ -459,19 +454,19 @@ public class SimpleProcedures {
                 "END;" + 
 "");
         ocs.registerOutParameter(1, Types.NUMERIC); // null
-                    // Set A from context a
-            if (ctx.getA() != null) {
-                ocs.setString(2, ctx.getA());
-            } else {
-                ocs.setNull(2, Types.VARCHAR);
-            }
+        // Set A from context a
+if (ctx.getA() != null) {
+ocs.setString(2, ctx.getA());
+} else {
+ocs.setNull(2, Types.VARCHAR);
+}
 
-                    // Set B from context b
-            if (ctx.getB() != null) {
-                ocs.setString(3, ctx.getB());
-            } else {
-                ocs.setNull(3, Types.VARCHAR);
-            }
+        // Set B from context b
+if (ctx.getB() != null) {
+ocs.setString(3, ctx.getB());
+} else {
+ocs.setNull(3, Types.VARCHAR);
+}
 
         ocs.registerOutParameter(3, Types.VARCHAR); // B
         ocs.registerOutParameter(4, Types.VARCHAR); // C
@@ -498,9 +493,8 @@ public class SimpleProcedures {
 
         try {
             conn = dataSource.getConnection();
-            ret = simpleFunc(a, b,  conn);
+            return simpleFunc(a, b,  conn);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             try {
@@ -510,7 +504,6 @@ public class SimpleProcedures {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return ret;
         }
     }
 

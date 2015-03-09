@@ -17,31 +17,6 @@ import java.util.Properties;
 
 public class OBridge {
 
-    public void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
-        // generate objects
-        EntityObjectGenerator.generate(c);
-
-        // generate converters
-        ConverterObjectGenerator.generate(c);
-
-        // generate contexts
-        ProcedureContextGenerator.generate(c);
-
-        // generate packages
-        PackageObjectGenerator.generate(c);
-
-    }
-
-    public OBridgeConfiguration loadConfiguration(File f) {
-        XStream xs = XStreamFactory.createXStream();
-        Object config = xs.fromXML(f);
-        return (OBridgeConfiguration) config;
-    }
-
-    public void generate(File f) throws IOException, SQLException, PropertyVetoException {
-        this.generate(loadConfiguration(f));
-    }
-
     public static void main(String... args) throws SQLException, IOException, PropertyVetoException, ParseException {
 
         Options o = new Options();
@@ -76,5 +51,30 @@ public class OBridge {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("obridge", o, true);
         }
+    }
+
+    public void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
+        // generate objects
+        EntityObjectGenerator.generate(c);
+
+        // generate converters
+        ConverterObjectGenerator.generate(c);
+
+        // generate contexts
+        ProcedureContextGenerator.generate(c);
+
+        // generate packages
+        PackageObjectGenerator.generate(c);
+
+    }
+
+    public OBridgeConfiguration loadConfiguration(File f) {
+        XStream xs = XStreamFactory.createXStream();
+        Object config = xs.fromXML(f);
+        return (OBridgeConfiguration) config;
+    }
+
+    public void generate(File f) throws IOException, SQLException, PropertyVetoException {
+        this.generate(loadConfiguration(f));
     }
 }

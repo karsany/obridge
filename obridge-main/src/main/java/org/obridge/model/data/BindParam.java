@@ -1,4 +1,4 @@
-package org.obridge.model.generator;
+package org.obridge.model.data;
 
 import org.obridge.model.data.ProcedureArgument;
 

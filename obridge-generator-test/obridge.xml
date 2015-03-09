@@ -1,11 +1,18 @@
 <configuration>
-    <jdbcUrl>jdbc:oracle:thin:obridge/obridge@localhost:1521:xe</jdbcUrl> <!-- jdbc connection string for obridge -->
-    <sourceRoot>src/main/java</sourceRoot> <!-- where to generate sources - related to this configuration file -->
-    <rootPackageName>org.obridge.test.database</rootPackageName> <!-- root Java package, generator builds the directory structure -->
+    <jdbcUrl>jdbc:oracle:thin:obridge/obridge@localhost:1521:xe</jdbcUrl>
+    <!-- jdbc connection string for obridge -->
+    <sourceRoot>src/main/java</sourceRoot>
+    <!-- where to generate sources - related to this configuration file -->
+    <rootPackageName>org.obridge.test.database</rootPackageName>
+    <!-- root Java package, generator builds the directory structure -->
     <packages>
-        <entityObjects>objects</entityObjects> <!-- object types are going to this package -->
-        <converterObjects>converters</converterObjects> <!-- converter util classes are going to this package -->
-        <procedureContextObjects>context</procedureContextObjects> <!-- procedure parameter entities are going to this package -->
-        <packageObjects>packages</packageObjects> <!-- procedure calling utility classes are going to this package -->
+        <entityObjects>objects</entityObjects>
+        <!-- object types are going to this package -->
+        <converterObjects>converters</converterObjects>
+        <!-- converter util classes are going to this package -->
+        <procedureContextObjects>context</procedureContextObjects>
+        <!-- procedure parameter entities are going to this package -->
+        <packageObjects>packages</packageObjects>
+        <!-- procedure calling utility classes are going to this package -->
     </packages>
 </configuration>

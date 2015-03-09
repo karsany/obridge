@@ -1,7 +1,6 @@
 package org.obridge.context;
 
 /**
- *
  * @author fkarsany
  */
 public class Packages {

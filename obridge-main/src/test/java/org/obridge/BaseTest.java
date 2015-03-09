@@ -13,9 +13,9 @@ import java.util.Properties;
 
 public abstract class BaseTest {
 
-    private Properties p;
     protected OracleDataSource ds;
     protected String connectionString;
+    private Properties p;
 
     @Before
     public void init() throws SQLException, IOException {

@@ -1,6 +1,6 @@
 package org.obridge.model.data;
 
-import org.obridge.generators.builders.ParameterGetSetRegisterBuilder;
+import org.obridge.mappers.builders.ParameterGetSetRegisterBuilder;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
 
@@ -215,13 +215,12 @@ public class ProcedureArgument {
                 + "}\n";
     }
 
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
 
     public void setSequenceNumber(int sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
-    }
-
-    public int getSequenceNumber() {
-        return sequenceNumber;
     }
 
     public String getOrigTypeName() {

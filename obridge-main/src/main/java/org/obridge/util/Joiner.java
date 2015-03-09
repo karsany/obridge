@@ -10,6 +10,12 @@ public class Joiner {
     private String splitSymbol;
     private boolean skipNulls = false;
 
+    public static Joiner on(String splitSymbol) {
+        Joiner joiner = new Joiner();
+        joiner.setSplitSymbol(splitSymbol);
+        return joiner;
+    }
+
     public boolean isSkipNulls() {
         return skipNulls;
     }
@@ -24,12 +30,6 @@ public class Joiner {
 
     public void setSplitSymbol(String splitSymbol) {
         this.splitSymbol = splitSymbol;
-    }
-
-    public static Joiner on(String splitSymbol) {
-        Joiner joiner = new Joiner();
-        joiner.setSplitSymbol(splitSymbol);
-        return joiner;
     }
 
     public Joiner skipNulls() {

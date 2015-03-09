@@ -15,9 +15,9 @@ import java.util.Properties;
 
 public abstract class BaseTest {
 
-    private Properties p;
     protected DataSource ds;
     protected String connectionString;
+    private Properties p;
 
     @Before
     public void init() throws SQLException, IOException, PropertyVetoException {

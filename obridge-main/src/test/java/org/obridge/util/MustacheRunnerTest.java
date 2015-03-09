@@ -5,15 +5,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.obridge.model.generator.Pojo;
 import org.obridge.model.generator.PojoField;
-import org.obridge.util.MustacheRunner;
 
 import java.util.ArrayList;
 
 public class MustacheRunnerTest {
 
-    private final static String CLASS_NAME = "ExampleClass";
     public static final String COMMENT = "This is a comment";
     public static final String PACKAGE_NAME = "hu.karsany.tesztpackage";
+    private final static String CLASS_NAME = "ExampleClass";
 
     @Test
     public void pojoMustacheTest() throws Exception {

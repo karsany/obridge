@@ -5,14 +5,14 @@
  */
 package org.obridge;
 
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.sql.SQLException;
 import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.sql.SQLException;
+
 /**
- *
  * @author fkarsany
  */
 public class OBridgeTest {

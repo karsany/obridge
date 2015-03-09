@@ -1,6 +1,6 @@
-            // Set {{argumentName}} from context {{javaPropertyName}}
-            if (ctx.get{{javaPropertyNameBig}}() != null) {
-                ocs.setInt({{sequenceNumber}}, ctx.get{{javaPropertyNameBig}}());
-            } else {
-                ocs.setNull({{sequenceNumber}}, Types.{{oracleType}});
-            }
+// Set {{argumentName}} from context {{javaPropertyName}}
+if (ctx.get{{javaPropertyNameBig}}() != null) {
+ocs.setInt({{sequenceNumber}}, ctx.get{{javaPropertyNameBig}}());
+} else {
+ocs.setNull({{sequenceNumber}}, Types.{{oracleType}});
+}
