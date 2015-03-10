@@ -38,7 +38,7 @@ public class CallStringBuilder {
         addLine(callString, "DECLARE ");
 
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getOracleType().equals("BOOLEAN")) {
+            if (pa.getOracleType().equals("BOOLEAN") && pa.getArgumentName() != null) {
                 String ln = "  " + pa.getArgumentName() + " BOOLEAN";
                 if (pa.isInParam()) {
                     ln += " := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")";
@@ -53,10 +53,13 @@ public class CallStringBuilder {
 
         if ("FUNCTION".equals(procedure.getMethodType())) {
             addLine(callString, "  :result := ");
+            if (procedure.getReturnJavaType().equals("Boolean")) {
+                addLine(callString, "  sys.diutil.bool_to_int( ");
+            }
             addBindParam("result", procedure.getArgumentList().get(0), false, true);
         }
 
-        addLine(callString, "  " + procedure.getObjectName() + "." + procedure.getProcedureName() + "( ");
+        addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
 
         boolean first = true;
         for (ProcedureArgument pa : procedure.getArgumentList()) {
@@ -64,9 +67,9 @@ public class CallStringBuilder {
                 String ln = "  ";
                 ln += !first ? " ," : "  ";
                 if (pa.getOracleType().equals("BOOLEAN")) {
-                    ln += pa.getArgumentName() + " => " + pa.getArgumentName();
+                    ln += "\\\"" + pa.getArgumentName() + "\\\" => " + pa.getArgumentName();
                 } else {
-                    ln += pa.getArgumentName() + " => :" + pa.getArgumentName();
+                    ln += "\\\"" + pa.getArgumentName() + "\\\" => :" + pa.getArgumentName();
                     addBindParam(pa.getArgumentName(), pa, pa.isInParam(), pa.isOutParam());
                 }
                 first = false;
@@ -75,12 +78,20 @@ public class CallStringBuilder {
         }
 
 
+        if ("FUNCTION".equals(procedure.getMethodType())) {
+            if (procedure.getReturnJavaType().equals("Boolean")) {
+                addLine(callString, "  ) ");
+            }
+        }
+
         addLine(callString, "   );");
 
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
-                addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
-                addBindParam("o" + pa.getArgumentName(), pa, false, true);
+            if (pa.getArgumentName() != null) {
+                if (pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
+                    addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
+                    addBindParam("o" + pa.getArgumentName(), pa, false, true);
+                }
             }
         }
 

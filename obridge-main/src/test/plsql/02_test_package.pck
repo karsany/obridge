@@ -36,6 +36,14 @@ Create Or Replace Package test_package Is
                       o    In Out sample_type_one -- object
                       );
 
+  Procedure "quoted_Procedure_Name";
+
+  Function "isItAGoodFunction"(p_param1 sample_type_one) Return Boolean;
+
+  Function "function_returns_boolean"(param1 Varchar2) Return Boolean;
+
+  Function simple_boolean_return Return Boolean;
+
 End test_package;
 /
 Create Or Replace Package Body test_package Is
@@ -131,6 +139,26 @@ Create Or Replace Package Body test_package Is
   Begin
     Null;
   End all_types;
+
+  Procedure "quoted_Procedure_Name" Is
+  Begin
+    Null;
+  End "quoted_Procedure_Name";
+
+  Function "isItAGoodFunction"(p_param1 sample_type_one) Return Boolean Is
+  Begin
+    Return True;
+  End "isItAGoodFunction";
+
+  Function "function_returns_boolean"(param1 Varchar2) Return Boolean Is
+  Begin
+    Return True;
+  End "function_returns_boolean";
+
+  Function simple_boolean_return Return Boolean Is
+  Begin
+    Return True;
+  End simple_boolean_return;
 
 End test_package;
 /

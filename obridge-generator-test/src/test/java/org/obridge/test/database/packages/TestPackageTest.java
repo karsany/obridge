@@ -63,4 +63,10 @@ public class TestPackageTest extends BaseTest {
         TestPackage.allTypes(ctx, ds.getConnection());
     }
 
+    @Test
+    public void testQuotationMarks1() {
+        TestPackage.quotedProcedureName(ds);
+        Assert.assertTrue(TestPackage.simpleBooleanReturn(ds).getFunctionReturn());
+    }
+
 }

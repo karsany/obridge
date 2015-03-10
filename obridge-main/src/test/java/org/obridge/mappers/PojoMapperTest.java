@@ -40,7 +40,7 @@ public class PojoMapperTest extends BaseTest {
     @Test
     public void testToPojo2() throws Exception {
 
-        List<Procedure> simple_procedures = procedureDao.getAllProcedures("SIMPLE_PROCEDURES");
+        List<Procedure> simple_procedures = procedureDao.getAllProcedures("SIMPLE_PROCEDURES", null);
 
         Procedure ppp = null;
 
@@ -58,7 +58,7 @@ public class PojoMapperTest extends BaseTest {
 
     @Test
     public void testToPojo3() throws Exception {
-        List<Procedure> simple_procedures = procedureDao.getAllProcedures("SIMPLE_PROCEDURES");
+        List<Procedure> simple_procedures = procedureDao.getAllProcedures("SIMPLE_PROCEDURES", null);
 
         Procedure ppp = null;
 

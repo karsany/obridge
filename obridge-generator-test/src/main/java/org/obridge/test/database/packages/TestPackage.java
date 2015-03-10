@@ -17,20 +17,20 @@ public class TestPackage {
                 "DECLARE " +
                 "  B BOOLEAN := sys.diutil.int_to_bool(:iB); " +
                 "BEGIN " +
-                "  TEST_PACKAGE.ALL_TYPES( " +
-                "    N => :N" +
-                "   ,BI => :BI" +
-                "   ,PI => :PI" +
-                "   ,VCH => :VCH" +
-                "   ,NVCH => :NVCH" +
-                "   ,CH => :CH" +
-                "   ,NCH => :NCH" +
-                "   ,D => :D" +
-                "   ,TS => :TS" +
-                "   ,CL => :CL" +
-                "   ,B => B" +
-                "   ,TBL => :TBL" +
-                "   ,O => :O" +
+                "  \"TEST_PACKAGE\".\"ALL_TYPES\"( " +
+                "    \"N\" => :N" +
+                "   ,\"BI\" => :BI" +
+                "   ,\"PI\" => :PI" +
+                "   ,\"VCH\" => :VCH" +
+                "   ,\"NVCH\" => :NVCH" +
+                "   ,\"CH\" => :CH" +
+                "   ,\"NCH\" => :NCH" +
+                "   ,\"D\" => :D" +
+                "   ,\"TS\" => :TS" +
+                "   ,\"CL\" => :CL" +
+                "   ,\"B\" => B" +
+                "   ,\"TBL\" => :TBL" +
+                "   ,\"O\" => :O" +
                 "   );" +
                 "  :oB := sys.diutil.bool_to_int(B);" +
                 "END;" +
@@ -199,8 +199,8 @@ public class TestPackage {
                 "  P_BOOL BOOLEAN := sys.diutil.int_to_bool(:iP_BOOL); " +
                 "BEGIN " +
                 "  :result := " +
-                "  TEST_PACKAGE.BOOLEAN_TEST_1( " +
-                "    P_BOOL => P_BOOL" +
+                "  \"TEST_PACKAGE\".\"BOOLEAN_TEST_1\"( " +
+                "    \"P_BOOL\" => P_BOOL" +
                 "   );" +
                 "END;" +
                 "");
@@ -254,11 +254,11 @@ public class TestPackage {
                 "  BOOL_OUT BOOLEAN; " +
                 "  BOOL_INOUT BOOLEAN := sys.diutil.int_to_bool(:iBOOL_INOUT); " +
                 "BEGIN " +
-                "  TEST_PACKAGE.BOOLEAN_TEST_2( " +
-                "    N => :N" +
-                "   ,BOOL_IN => BOOL_IN" +
-                "   ,BOOL_OUT => BOOL_OUT" +
-                "   ,BOOL_INOUT => BOOL_INOUT" +
+                "  \"TEST_PACKAGE\".\"BOOLEAN_TEST_2\"( " +
+                "    \"N\" => :N" +
+                "   ,\"BOOL_IN\" => BOOL_IN" +
+                "   ,\"BOOL_OUT\" => BOOL_OUT" +
+                "   ,\"BOOL_INOUT\" => BOOL_INOUT" +
                 "   );" +
                 "  :oBOOL_OUT := sys.diutil.bool_to_int(BOOL_OUT);" +
                 "  :oBOOL_INOUT := sys.diutil.bool_to_int(BOOL_INOUT);" +
@@ -331,9 +331,9 @@ public class TestPackage {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  TEST_PACKAGE.COMBINED_TYPES_TEST_1( " +
-                "    P_OBJECT_TYPE => :P_OBJECT_TYPE" +
-                "   ,P_LIST_OF => :P_LIST_OF" +
+                "  \"TEST_PACKAGE\".\"COMBINED_TYPES_TEST_1\"( " +
+                "    \"P_OBJECT_TYPE\" => :P_OBJECT_TYPE" +
+                "   ,\"P_LIST_OF\" => :P_LIST_OF" +
                 "   );" +
                 "END;" +
                 "");
@@ -390,7 +390,7 @@ public class TestPackage {
                 "DECLARE " +
                 "BEGIN " +
                 "  :result := " +
-                "  TEST_PACKAGE.GET_SYSDATE( " +
+                "  \"TEST_PACKAGE\".\"GET_SYSDATE\"( " +
                 "   );" +
                 "END;" +
                 "");
@@ -433,8 +433,8 @@ public class TestPackage {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  TEST_PACKAGE.GET_SYSDATE( " +
-                "    P_SYSDATE => :P_SYSDATE" +
+                "  \"TEST_PACKAGE\".\"GET_SYSDATE\"( " +
+                "    \"P_SYSDATE\" => :P_SYSDATE" +
                 "   );" +
                 "END;" +
                 "");
@@ -477,9 +477,9 @@ public class TestPackage {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  TEST_PACKAGE.HELLO_WORLD( " +
-                "    P_NAME => :P_NAME" +
-                "   ,P_OUT => :P_OUT" +
+                "  \"TEST_PACKAGE\".\"HELLO_WORLD\"( " +
+                "    \"P_NAME\" => :P_NAME" +
+                "   ,\"P_OUT\" => :P_OUT" +
                 "   );" +
                 "END;" +
                 "");
@@ -531,8 +531,8 @@ public class TestPackage {
                 "DECLARE " +
                 "BEGIN " +
                 "  :result := " +
-                "  TEST_PACKAGE.OBJECT_TYPE_TEST_1( " +
-                "    P_OBJECT_TYPE => :P_OBJECT_TYPE" +
+                "  \"TEST_PACKAGE\".\"OBJECT_TYPE_TEST_1\"( " +
+                "    \"P_OBJECT_TYPE\" => :P_OBJECT_TYPE" +
                 "   );" +
                 "END;" +
                 "");
@@ -581,13 +581,59 @@ public class TestPackage {
     }
 
 
+    public static void simpleBooleanReturn(TestPackageSimpleBooleanReturn ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall("" +
+                "DECLARE " +
+                "BEGIN " +
+                "  :result := " +
+                "  sys.diutil.bool_to_int( " +
+                "  \"TEST_PACKAGE\".\"SIMPLE_BOOLEAN_RETURN\"( " +
+                "  ) " +
+                "   );" +
+                "END;" +
+                "");
+        ocs.registerOutParameter(1, Types.INTEGER); // null
+        ocs.execute();
+        ctx.setFunctionReturn(null == ocs.getBigDecimal(1) ? null : BigDecimal.ONE.equals(ocs.getBigDecimal(1)) ? true : BigDecimal.ZERO.equals(ocs.getBigDecimal(1)) ? false : null); // null
+        ocs.close();
+    }
+
+    public static TestPackageSimpleBooleanReturn simpleBooleanReturn(Connection connection) throws SQLException {
+        TestPackageSimpleBooleanReturn ctx = new TestPackageSimpleBooleanReturn();
+
+        simpleBooleanReturn(ctx, connection);
+
+        return ctx;
+    }
+
+    public static TestPackageSimpleBooleanReturn simpleBooleanReturn(DataSource dataSource) {
+        Connection conn = null;
+        TestPackageSimpleBooleanReturn ret = null;
+
+        try {
+            conn = dataSource.getConnection();
+            return simpleBooleanReturn(conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void tableOfTest1(TestPackageTableOfTest1 ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
                 "  :result := " +
-                "  TEST_PACKAGE.TABLE_OF_TEST_1( " +
-                "    P_LIST_OF => :P_LIST_OF" +
+                "  \"TEST_PACKAGE\".\"TABLE_OF_TEST_1\"( " +
+                "    \"P_LIST_OF\" => :P_LIST_OF" +
                 "   );" +
                 "END;" +
                 "");
@@ -617,6 +663,157 @@ public class TestPackage {
         try {
             conn = dataSource.getConnection();
             return tableOfTest1(listOf, conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public static void functionReturnsBoolean(TestPackageFunctionReturnsBoolean ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall("" +
+                "DECLARE " +
+                "BEGIN " +
+                "  :result := " +
+                "  sys.diutil.bool_to_int( " +
+                "  \"TEST_PACKAGE\".\"function_returns_boolean\"( " +
+                "    \"PARAM1\" => :PARAM1" +
+                "  ) " +
+                "   );" +
+                "END;" +
+                "");
+        ocs.registerOutParameter(1, Types.INTEGER); // null
+        // Set PARAM1 from context param1
+        if (ctx.getParam1() != null) {
+            ocs.setString(2, ctx.getParam1());
+        } else {
+            ocs.setNull(2, Types.VARCHAR);
+        }
+
+        ocs.execute();
+        ctx.setFunctionReturn(null == ocs.getBigDecimal(1) ? null : BigDecimal.ONE.equals(ocs.getBigDecimal(1)) ? true : BigDecimal.ZERO.equals(ocs.getBigDecimal(1)) ? false : null); // null
+        ocs.close();
+    }
+
+    public static TestPackageFunctionReturnsBoolean functionReturnsBoolean(String param1, Connection connection) throws SQLException {
+        TestPackageFunctionReturnsBoolean ctx = new TestPackageFunctionReturnsBoolean();
+        ctx.setParam1(param1);
+
+        functionReturnsBoolean(ctx, connection);
+
+        return ctx;
+    }
+
+    public static TestPackageFunctionReturnsBoolean functionReturnsBoolean(String param1, DataSource dataSource) {
+        Connection conn = null;
+        TestPackageFunctionReturnsBoolean ret = null;
+
+        try {
+            conn = dataSource.getConnection();
+            return functionReturnsBoolean(param1, conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public static void isitagoodfunction(TestPackageIsitagoodfunction ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall("" +
+                "DECLARE " +
+                "BEGIN " +
+                "  :result := " +
+                "  sys.diutil.bool_to_int( " +
+                "  \"TEST_PACKAGE\".\"isItAGoodFunction\"( " +
+                "    \"P_PARAM1\" => :P_PARAM1" +
+                "  ) " +
+                "   );" +
+                "END;" +
+                "");
+        ocs.registerOutParameter(1, Types.INTEGER); // null
+        // Set P_PARAM1 from context param1
+        if (ctx.getParam1() != null) {
+            ocs.setObject(2, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
+        } else {
+            ocs.setNull(2, Types.STRUCT, "SAMPLE_TYPE_ONE");
+        }
+
+        ocs.execute();
+        ctx.setFunctionReturn(null == ocs.getBigDecimal(1) ? null : BigDecimal.ONE.equals(ocs.getBigDecimal(1)) ? true : BigDecimal.ZERO.equals(ocs.getBigDecimal(1)) ? false : null); // null
+        ocs.close();
+    }
+
+    public static TestPackageIsitagoodfunction isitagoodfunction(SampleTypeOne param1, Connection connection) throws SQLException {
+        TestPackageIsitagoodfunction ctx = new TestPackageIsitagoodfunction();
+        ctx.setParam1(param1);
+
+        isitagoodfunction(ctx, connection);
+
+        return ctx;
+    }
+
+    public static TestPackageIsitagoodfunction isitagoodfunction(SampleTypeOne param1, DataSource dataSource) {
+        Connection conn = null;
+        TestPackageIsitagoodfunction ret = null;
+
+        try {
+            conn = dataSource.getConnection();
+            return isitagoodfunction(param1, conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public static void quotedProcedureName(TestPackageQuotedProcedureName ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall("" +
+                "DECLARE " +
+                "BEGIN " +
+                "  \"TEST_PACKAGE\".\"quoted_Procedure_Name\"( " +
+                "   );" +
+                "END;" +
+                "");
+        ocs.execute();
+        ocs.close();
+    }
+
+    public static TestPackageQuotedProcedureName quotedProcedureName(Connection connection) throws SQLException {
+        TestPackageQuotedProcedureName ctx = new TestPackageQuotedProcedureName();
+
+        quotedProcedureName(ctx, connection);
+
+        return ctx;
+    }
+
+    public static TestPackageQuotedProcedureName quotedProcedureName(DataSource dataSource) {
+        Connection conn = null;
+        TestPackageQuotedProcedureName ret = null;
+
+        try {
+            conn = dataSource.getConnection();
+            return quotedProcedureName(conn);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

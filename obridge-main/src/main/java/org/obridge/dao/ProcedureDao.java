@@ -23,18 +23,26 @@ public class ProcedureDao {
     }
 
     public List<Procedure> getAllProcedures() {
-        return getAllProcedures("");
+        return getAllProcedures("", "");
     }
 
-    public List<Procedure> getAllProcedures(String pckName) {
+    public List<Procedure> getAllProcedures(String packageName, String procedureName) {
 
-        String srch = "";
+        String packageNameFilter = "";
+        String procedureNameFilter = "";
 
-        if (pckName == null || pckName.isEmpty() || "".equals(pckName)) {
-            srch = "%";
+        if (packageName == null || packageName.isEmpty() || "".equals(packageName)) {
+            packageNameFilter = "%";
         } else {
-            srch = pckName;
+            packageNameFilter = packageName;
         }
+
+        if (procedureName == null || procedureName.isEmpty() || "".equals(procedureName)) {
+            procedureNameFilter = "%";
+        } else {
+            procedureNameFilter = procedureName;
+        }
+
 
         List<Procedure> procedures = jdbcTemplate.query(
                 "Select object_name\n"
@@ -52,6 +60,7 @@ public class ProcedureDao {
                         + " Where procedure_name Is Not Null\n"
                         + "   And object_type = 'PACKAGE'"
                         + "   And object_name like ? "
+                        + "   And procedure_name like ? "
                         + " and not ((object_name, procedure_name, nvl(overload, -1)) In\n"
                         + "       (Select package_name,\n"
                         + "               object_name,\n"
@@ -71,7 +80,7 @@ public class ProcedureDao {
                                         resultSet.getString("overload"))
                         );
                     }
-                }, srch
+                }, packageNameFilter, procedureNameFilter
         );
 
         return procedures;
@@ -87,8 +96,8 @@ public class ProcedureDao {
                         "rownum sequen, p.type_name orig_type_name " +
                         "from (Select argument_name, data_type, type_name, defaulted, in_out\n"
                         + "        From user_arguments t\n"
-                        + "       Where nvl(t.package_name, '###') = nvl(upper(?), '###')\n"
-                        + "         And t.object_name = upper(?)\n"
+                        + "       Where nvl(t.package_name, '###') = nvl((?), '###')\n"
+                        + "         And t.object_name = (?)\n"
                         + "         And nvl(t.overload, '###') = nvl(?, '###')\n"
                         + "         And t.data_level = 0\n"
                         + "         And not(pls_type is null and argument_name is null and data_type is null)"
@@ -118,7 +127,7 @@ public class ProcedureDao {
             public OraclePackage mapRow(ResultSet resultSet, int i) throws SQLException {
                 OraclePackage p = new OraclePackage();
                 p.setName(resultSet.getString("object_name"));
-                p.setProcedureList(getAllProcedures(resultSet.getString("object_name")));
+                p.setProcedureList(getAllProcedures(resultSet.getString("object_name"), ""));
                 return p;
             }
         });

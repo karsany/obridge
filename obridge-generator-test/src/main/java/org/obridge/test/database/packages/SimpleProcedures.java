@@ -18,7 +18,7 @@ public class SimpleProcedures {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  SIMPLE_PROCEDURES.A( " +
+                "  \"SIMPLE_PROCEDURES\".\"A\"( " +
                 "   );" +
                 "END;" +
                 "");
@@ -60,20 +60,20 @@ public class SimpleProcedures {
                 "DECLARE " +
                 "  B BOOLEAN := sys.diutil.int_to_bool(:iB); " +
                 "BEGIN " +
-                "  SIMPLE_PROCEDURES.ALL_TYPES( " +
-                "    N => :N" +
-                "   ,BI => :BI" +
-                "   ,PI => :PI" +
-                "   ,VCH => :VCH" +
-                "   ,NVCH => :NVCH" +
-                "   ,CH => :CH" +
-                "   ,NCH => :NCH" +
-                "   ,D => :D" +
-                "   ,TS => :TS" +
-                "   ,CL => :CL" +
-                "   ,B => B" +
-                "   ,TBL => :TBL" +
-                "   ,O => :O" +
+                "  \"SIMPLE_PROCEDURES\".\"ALL_TYPES\"( " +
+                "    \"N\" => :N" +
+                "   ,\"BI\" => :BI" +
+                "   ,\"PI\" => :PI" +
+                "   ,\"VCH\" => :VCH" +
+                "   ,\"NVCH\" => :NVCH" +
+                "   ,\"CH\" => :CH" +
+                "   ,\"NCH\" => :NCH" +
+                "   ,\"D\" => :D" +
+                "   ,\"TS\" => :TS" +
+                "   ,\"CL\" => :CL" +
+                "   ,\"B\" => B" +
+                "   ,\"TBL\" => :TBL" +
+                "   ,\"O\" => :O" +
                 "   );" +
                 "  :oB := sys.diutil.bool_to_int(B);" +
                 "END;" +
@@ -240,10 +240,10 @@ public class SimpleProcedures {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  SIMPLE_PROCEDURES.FUNC_WITH_TYPES( " +
-                "    P_PARAM_1 => :P_PARAM_1" +
-                "   ,P_PARAM_HELLO => :P_PARAM_HELLO" +
-                "   ,P_PARAM_TWO => :P_PARAM_TWO" +
+                "  \"SIMPLE_PROCEDURES\".\"FUNC_WITH_TYPES\"( " +
+                "    \"P_PARAM_1\" => :P_PARAM_1" +
+                "   ,\"P_PARAM_HELLO\" => :P_PARAM_HELLO" +
+                "   ,\"P_PARAM_TWO\" => :P_PARAM_TWO" +
                 "   );" +
                 "END;" +
                 "");
@@ -297,7 +297,7 @@ public class SimpleProcedures {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  SIMPLE_PROCEDURES.OVERLOAD( " +
+                "  \"SIMPLE_PROCEDURES\".\"OVERLOAD\"( " +
                 "   );" +
                 "END;" +
                 "");
@@ -338,8 +338,8 @@ public class SimpleProcedures {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  SIMPLE_PROCEDURES.OVERLOAD( " +
-                "    A => :A" +
+                "  \"SIMPLE_PROCEDURES\".\"OVERLOAD\"( " +
+                "    \"A\" => :A" +
                 "   );" +
                 "END;" +
                 "");
@@ -388,10 +388,10 @@ public class SimpleProcedures {
         CallableStatement ocs = connection.prepareCall("" +
                 "DECLARE " +
                 "BEGIN " +
-                "  SIMPLE_PROCEDURES.PROC_WITH_LISTS( " +
-                "    P1 => :P1" +
-                "   ,P2 => :P2" +
-                "   ,P3 => :P3" +
+                "  \"SIMPLE_PROCEDURES\".\"PROC_WITH_LISTS\"( " +
+                "    \"P1\" => :P1" +
+                "   ,\"P2\" => :P2" +
+                "   ,\"P3\" => :P3" +
                 "   );" +
                 "END;" +
                 "");
@@ -448,10 +448,10 @@ public class SimpleProcedures {
                 "DECLARE " +
                 "BEGIN " +
                 "  :result := " +
-                "  SIMPLE_PROCEDURES.SIMPLE_FUNC( " +
-                "    A => :A" +
-                "   ,B => :B" +
-                "   ,C => :C" +
+                "  \"SIMPLE_PROCEDURES\".\"SIMPLE_FUNC\"( " +
+                "    \"A\" => :A" +
+                "   ,\"B\" => :B" +
+                "   ,\"C\" => :C" +
                 "   );" +
                 "END;" +
                 "");
