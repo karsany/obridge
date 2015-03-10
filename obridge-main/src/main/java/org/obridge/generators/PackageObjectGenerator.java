@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.ProcedureDao;
 import org.obridge.model.data.OraclePackage;
+import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
 
@@ -37,8 +38,8 @@ public class PackageObjectGenerator {
             oraclePackage.setContextPackage(contextPackage);
             oraclePackage.setConverterPackage(converterPackage);
             oraclePackage.setObjectPackage(objectPackage);
-            String pojoString = MustacheRunner.build("package.mustache", oraclePackage);
-            FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), pojoString);
+            String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
+            FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource));
         }
     }
 }

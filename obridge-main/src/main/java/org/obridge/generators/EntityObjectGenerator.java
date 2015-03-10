@@ -5,6 +5,7 @@ import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.mappers.PojoMapper;
 import org.obridge.model.generator.Pojo;
+import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
 
@@ -31,8 +32,8 @@ public class EntityObjectGenerator {
         for (String typeName : types) {
             Pojo pojo = PojoMapper.typeToPojo(typeName, td.getTypeAttributes(typeName));
             pojo.setPackageName(packageName);
-            String pojoString = MustacheRunner.build("pojo.mustache", pojo);
-            FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), pojoString);
+            String javaSource = MustacheRunner.build("pojo.mustache", pojo);
+            FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
         }
 
     }

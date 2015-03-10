@@ -7,6 +7,7 @@ import org.obridge.dao.ProcedureDao;
 import org.obridge.mappers.PojoMapper;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.generator.Pojo;
+import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
 
@@ -37,8 +38,8 @@ public class ProcedureContextGenerator {
             Pojo pojo = PojoMapper.procedureToPojo(p);
             pojo.setPackageName(packageName);
             pojo.getImports().add(objectPackage + ".*");
-            String pojoString = MustacheRunner.build("pojo.mustache", pojo);
-            FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), pojoString);
+            String javaSource = MustacheRunner.build("pojo.mustache", pojo);
+            FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
         }
 
     }
