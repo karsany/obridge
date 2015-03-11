@@ -1,6 +1,9 @@
 OBridge
 =======
 
+[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=QQAFXN8GH5YFN&lc=GB&item_name=OBridge&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted "Help OBridge development using Paypal")  
+
+
 OBridge provides a simple Java source code generator for calling Oracle PL/SQL package procedures.
 
 Supported input, output parameters and return values are:
