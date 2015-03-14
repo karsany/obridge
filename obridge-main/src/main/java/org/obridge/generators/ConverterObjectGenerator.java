@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.model.data.Type;
+import org.obridge.model.generator.Pojo;
 import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
@@ -41,6 +42,12 @@ public class ConverterObjectGenerator {
             String javaSource = MustacheRunner.build("converter.mustache", t);
             FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
         }
+
+        Pojo pojo = new Pojo();
+        pojo.setPackageName(packageName);
+        String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
+        FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
+
     }
 
 

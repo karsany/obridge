@@ -3,14 +3,14 @@ package org.obridge.test.database.packages;
 import org.junit.Assert;
 import org.junit.Test;
 import org.obridge.test.BaseTest;
-import org.obridge.test.database.context.TestPackageAllTypes;
-import org.obridge.test.database.context.TestPackageObjectTypeTest1;
-import org.obridge.test.database.context.TestPackageTableOfTest1;
+import org.obridge.test.database.context.*;
 import org.obridge.test.database.objects.SampleTypeOne;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TestPackageTest extends BaseTest {
 
@@ -67,6 +67,22 @@ public class TestPackageTest extends BaseTest {
     public void testQuotationMarks1() {
         TestPackage.quotedProcedureName(ds);
         Assert.assertTrue(TestPackage.simpleBooleanReturn(ds).getFunctionReturn());
+    }
+
+    @Test
+    public void testStringList1() {
+        TestPackageReturnStringList testPackageReturnStringList = TestPackage.returnStringList(ds);
+        Assert.assertEquals(3, testPackageReturnStringList.getFunctionReturn().size());
+    }
+
+    @Test
+    public void testNumberListAsInput1() {
+        List<Integer> integers = new ArrayList<Integer>();
+        integers.add(3);
+        integers.add(10);
+        integers.add(0);
+        TestPackageSumList testPackageSumList = TestPackage.sumList(integers, ds);
+        Assert.assertTrue(testPackageSumList.getFunctionReturn().equals(new BigDecimal(13)));
     }
 
 }

@@ -115,7 +115,12 @@ public class ProcedureArgument {
 
     public String getJavaTypeName() {
         if (isList()) {
-            return "List<" + StringHelper.toCamelCase(typeName) + ">";
+            String mappedType = new TypeMapper().getMappedType(typeName, 0);
+            if (mappedType.equals("Object")) {
+                return "List<" + StringHelper.toCamelCase(typeName) + ">";
+            } else {
+                return "List<" + mappedType + ">";
+            }
         } else {
             return StringHelper.toCamelCase(typeName);
         }
@@ -123,6 +128,10 @@ public class ProcedureArgument {
 
     public boolean isList() {
         return dataType.equals("TABLE");
+    }
+
+    public boolean isPrimitiveList() {
+        return isList() && !(new TypeMapper().getMappedType(typeName, 0).equals("Object"));
     }
 
     public String getUnderlyingTypeName() {
@@ -189,6 +198,9 @@ public class ProcedureArgument {
         if ("OBJECT".equals(dataType)) {
             return String.format("ctx.set%s(%sConverter.getObject((Struct)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         } else if ("TABLE".equals(dataType)) {
+            if (getUnderlyingTypeName().equals("Varchar2")) {
+                return String.format("ctx.set%s(Arrays.asList(((String[]) ((Array) ocs.getObject(1)).getArray()))); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
+            }
             return String.format("ctx.set%s(%sConverter.getObjectList((Array)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
         } else if ("Integer".equals(getJavaDataType())) {
             return String.format("ctx.set%s(ocs.getInt(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);

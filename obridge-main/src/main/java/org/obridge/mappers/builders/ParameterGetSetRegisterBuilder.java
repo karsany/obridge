@@ -21,6 +21,10 @@ public class ParameterGetSetRegisterBuilder {
             return MustacheRunner.build("sniplets/OBJECT-GET.mustache", pa);
         }
 
+        if (pa.isPrimitiveList()) {
+            return MustacheRunner.build("sniplets/LIST-PRIMITIVE-GET.mustache", pa);
+        }
+
         if (pa.getDataType().equals("TABLE")) {
             return MustacheRunner.build("sniplets/LIST-GET.mustache", pa);
         }

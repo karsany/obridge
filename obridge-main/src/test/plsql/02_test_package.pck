@@ -44,6 +44,10 @@ Create Or Replace Package test_package Is
 
   Function simple_boolean_return Return Boolean;
 
+  Function return_string_list Return simple_string_list;
+
+  Function sum_list(p_list In simple_number_list) Return Number;
+
 End test_package;
 /
 Create Or Replace Package Body test_package Is
@@ -159,6 +163,43 @@ Create Or Replace Package Body test_package Is
   Begin
     Return True;
   End simple_boolean_return;
+
+  Function return_string_list Return simple_string_list Is
+    v_ret simple_string_list := simple_string_list();
+  Begin
+  
+    v_ret.extend;
+    v_ret(v_ret.count) := 'string1';
+  
+    v_ret.extend;
+    v_ret(v_ret.count) := 'string2';
+  
+    v_ret.extend;
+    v_ret(v_ret.count) := 'string3';
+  
+    Return v_ret;
+  End return_string_list;
+
+  Function sum_list(p_list In simple_number_list) Return Number Is
+    x Number := 0;
+  Begin
+    If p_list Is Not Null
+    Then
+      If p_list.count != 0
+      Then
+        For i In p_list.first .. p_list.last
+        Loop
+          x := x + p_list(i);
+        End Loop;
+        Return x;
+      Else
+        Return 0;
+      End If;
+    Else
+      Return Null;
+    End If;
+  
+  End sum_list;
 
 End test_package;
 /

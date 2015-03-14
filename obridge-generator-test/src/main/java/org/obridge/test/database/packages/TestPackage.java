@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
+import java.util.Arrays;
 
 public class TestPackage {
 
@@ -538,6 +539,47 @@ public class TestPackage {
     }
 
 
+    public static void returnStringList(TestPackageReturnStringList ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  :result := " +
+                                "  \"TEST_PACKAGE\".\"RETURN_STRING_LIST\"( " +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.registerOutParameter(1, Types.ARRAY, "SIMPLE_STRING_LIST"); // null
+        ocs.execute();
+        ctx.setFunctionReturn(Arrays.asList(((String[]) ((Array) ocs.getObject(1)).getArray()))); // 1
+        ocs.close();
+    }
+
+    public static TestPackageReturnStringList returnStringList( Connection connection) throws SQLException {
+        TestPackageReturnStringList ctx = new TestPackageReturnStringList();
+        returnStringList(ctx, connection);
+        return ctx;
+    }
+
+    public static TestPackageReturnStringList returnStringList( DataSource dataSource) {
+        Connection conn = null;
+        TestPackageReturnStringList ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return returnStringList( conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void simpleBooleanReturn(TestPackageSimpleBooleanReturn ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
@@ -567,6 +609,51 @@ public class TestPackage {
         try {
             conn = dataSource.getConnection();
             return simpleBooleanReturn( conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public static void sumList(TestPackageSumList ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  :result := " +
+                                "  \"TEST_PACKAGE\".\"SUM_LIST\"( " +
+                                "    \"P_LIST\" => :P_LIST" +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.registerOutParameter(1, Types.NUMERIC); // null
+        // Set P_LIST from context list
+        ocs.setObject(2, PrimitiveTypeConverter.getListArray(ctx.getList(), connection, "SIMPLE_NUMBER_LIST"));
+        ocs.execute();
+        ctx.setFunctionReturn(ocs.getBigDecimal(1)); // null
+        ocs.close();
+    }
+
+    public static TestPackageSumList sumList(List<Integer> list,  Connection connection) throws SQLException {
+        TestPackageSumList ctx = new TestPackageSumList();
+        ctx.setList(list);
+        sumList(ctx, connection);
+        return ctx;
+    }
+
+    public static TestPackageSumList sumList(List<Integer> list,  DataSource dataSource) {
+        Connection conn = null;
+        TestPackageSumList ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return sumList(list,  conn);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

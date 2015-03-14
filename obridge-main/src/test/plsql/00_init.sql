@@ -49,3 +49,9 @@ create or replace type SAMPLE_TYPE_LISTS as object (
   list3  sample_type_two_list    
 );
 /
+
+create or replace type SIMPLE_STRING_LIST AS table of VARCHAR2(100)
+/
+
+create or replace type simple_number_list as table of number
+/
