@@ -85,7 +85,11 @@ public class TypeAttribute {
     public String getJavaDataType() {
         if (multiType == 1) {
             if ("COLLECTION".equals(typeCode)) {
-                return "List<" + getJavaCollectionBaseTypeNameBig() + ">";
+                if (isPrimitiveList()) {
+                    return "List<" + new TypeMapper().getMappedType(collectionBaseType, 0) + ">";
+                } else {
+                    return "List<" + getJavaCollectionBaseTypeNameBig() + ">";
+                }
             } else {
                 return StringHelper.toCamelCase(attrTypeName);
             }
@@ -94,6 +98,11 @@ public class TypeAttribute {
         }
 
     }
+
+    public boolean isPrimitiveList() {
+        return !(new TypeMapper().getMappedType(collectionBaseType, 0).equals("Object"));
+    }
+
 
     public String getJavaPropertyName() {
         return StringHelper.toCamelCaseSmallBegin(this.attrName);
@@ -112,8 +121,10 @@ public class TypeAttribute {
     }
 
     public String getStructAdder() {
-        if ("COLLECTION".equals(typeCode)) {
+        if ("COLLECTION".equals(typeCode) && !isPrimitiveList()) {
             return String.format("struct.add(%d, %sConverter.getListArray(o.get%s(), connection, \"%s\")); // %s", getAttrNoIndex(), getJavaCollectionBaseTypeNameBig(), getJavaPropertyNameBig(), getAttrTypeName(), attrName);
+        } else if ("COLLECTION".equals(typeCode) && isPrimitiveList()) {
+            return String.format("struct.add(%d, PrimitiveTypeConverter.getListArray(o.get%s(), connection, \"%s\")); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), getAttrTypeName(), attrName);
         } else if ("OBJECT".equals(typeCode)) {
             return String.format("struct.add(%d, %sConverter.getStruct(o.get%s(), connection)); // %s", getAttrNoIndex(), getJavaDataType(), getJavaPropertyNameBig(), attrName);
 //        } else if ("DATE".equals(attrTypeName)) {
@@ -131,8 +142,10 @@ public class TypeAttribute {
     }
 
     public String getObjectAdder() {
-        if ("COLLECTION".equals(typeCode)) {
+        if ("COLLECTION".equals(typeCode) && !isPrimitiveList()) {
             return String.format("result.set%s(%sConverter.getObjectList((Array)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaCollectionBaseTypeNameBig(), getAttrNoIndex(), attrName);
+        } else if ("COLLECTION".equals(typeCode) && isPrimitiveList()) {
+            return String.format("result.set%s(Arrays.asList(((%s[]) ((Array) attr[%d]).getArray()))); // %s", getJavaPropertyNameBig(), getUnderlyingJavaTypeName(), getAttrNoIndex(), attrName);
         } else if ("OBJECT".equals(typeCode)) {
             return String.format("result.set%s(%sConverter.getObject((Struct)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
         } else if ("DATE".equals(attrTypeName)) {
@@ -160,5 +173,22 @@ public class TypeAttribute {
                 ", typeCode='" + typeCode + '\'' +
                 ", collectionBaseType='" + collectionBaseType + '\'' +
                 '}';
+    }
+
+    public String getUnderlyingJavaTypeName() {
+        if (multiType == 1) {
+            if ("COLLECTION".equals(typeCode)) {
+                if (isPrimitiveList()) {
+                    return new TypeMapper().getMappedType(collectionBaseType, 0);
+                } else {
+                    return getJavaCollectionBaseTypeNameBig();
+                }
+            } else {
+                return StringHelper.toCamelCase(attrTypeName);
+            }
+        } else {
+            return new TypeMapper().getMappedType(this.attrTypeName, this.dataScale);
+        }
+
     }
 }

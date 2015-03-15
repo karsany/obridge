@@ -43,15 +43,17 @@ create or replace type SAMPLE_TYPE_TWO_GROUP as table of SAMPLE_TYPE_TWO
 create or replace type SAMPLE_TYPE_TWO_LIST as table of SAMPLE_TYPE_TWO
 /
 
-create or replace type SAMPLE_TYPE_LISTS as object (
-  list1  sample_type_one_list,
-  list2  sample_type_two_group,
-  list3  sample_type_two_list    
-);
-/
-
 create or replace type SIMPLE_STRING_LIST AS table of VARCHAR2(100)
 /
 
 create or replace type simple_number_list as table of number
+/
+
+create or replace type SAMPLE_TYPE_LISTS as object (
+  list1  sample_type_one_list,
+  list2  sample_type_two_group,
+  list3  sample_type_two_list,
+  list4  SIMPLE_STRING_LIST,
+  list5  SIMPLE_NUMBER_LIST
+);
 /

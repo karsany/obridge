@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 
 public final class SampleTypeListsConverter {
@@ -26,6 +27,8 @@ public final class SampleTypeListsConverter {
         struct.add(0, SampleTypeOneConverter.getListArray(o.getList1(), connection, "SAMPLE_TYPE_ONE_LIST")); // LIST1
         struct.add(1, SampleTypeTwoConverter.getListArray(o.getList2(), connection, "SAMPLE_TYPE_TWO_GROUP")); // LIST2
         struct.add(2, SampleTypeTwoConverter.getListArray(o.getList3(), connection, "SAMPLE_TYPE_TWO_LIST")); // LIST3
+        struct.add(3, PrimitiveTypeConverter.getListArray(o.getList4(), connection, "SIMPLE_STRING_LIST")); // LIST4
+        struct.add(4, PrimitiveTypeConverter.getListArray(o.getList5(), connection, "SIMPLE_NUMBER_LIST")); // LIST5
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
 
@@ -54,6 +57,10 @@ public final class SampleTypeListsConverter {
             result.setList2(SampleTypeTwoConverter.getObjectList((Array)attr[1])); // LIST2
         if (attr[2] != null)
             result.setList3(SampleTypeTwoConverter.getObjectList((Array)attr[2])); // LIST3
+        if (attr[3] != null)
+            result.setList4(Arrays.asList(((String[]) ((Array) attr[3]).getArray()))); // LIST4
+        if (attr[4] != null)
+            result.setList5(Arrays.asList(((Integer[]) ((Array) attr[4]).getArray()))); // LIST5
         return result;
     }
 
