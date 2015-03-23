@@ -9,13 +9,15 @@ import java.io.StringReader;
 /**
  * Created by fkarsany on 2015.03.11..
  */
-public class CodeFormatter {
+public final class CodeFormatter {
 
-    public static String format(String converterString) {
+    private CodeFormatter() {
+    }
+
+    public static String format(String javaSource) {
         ASFormatter formatter = new ASFormatter();
         formatter.setFormattingStyle(EnumFormatStyle.JAVA);
         formatter.setDeleteEmptyLinesMode(true);
-        converterString = FormatterHelper.format(new StringReader(converterString), formatter);
-        return converterString;
+        return FormatterHelper.format(new StringReader(javaSource), formatter);
     }
 }

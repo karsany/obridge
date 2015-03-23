@@ -19,15 +19,24 @@ public class JdbcTemplate {
         this.dataSource = dataSource;
     }
 
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper) {
+    public <T> List<T> queryForList(String sql) throws JdbcTemplateException {
+        return query(sql, new RowMapper<T>() {
+            @Override
+            public T mapRow(ResultSet resultSet, int i) throws SQLException {
+                return (T) resultSet.getObject(1);
+            }
+        });
+    }
+
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper) throws JdbcTemplateException {
         return query(sql, null, rowMapper);
     }
 
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) throws JdbcTemplateException {
         return query(sql, args, rowMapper);
     }
 
-    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper) {
+    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper) throws JdbcTemplateException {
 
         List<T> ret = null;
         Connection connection = null;
@@ -38,20 +47,11 @@ public class JdbcTemplate {
             connection = dataSource.getConnection();
             ps = connection.prepareStatement(sql);
 
-            if (args != null) {
-                for (int i = 0; i < args.length; i++) {
-                    ps.setObject(i + 1, args[i]);
-                }
-            }
+            bindParameters(args, ps);
 
             resultSet = ps.executeQuery();
 
-            ret = new ArrayList<T>();
-            int i = 0;
-            while (resultSet.next()) {
-                i++;
-                ret.add(rowMapper.mapRow(resultSet, i));
-            }
+            ret = fetchData(rowMapper, resultSet);
 
             resultSet.close();
             resultSet = null;
@@ -63,33 +63,45 @@ public class JdbcTemplate {
             return ret;
 
         } catch (SQLException e) {
-
-            try {
-                if (resultSet != null && !resultSet.isClosed()) {
-                    resultSet.close();
-                }
-                if (ps != null && !ps.isClosed()) {
-                    ps.close();
-                }
-                if (connection != null && !connection.isClosed()) {
-                    connection.close();
-                }
-
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            throw new RuntimeException(e);
-
+            tryCloseConnection(connection, ps, resultSet);
+            throw new JdbcTemplateException(e);
         }
     }
 
-    public <T> List<T> queryForList(String sql, Class<T> elementType) {
-        return query(sql, new RowMapper<T>() {
-            @Override
-            public T mapRow(ResultSet resultSet, int i) throws SQLException {
-                return (T) resultSet.getObject(1);
+    private void tryCloseConnection(Connection connection, PreparedStatement ps, ResultSet resultSet) {
+        try {
+            if (resultSet != null && !resultSet.isClosed()) {
+                resultSet.close();
             }
-        });
+            if (ps != null && !ps.isClosed()) {
+                ps.close();
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+
+        } catch (SQLException ex) {
+            throw new JdbcTemplateException("Cannot close the database", ex);
+        }
     }
+
+    private <T> List<T> fetchData(RowMapper<T> rowMapper, ResultSet resultSet) throws SQLException {
+        List<T> ret;
+        ret = new ArrayList<T>();
+        int i = 0;
+        while (resultSet.next()) {
+            i++;
+            ret.add(rowMapper.mapRow(resultSet, i));
+        }
+        return ret;
+    }
+
+    private void bindParameters(Object[] args, PreparedStatement ps) throws SQLException {
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
+                ps.setObject(i + 1, args[i]);
+            }
+        }
+    }
+
 }

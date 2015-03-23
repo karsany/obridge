@@ -21,7 +21,7 @@ public final class FuncUtils {
             }
             return result;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new OBridgeException(e);
         }
     }
 

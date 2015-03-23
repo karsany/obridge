@@ -18,7 +18,7 @@ public abstract class BaseTest {
     private Properties p;
 
     @Before
-    public void init() throws SQLException, IOException {
+    public void init() throws IOException, SQLException {
         p = new Properties();
         p.load(getClass().getClassLoader().getResourceAsStream("datasource.properties"));
         connectionString = p.getProperty("connectionString");

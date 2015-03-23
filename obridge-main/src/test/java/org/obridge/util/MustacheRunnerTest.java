@@ -15,7 +15,7 @@ public class MustacheRunnerTest {
     private final static String CLASS_NAME = "ExampleClass";
 
     @Test
-    public void pojoMustacheTest() throws Exception {
+    public void pojoMustacheTest() {
 
         Pojo pojo = new Pojo();
         pojo.setClassName(CLASS_NAME);

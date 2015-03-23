@@ -1,6 +1,5 @@
 package org.obridge.generators;
 
-import oracle.jdbc.pool.OracleDataSource;
 import org.apache.commons.io.FileUtils;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
@@ -9,45 +8,50 @@ import org.obridge.model.generator.Pojo;
 import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
+import org.obridge.util.OBridgeException;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Created by fkarsany on 2015.01.28..
  */
-public class ConverterObjectGenerator {
+public final class ConverterObjectGenerator {
 
-    public static void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
-        OracleDataSource oracleDataSource = new OracleDataSource();
-        oracleDataSource.setURL(c.getJdbcUrl());
+    private ConverterObjectGenerator() {
+    }
 
-        String packageName = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
-        String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+    public static void generate(OBridgeConfiguration c) {
+        try {
+            String packageName = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
+            String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
+            String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-        TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
+            TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-        List<String> types = td.getTypeList();
+            List<String> types = td.getTypeList();
 
-        for (String typeName : types) {
-            Type t = new Type();
-            t.setTypeName(typeName);
-            t.setAttributeList(td.getTypeAttributes(typeName));
-            t.setConverterPackageName(packageName);
-            t.setObjectPackage(objectPackage);
-            String javaSource = MustacheRunner.build("converter.mustache", t);
-            FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
+            for (String typeName : types) {
+                Type t = new Type();
+                t.setTypeName(typeName);
+                t.setAttributeList(td.getTypeAttributes(typeName));
+                t.setConverterPackageName(packageName);
+                t.setObjectPackage(objectPackage);
+                String javaSource = MustacheRunner.build("converter.mustache", t);
+                FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
+            }
+
+            Pojo pojo = new Pojo();
+            pojo.setPackageName(packageName);
+            String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
+            FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
+        } catch (PropertyVetoException e) {
+            throw new OBridgeException(e);
+        } catch (IOException e) {
+            throw new OBridgeException(e);
         }
-
-        Pojo pojo = new Pojo();
-        pojo.setPackageName(packageName);
-        String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
-
     }
 
 

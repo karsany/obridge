@@ -19,8 +19,7 @@ public class ProcedureArgument {
     private String origTypeName;
     private int sequenceNumber;
 
-    public ProcedureArgument(String argumentName, String dataType, String typeName, String defaulted, boolean inParam, boolean outParam, int sequence, String orig_type_name) {
-
+    public ProcedureArgument(String argumentName, String dataType, String typeName, String defaulted, boolean inParam, boolean outParam, int sequence, String origTypeName) {
         this.argumentName = argumentName;
         this.dataType = dataType;
         this.typeName = typeName;
@@ -28,8 +27,7 @@ public class ProcedureArgument {
         this.inParam = inParam;
         this.outParam = outParam;
         this.sequence = sequence;
-
-        origTypeName = orig_type_name;
+        this.origTypeName = origTypeName;
     }
 
     public int getSequence() {

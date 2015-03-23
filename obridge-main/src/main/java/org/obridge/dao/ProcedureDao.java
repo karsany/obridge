@@ -44,7 +44,7 @@ public class ProcedureDao {
         }
 
 
-        List<Procedure> procedures = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "Select object_name\n"
                         + "      ,procedure_name\n"
                         + "      ,overload\n"
@@ -83,11 +83,10 @@ public class ProcedureDao {
                 }, packageNameFilter, procedureNameFilter
         );
 
-        return procedures;
     }
 
     public List<ProcedureArgument> getProcedureArguments(String packageName, String procedureName, String overLoadNo) {
-        List<ProcedureArgument> procedureArguments = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 "  select argument_name," +
                         "data_type," +
                         "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name) type_name," +
@@ -118,11 +117,11 @@ public class ProcedureDao {
                     }
                 }
         );
-        return procedureArguments;
+
     }
 
     public List<OraclePackage> getAllPackages() {
-        List<OraclePackage> p = jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", new RowMapper<OraclePackage>() {
+        return jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", new RowMapper<OraclePackage>() {
             @Override
             public OraclePackage mapRow(ResultSet resultSet, int i) throws SQLException {
                 OraclePackage p = new OraclePackage();
@@ -132,7 +131,6 @@ public class ProcedureDao {
             }
         });
 
-        return p;
     }
 
 }

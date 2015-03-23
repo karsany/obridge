@@ -22,7 +22,7 @@ public class TypeDao {
     }
 
     public List<String> getTypeList() {
-        return jdbcTemplate.queryForList("SELECT type_name FROM user_types WHERE typecode = 'OBJECT'", String.class);
+        return jdbcTemplate.queryForList("SELECT type_name FROM user_types WHERE typecode = 'OBJECT'");
     }
 
     public List<TypeAttribute> getTypeAttributes(String typeName) {

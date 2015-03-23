@@ -55,11 +55,9 @@ public class CallStringBuilder {
 
     private void generateBooleanOutputParameters(StringBuilder callString) {
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getArgumentName() != null) {
-                if (pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
-                    addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
-                    addBindParam("o" + pa.getArgumentName(), pa, false, true);
-                }
+            if (pa.getArgumentName() != null && pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
+                addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
+                addBindParam("o" + pa.getArgumentName(), pa, false, true);
             }
         }
     }

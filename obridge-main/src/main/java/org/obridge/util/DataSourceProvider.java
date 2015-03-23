@@ -10,9 +10,12 @@ import java.util.Map;
 /**
  * @author fkarsany
  */
-public class DataSourceProvider {
+public final class DataSourceProvider {
 
     private static Map<String, ComboPooledDataSource> dataSourcePool = null;
+
+    private DataSourceProvider() {
+    }
 
     public static DataSource getDataSource(String jdbcURL) throws PropertyVetoException {
 
@@ -23,7 +26,7 @@ public class DataSourceProvider {
         if (!dataSourcePool.containsKey(jdbcURL)) {
 
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
-            dataSource.setDriverClass("oracle.jdbc.OracleDriver"); //loads the jdbc driver            
+            dataSource.setDriverClass("oracle.jdbc.OracleDriver");
             dataSource.setJdbcUrl(jdbcURL);
 
             dataSourcePool.put(jdbcURL, dataSource);

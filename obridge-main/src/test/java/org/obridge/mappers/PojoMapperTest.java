@@ -27,18 +27,18 @@ public class PojoMapperTest extends BaseTest {
     }
 
     @Test
-    public void testToPojo() throws Exception {
+    public void testToPojo() {
         Pojo pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(SAMPLE_TYPE_ONE));
         Assert.assertEquals("SampleTypeOne", pojo.getClassName());
         Assert.assertEquals(8, pojo.getFields().size());
         for (PojoField f : pojo.getFields()) {
             Assert.assertFalse(f.isReadonly());
         }
-        String pomu = MustacheRunner.build("pojo.mustache", pojo);
+        MustacheRunner.build("pojo.mustache", pojo);
     }
 
     @Test
-    public void testToPojo2() throws Exception {
+    public void testToPojo2() {
 
         List<Procedure> simple_procedures = procedureDao.getAllProcedures("SIMPLE_PROCEDURES", null);
 
@@ -57,7 +57,7 @@ public class PojoMapperTest extends BaseTest {
     }
 
     @Test
-    public void testToPojo3() throws Exception {
+    public void testToPojo3() {
         List<Procedure> simple_procedures = procedureDao.getAllProcedures("SIMPLE_PROCEDURES", null);
 
         Procedure ppp = null;
@@ -72,6 +72,6 @@ public class PojoMapperTest extends BaseTest {
         Assert.assertEquals("SimpleProceduresSimpleFunc", pojo.getClassName());
         Assert.assertEquals(4, pojo.getFields().size());
 
-        String s = MustacheRunner.build("pojo.mustache", pojo);
+        MustacheRunner.build("pojo.mustache", pojo);
     }
 }

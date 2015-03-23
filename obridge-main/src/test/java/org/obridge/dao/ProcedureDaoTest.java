@@ -22,7 +22,7 @@ public class ProcedureDaoTest extends BaseTest {
     }
 
     @Test
-    public void testGetAllProcedures() throws Exception {
+    public void testGetAllProcedures() {
         List<Procedure> allProcedures = procedureDao.getAllProcedures();
         Collection<String> procedureNames = FuncUtils.pluck("storedProcedureClassName", String.class, allProcedures);
         Assert.assertTrue(procedureNames.contains("SimpleProceduresA"));
@@ -31,11 +31,11 @@ public class ProcedureDaoTest extends BaseTest {
     }
 
     @Test
-    public void testGetProcedureArguments() throws Exception {
+    public void testGetProcedureArguments() {
         List<OraclePackage> allPackages = procedureDao.getAllPackages();
 
         for (OraclePackage p : allPackages) {
-            String build = MustacheRunner.build("package.mustache", p);
+            MustacheRunner.build("package.mustache", p);
         }
 
     }

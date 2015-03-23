@@ -1,6 +1,7 @@
 package org.obridge.model.data;
 
 import org.obridge.mappers.builders.CallStringBuilder;
+import org.obridge.util.OBridgeException;
 import org.obridge.util.StringHelper;
 
 import java.util.List;
@@ -36,7 +37,6 @@ public class Procedure {
     }
 
     public void initBindParams() {
-        System.out.println(this.getObjectName() + " " + this.getProcedureName());
         CallStringBuilder callStringBuilder = new CallStringBuilder(this);
         this.callString = callStringBuilder.build();
         this.bindParams = callStringBuilder.getBindParams();
@@ -95,7 +95,7 @@ public class Procedure {
 
     public String getReturnJavaType() {
         if (!methodType.equals("FUNCTION")) {
-            throw new RuntimeException("Only for functions.");
+            throw new OBridgeException("Only for functions.");
         }
         if (hasArguments()) {
             return argumentList.get(0).getJavaDataType();

@@ -25,7 +25,7 @@ public class TypeDaoTest extends BaseTest {
     }
 
     @Test
-    public void testGetTypeList() throws Exception {
+    public void testGetTypeList() {
         List<String> typeList = typeDao.getTypeList();
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_ONE));
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_TWO));
@@ -49,7 +49,7 @@ public class TypeDaoTest extends BaseTest {
         t.setTypeName(SAMPLE_TYPE_ONE);
         t.setAttributeList(typeAttributes);
 
-        String s = MustacheRunner.build("converter.mustache", t);
+        MustacheRunner.build("converter.mustache", t);
 
     }
 
