@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.obridge</groupId>
         <artifactId>obridge-parent</artifactId>
-        <version>1.0-alpha3-SNAPSHOT</version>
+        <version>1.0-alpha3</version>
     </parent>
     <groupId>org.obridge</groupId>
     <artifactId>obridge-main</artifactId>
-    <version>1.0-alpha3-SNAPSHOT</version>
+    <version>1.0-alpha3</version>
     <name>obridge-main</name>
     <url>http://maven.apache.org</url>
     <properties>
