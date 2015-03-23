@@ -37,30 +37,51 @@ public class CallStringBuilder {
         addLine(callString, "");
         addLine(callString, "DECLARE ");
 
-        for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getOracleType().equals("BOOLEAN") && pa.getArgumentName() != null) {
-                String ln = "  " + pa.getArgumentName() + " BOOLEAN";
-                if (pa.isInParam()) {
-                    ln += " := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")";
-                    addBindParam("i" + pa.getArgumentName(), pa, true, false);
-                }
-                ln += "; ";
-                addLine(callString, ln);
-            }
-        }
+        generateBooleanInputParameters(callString);
 
         addLine(callString, "BEGIN ");
 
-        if ("FUNCTION".equals(procedure.getMethodType())) {
-            addLine(callString, "  :result := ");
-            if (procedure.getReturnJavaType().equals("Boolean")) {
-                addLine(callString, "  sys.diutil.bool_to_int( ");
+        generateCall(callString);
+
+        generateBooleanOutputParameters(callString);
+
+        addLine(callString, "END;");
+
+        callString.append("\"\"");
+
+        return callString.toString();
+
+    }
+
+    private void generateBooleanOutputParameters(StringBuilder callString) {
+        for (ProcedureArgument pa : procedure.getArgumentList()) {
+            if (pa.getArgumentName() != null) {
+                if (pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
+                    addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
+                    addBindParam("o" + pa.getArgumentName(), pa, false, true);
+                }
             }
-            addBindParam("result", procedure.getArgumentList().get(0), false, true);
         }
+    }
+
+    private void generateCall(StringBuilder callString) {
+        generateOutReturnVariable(callString);
 
         addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
 
+        generateParameters(callString);
+
+
+        if ("FUNCTION".equals(procedure.getMethodType())) {
+            if (procedure.getReturnJavaType().equals("Boolean")) {
+                addLine(callString, "  ) ");
+            }
+        }
+
+        addLine(callString, "   );");
+    }
+
+    private void generateParameters(StringBuilder callString) {
         boolean first = true;
         for (ProcedureArgument pa : procedure.getArgumentList()) {
             if (pa.getArgumentName() != null) {
@@ -76,32 +97,31 @@ public class CallStringBuilder {
                 addLine(callString, ln);
             }
         }
+    }
 
-
+    private void generateOutReturnVariable(StringBuilder callString) {
         if ("FUNCTION".equals(procedure.getMethodType())) {
+            addLine(callString, "  :result := ");
             if (procedure.getReturnJavaType().equals("Boolean")) {
-                addLine(callString, "  ) ");
+                addLine(callString, "  sys.diutil.bool_to_int( ");
             }
+            addBindParam("result", procedure.getArgumentList().get(0), false, true);
         }
+    }
 
-        addLine(callString, "   );");
-
+    private void generateBooleanInputParameters(StringBuilder callString) {
+        // DECLARE BOOLEAN INPUT VARIABLES
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getArgumentName() != null) {
-                if (pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
-                    addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
-                    addBindParam("o" + pa.getArgumentName(), pa, false, true);
+            if (pa.getOracleType().equals("BOOLEAN") && pa.getArgumentName() != null) {
+                String ln = "  " + pa.getArgumentName() + " BOOLEAN";
+                if (pa.isInParam()) {
+                    ln += " := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")";
+                    addBindParam("i" + pa.getArgumentName(), pa, true, false);
                 }
+                ln += "; ";
+                addLine(callString, ln);
             }
         }
-
-
-        addLine(callString, "END;");
-
-        callString.append("\"\"");
-
-        return callString.toString();
-
     }
 
     public List<BindParam> getBindParams() {

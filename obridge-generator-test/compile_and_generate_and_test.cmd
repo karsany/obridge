@@ -1,6 +1,6 @@
 cd ../obridge-main
 
-call mvn package assembly:single -DskipTests
+call mvn clean package assembly:single
 
 cd ../obridge-generator-test
 

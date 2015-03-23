@@ -95,7 +95,7 @@ public class Procedure {
 
     public String getReturnJavaType() {
         if (!methodType.equals("FUNCTION")) {
-            throw new RuntimeException("Csak fuggvenyek eseteben ertelmezett.");
+            throw new RuntimeException("Only for functions.");
         }
         if (hasArguments()) {
             return argumentList.get(0).getJavaDataType();
