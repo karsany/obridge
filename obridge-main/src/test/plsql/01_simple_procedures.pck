@@ -30,6 +30,8 @@ Create Or Replace Package simple_procedures Is
                             p2 In Out sample_type_two_group,
                             p3 In Out sample_type_two_list);
 
+  Procedure refcursor_test(p_refc Out Sys_Refcursor);
+
 End simple_procedures;
 /
 Create Or Replace Package Body simple_procedures Is
@@ -89,6 +91,13 @@ Create Or Replace Package Body simple_procedures Is
   Begin
     Null;
   End proc_with_lists;
+
+  Procedure refcursor_test(p_refc Out Sys_Refcursor) Is
+  Begin
+    Open p_refc For
+      Select *
+        From dual;
+  End refcursor_test;
 
 End simple_procedures;
 /
