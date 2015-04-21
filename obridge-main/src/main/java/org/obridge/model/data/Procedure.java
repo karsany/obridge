@@ -124,6 +124,15 @@ public class Procedure {
         this.bindParams = bindParams;
     }
 
+    public boolean hasResultSetParam() {
+        for (ProcedureArgument pa : getArgumentList()) {
+            if (pa.getJavaDataType().equals("ResultSet")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Procedure{"

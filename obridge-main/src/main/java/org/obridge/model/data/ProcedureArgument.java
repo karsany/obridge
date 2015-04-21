@@ -209,7 +209,7 @@ public class ProcedureArgument {
         } else if ("BOOLEAN".equals(getOracleType())) {
             return String.format("ctx.set%s(null == ocs.getBigDecimal(%d) ? null : BigDecimal.ONE.equals(ocs.getBigDecimal(%d)) ? true : BigDecimal.ZERO.equals(ocs.getBigDecimal(%d)) ? false : null); // %s", getJavaPropertyNameBig(), sequenceNumber, sequenceNumber, sequenceNumber, argumentName);
         } else if ("ResultSet".equals(getJavaDataType())) {
-            return String.format("ctx.set%s(ocs.getCursor(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
+            return String.format("ctx.set%s((ResultSet)ocs.getObject(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
         } else {
             return String.format("ctx.set%s(ocs.get%s(%d)); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         }

@@ -30,7 +30,9 @@ public class {{javaClassName}} {
         {{& paramGet}}
         {{/outParam}}
         {{/bindParams}}
+        {{^hasResultSetParam}}
         ocs.close();
+        {{/hasResultSetParam}}
     }
 
     public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) throws SQLException {

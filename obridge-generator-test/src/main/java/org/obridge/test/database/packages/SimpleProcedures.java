@@ -410,6 +410,46 @@ public class SimpleProcedures {
     }
 
 
+    public static void refcursorTest(SimpleProceduresRefcursorTest ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"REFCURSOR_TEST\"( " +
+                                "    \"P_REFC\" => :P_REFC" +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.registerOutParameter(1, -10); // P_REFC
+        ocs.execute();
+        ctx.setRefc((ResultSet)ocs.getObject(1)); // P_REFC
+    }
+
+    public static SimpleProceduresRefcursorTest refcursorTest( Connection connection) throws SQLException {
+        SimpleProceduresRefcursorTest ctx = new SimpleProceduresRefcursorTest();
+        refcursorTest(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresRefcursorTest refcursorTest( DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresRefcursorTest ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return refcursorTest( conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void simpleFunc(SimpleProceduresSimpleFunc ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
