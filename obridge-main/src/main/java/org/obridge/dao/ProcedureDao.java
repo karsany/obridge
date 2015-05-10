@@ -23,7 +23,53 @@ public class ProcedureDao {
     }
 
     public List<Procedure> getAllProcedures() {
-        return getAllProcedures("", "");
+        List<Procedure> allProcedures = getAllProcedures("", "");
+        allProcedures.addAll(getAllSimpleFunctionAndProcedures());
+
+        return allProcedures;
+    }
+
+    public List<Procedure> getAllSimpleFunctionAndProcedures() {
+
+        return jdbcTemplate.query(
+                "Select object_name\n"
+                        + "      ,procedure_name\n"
+                        + "      ,overload\n"
+                        + "      ,(Select Count(*)\n"
+                        + "         From user_arguments a\n"
+                        + "        Where a.object_name = t.procedure_name\n"
+                        + "          And a.package_name = t.object_name\n"
+                        + "          And nvl(a.overload,'##NVL##') = nvl(t.overload,'##NVL##')\n"
+                        + "          And a.argument_name Is Null\n"
+                        + "          And a.data_level = 0"
+                        + "          And a.data_type is not null) proc_or_func\n"
+                        + "  From user_procedures t\n"
+                        + " Where procedure_name Is Null\n"
+                        + "   And object_type in ( 'PROCEDURE', 'FUNCTION' )"
+                        + " and not ((object_name, procedure_name, nvl(overload, -1)) In\n"
+                        + "       (Select object_name,\n"
+                        + "               package_name,\n"
+                        + "               nvl(overload, -1)\n"
+                        + "          From user_arguments\n"
+                        + "         Where data_type in ( 'PL/SQL RECORD', 'PL/SQL TABLE' )\n"
+                        + "    Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n"
+                        + ") or object_name = 'ASSERT')\n",
+                new RowMapper<Procedure>() {
+                    @Override
+                    public Procedure mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return new Procedure(
+                                "",
+                                resultSet.getString("object_name"),
+                                resultSet.getString("overload") == null ? "" : resultSet.getString("overload"),
+                                resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION",
+                                getProcedureArguments("",
+                                        resultSet.getString("object_name"),
+                                        resultSet.getString("overload"))
+                        );
+                    }
+                }
+        );
+
     }
 
     public List<Procedure> getAllProcedures(String packageName, String procedureName) {
@@ -123,6 +169,19 @@ public class ProcedureDao {
     }
 
     public List<OraclePackage> getAllPackages() {
+        List<OraclePackage> allPackage = getAllRealOraclePackages();
+        allPackage.add(getAllStandalones());
+        return allPackage;
+    }
+
+    private OraclePackage getAllStandalones() {
+        OraclePackage oraclePackage = new OraclePackage();
+        oraclePackage.setName("PROCEDURES_AND_FUNCTIONS");
+        oraclePackage.setProcedureList(getAllSimpleFunctionAndProcedures());
+        return oraclePackage;
+    }
+
+    private List<OraclePackage> getAllRealOraclePackages() {
         return jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", new RowMapper<OraclePackage>() {
             @Override
             public OraclePackage mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -132,7 +191,6 @@ public class ProcedureDao {
                 return p;
             }
         });
-
     }
 
 }

@@ -39,4 +39,10 @@ public class ProcedureDaoTest extends BaseTest {
         }
 
     }
+
+    @Test
+    public void testGetAllSimpleProcedureAndFunction() {
+        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedures();
+        System.out.println(procs);
+    }
 }

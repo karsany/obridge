@@ -65,7 +65,11 @@ public class CallStringBuilder {
     private void generateCall(StringBuilder callString) {
         generateOutReturnVariable(callString);
 
-        addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
+        if(procedure.getObjectName() != null && !procedure.getObjectName().equals("")) {
+            addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
+        } else {
+            addLine(callString, "  \\\"" + procedure.getProcedureName() + "\\\"( ");
+        }
 
         generateParameters(callString);
 
