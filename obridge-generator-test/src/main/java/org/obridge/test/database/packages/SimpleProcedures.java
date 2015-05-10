@@ -512,4 +512,52 @@ public class SimpleProcedures {
     }
 
 
+    public static void testTypeWithIntegerField(SimpleProceduresTestTypeWithIntegerField ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"TEST_TYPE_WITH_INTEGER_FIELD\"( " +
+                                "    \"P_TP\" => :P_TP" +
+                                "   );" +
+                                "END;" +
+                                "");
+        // Set P_TP from context tp
+        if (ctx.getTp() != null) {
+            ocs.setObject(1, SampleTypeThreeConverter.getStruct(ctx.getTp(), connection));
+        } else {
+            ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_THREE");
+        }
+        ocs.registerOutParameter(1, Types.STRUCT, "SAMPLE_TYPE_THREE"); // P_TP
+        ocs.execute();
+        ctx.setTp(SampleTypeThreeConverter.getObject((Struct)ocs.getObject(1))); // P_TP
+        ocs.close();
+    }
+
+    public static SimpleProceduresTestTypeWithIntegerField testTypeWithIntegerField(SampleTypeThree tp,  Connection connection) throws SQLException {
+        SimpleProceduresTestTypeWithIntegerField ctx = new SimpleProceduresTestTypeWithIntegerField();
+        ctx.setTp(tp);
+        testTypeWithIntegerField(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresTestTypeWithIntegerField testTypeWithIntegerField(SampleTypeThree tp,  DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresTestTypeWithIntegerField ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return testTypeWithIntegerField(tp,  conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
 }

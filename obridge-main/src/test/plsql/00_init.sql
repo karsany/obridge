@@ -57,3 +57,9 @@ create or replace type SAMPLE_TYPE_LISTS as object (
   list5  SIMPLE_NUMBER_LIST
 );
 /
+
+create or replace type sample_type_three as object (
+  field1  INTEGER,
+  field2  VARCHAR2(30)
+);
+/

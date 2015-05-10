@@ -32,6 +32,8 @@ Create Or Replace Package simple_procedures Is
 
   Procedure refcursor_test(p_refc Out Sys_Refcursor);
 
+  Procedure test_type_with_integer_field(p_tp In Out sample_type_three);
+
 End simple_procedures;
 /
 Create Or Replace Package Body simple_procedures Is
@@ -98,6 +100,17 @@ Create Or Replace Package Body simple_procedures Is
       Select *
         From dual;
   End refcursor_test;
+
+  Procedure test_type_with_integer_field(p_tp In Out sample_type_three) Is
+  Begin
+    If p_tp Is Null
+    Then
+      p_tp := sample_type_three(field1 => 0, field2 => '');
+    End If;
+    p_tp.field1 := p_tp.field1 + 1;
+    p_tp.field2 := p_tp.field2 || 'ABC';
+  
+  End test_type_with_integer_field;
 
 End simple_procedures;
 /

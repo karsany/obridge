@@ -154,6 +154,8 @@ public class TypeAttribute {
             return String.format("result.set%s((Timestamp)attr[%d]); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if ("CLOB".equals(attrTypeName)) {
             return String.format("result.set%s(((Clob)attr[%d]).getSubString(1, (int)((Clob)attr[%d]).length())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
+        } else if ("INTEGER".equals(attrTypeName)) {
+            return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if ("Integer".equals(getJavaDataType())) {
             return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else {

@@ -15,11 +15,12 @@ public class TypeMapper {
     public static final String ORACLE_CLOB = "CLOB";
     public static final String ORACLE_NUMBER = "NUMBER";
     public static final String ORACLE_BINARY_INTEGER = "BINARY_INTEGER";
+    private static final String ORACLE_INTEGER = "INTEGER";
     public static final String ORACLE_REF_CURSOR = "REF CURSOR";
     public static final String ORACLE_DATE = "DATE";
     public static final String ORACLE_TIMESTAMP = "TIMESTAMP";
-    public static final String ORACLE_BOOLEAN = "PL/SQL BOOLEAN";
 
+    public static final String ORACLE_BOOLEAN = "PL/SQL BOOLEAN";
     public static final String JAVA_STRING = "String";
     public static final String JAVA_INTEGER = "Integer";
     public static final String JAVA_BIGDECIMAL = "BigDecimal";
@@ -45,6 +46,7 @@ public class TypeMapper {
         mappingData.put(ORACLE_CLOB, JAVA_STRING);
         mappingData.put(ORACLE_NUMBER, JAVA_BIGDECIMAL);
         mappingData.put(ORACLE_BINARY_INTEGER, JAVA_INTEGER);
+        mappingData.put(ORACLE_INTEGER, JAVA_INTEGER);
         mappingData.put(ORACLE_REF_CURSOR, JAVA_RESULTSET);
         mappingData.put(ORACLE_DATE, JAVA_DATE);
         mappingData.put(ORACLE_TIMESTAMP, JAVA_TIMESTAMP);
