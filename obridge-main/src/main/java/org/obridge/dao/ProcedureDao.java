@@ -51,7 +51,7 @@ public class ProcedureDao {
                         + "               package_name,\n"
                         + "               nvl(overload, -1)\n"
                         + "          From user_arguments\n"
-                        + "         Where data_type in ( 'PL/SQL RECORD', 'PL/SQL TABLE' )\n"
+                        + "         Where data_type in ( 'PL/SQL TABLE' )\n"
                         + "    Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n"
                         + ") or object_name = 'ASSERT')\n",
                 new RowMapper<Procedure>() {
@@ -112,7 +112,7 @@ public class ProcedureDao {
                         + "               object_name,\n"
                         + "               nvl(overload, -1)\n"
                         + "          From user_arguments\n"
-                        + "         Where data_type in ( 'PL/SQL RECORD', 'PL/SQL TABLE' )\n"
+                        + "         Where data_type in ( 'PL/SQL TABLE' )\n"
                         + "    Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n"
                         + ") or procedure_name = 'ASSERT')\n",
                 new RowMapper<Procedure>() {
@@ -137,11 +137,11 @@ public class ProcedureDao {
         return jdbcTemplate.query(
                 "  select argument_name," +
                         "data_type," +
-                        "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name) type_name," +
+                        "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
                         "defaulted," +
                         "in_out," +
                         "rownum sequen, p.type_name orig_type_name " +
-                        "from (Select argument_name, data_type, type_name, defaulted, in_out\n"
+                        "from (Select argument_name, data_type, type_name, type_subname, defaulted, in_out\n"
                         + "        From user_arguments t\n"
                         + "       Where nvl(t.package_name, '###') = nvl((?), '###')\n"
                         + "         And t.object_name = (?)\n"

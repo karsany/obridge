@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.obridge.test.BaseTest;
 import org.obridge.test.database.context.*;
 import org.obridge.test.database.objects.SampleTypeOne;
+import org.obridge.test.database.objects.TestPackageLocTestType;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -83,6 +84,16 @@ public class TestPackageTest extends BaseTest {
         integers.add(0);
         TestPackageSumList testPackageSumList = TestPackage.sumList(integers, ds);
         Assert.assertTrue(testPackageSumList.getFunctionReturn().equals(new BigDecimal(13)));
+    }
+
+    @Test
+    public void testGetLocTestType() {
+        TestPackageLocTestType testType = new TestPackageLocTestType();
+        testType.setName("OBRIDGE");
+        testType.setId(new BigDecimal(1));
+        TestPackageGetLocTestType locTestType = TestPackage.getLocTestType(testType, ds);
+        Assert.assertEquals("OBRIDGEABC", locTestType.getTp().getName());
+        Assert.assertEquals(new BigDecimal(2), locTestType.getTp().getId());
     }
 
 }

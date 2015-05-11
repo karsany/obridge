@@ -53,4 +53,16 @@ public class TypeDaoTest extends BaseTest {
 
     }
 
+    @Test
+    public void testGetEmbeddedTypeList() {
+        List<String> embeddedTypeList = typeDao.getEmbeddedTypeList();
+        Assert.assertTrue(embeddedTypeList.contains("TEST_PACKAGE_LOC_TEST_TYPE"));
+    }
+
+    @Test
+    public void testGetEmbeddedTypeAttributes() {
+        List<TypeAttribute> testPackageLocTestType = typeDao.getEmbeddedTypeAttributes("TEST_PACKAGE_LOC_TEST_TYPE");
+        System.out.println(testPackageLocTestType);
+    }
+
 }

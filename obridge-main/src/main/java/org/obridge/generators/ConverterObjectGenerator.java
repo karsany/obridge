@@ -31,6 +31,7 @@ public final class ConverterObjectGenerator {
 
             TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
+            // Standard Object Types
             List<String> types = td.getTypeList();
 
             for (String typeName : types) {
@@ -43,6 +44,21 @@ public final class ConverterObjectGenerator {
                 FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
             }
 
+            // Embedded Object Types
+            List<String> embeddedTypeList = td.getEmbeddedTypeList();
+
+            for (String typeName : embeddedTypeList) {
+                Type t = new Type();
+                t.setTypeName(typeName);
+                t.setAttributeList(td.getEmbeddedTypeAttributes(typeName));
+                t.setConverterPackageName(packageName);
+                t.setObjectPackage(objectPackage);
+                String javaSource = MustacheRunner.build("converter.mustache", t);
+                FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
+            }
+
+
+            // Primitive list types
             Pojo pojo = new Pojo();
             pojo.setPackageName(packageName);
             String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);

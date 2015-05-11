@@ -1,5 +1,9 @@
 Create Or Replace Package test_package Is
 
+  Type loc_test_type Is Record(
+    id   Number,
+    Name Varchar2(30));
+
   Function get_sysdate Return Date;
 
   Procedure get_sysdate(p_sysdate Out Date);
@@ -47,6 +51,9 @@ Create Or Replace Package test_package Is
   Function return_string_list Return simple_string_list;
 
   Function sum_list(p_list In simple_number_list) Return Number;
+
+  Procedure get_loc_test_type(tp  In Out loc_test_type,
+                              tp2 Out loc_test_type);
 
 End test_package;
 /
@@ -200,6 +207,14 @@ Create Or Replace Package Body test_package Is
     End If;
   
   End sum_list;
+
+  Procedure get_loc_test_type(tp  In Out loc_test_type,
+                              tp2 Out loc_test_type) Is
+  Begin
+    tp2     := tp;
+    tp.id   := nvl(tp.id, 0) + 1;
+    tp.name := tp.name || 'ABC';
+  End get_loc_test_type;
 
 End test_package;
 /

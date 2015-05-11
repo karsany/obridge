@@ -30,6 +30,7 @@ public final class EntityObjectGenerator {
 
             TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
+            // Standard Object Types
             List<String> types = td.getTypeList();
 
             for (String typeName : types) {
@@ -38,6 +39,16 @@ public final class EntityObjectGenerator {
                 String javaSource = MustacheRunner.build("pojo.mustache", pojo);
                 FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
             }
+
+            // Embedded Types
+            List<String> embeddedTypeList = td.getEmbeddedTypeList();
+            for (String typeName : embeddedTypeList) {
+                Pojo pojo = PojoMapper.typeToPojo(typeName, td.getEmbeddedTypeAttributes(typeName));
+                pojo.setPackageName(packageName);
+                String javaSource = MustacheRunner.build("pojo.mustache", pojo);
+                FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
+            }
+
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
