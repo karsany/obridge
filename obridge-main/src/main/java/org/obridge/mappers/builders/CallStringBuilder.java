@@ -55,7 +55,7 @@ public class CallStringBuilder {
 
     private void generateBooleanOutputParameters(StringBuilder callString) {
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getArgumentName() != null && pa.getOracleType().equals("BOOLEAN") && pa.isOutParam()) {
+            if (pa.getArgumentName() != null && pa.isJDBCTypeBoolean() && pa.isOutParam()) {
                 addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
                 addBindParam("o" + pa.getArgumentName(), pa, false, true);
             }
@@ -89,7 +89,7 @@ public class CallStringBuilder {
             if (pa.getArgumentName() != null) {
                 String ln = "  ";
                 ln += !first ? " ," : "  ";
-                if (pa.getOracleType().equals("BOOLEAN")) {
+                if (pa.isJDBCTypeBoolean()) {
                     ln += "\\\"" + pa.getArgumentName() + "\\\" => " + pa.getArgumentName();
                 } else {
                     ln += "\\\"" + pa.getArgumentName() + "\\\" => :" + pa.getArgumentName();
@@ -114,7 +114,7 @@ public class CallStringBuilder {
     private void generateBooleanInputParameters(StringBuilder callString) {
         // DECLARE BOOLEAN INPUT VARIABLES
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getOracleType().equals("BOOLEAN") && pa.getArgumentName() != null) {
+            if (pa.isJDBCTypeBoolean() && pa.getArgumentName() != null) {
                 String ln = "  " + pa.getArgumentName() + " BOOLEAN";
                 if (pa.isInParam()) {
                     ln += " := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")";

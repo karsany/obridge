@@ -2,5 +2,5 @@
 if (ctx.get{{javaPropertyNameBig}}() != null) {
 ocs.set{{javaDataType}}({{sequenceNumber}}, ctx.get{{javaPropertyNameBig}}());
 } else {
-ocs.setNull({{sequenceNumber}}, Types.{{oracleType}});
+ocs.setNull({{sequenceNumber}}, Types.{{JDBCType}});
 }

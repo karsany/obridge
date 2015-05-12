@@ -148,7 +148,7 @@ public class ProcedureArgument {
         }
     }
 
-    public String getOracleType() {
+    public String getJDBCType() {
         if (dataType.equals("VARCHAR2")) {
             return "VARCHAR";
         } else if (dataType.equals("NVARCHAR2")) {
@@ -170,6 +170,10 @@ public class ProcedureArgument {
         }
     }
 
+    public boolean isJDBCTypeBoolean() {
+        return "BOOLEAN".equals(getJDBCType());
+    }
+
     public String getInoutType() {
         return (inParam ? "IN" : "") + (outParam ? "OUT" : "");
     }
@@ -187,11 +191,11 @@ public class ProcedureArgument {
 
     public String getRegOutput(int sequenceNumber) {
         if ("OBJECT".equals(dataType) || "TABLE".equals(dataType)) {
-            return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequenceNumber, getOracleType(), origTypeName, argumentName);
-        } else if (getOracleType().equals("BOOLEAN")) {
-            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getOracleType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
+            return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequenceNumber, getJDBCType(), origTypeName, argumentName);
+        } else if (getJDBCType().equals("BOOLEAN")) {
+            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         } else {
-            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getOracleType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
+            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         }
 
     }
@@ -206,7 +210,7 @@ public class ProcedureArgument {
             return String.format("ctx.set%s(%sConverter.getObjectList((Array)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
         } else if ("Integer".equals(getJavaDataType())) {
             return String.format("ctx.set%s(ocs.getInt(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
-        } else if ("BOOLEAN".equals(getOracleType())) {
+        } else if ("BOOLEAN".equals(getJDBCType())) {
             return String.format("ctx.set%s(null == ocs.getBigDecimal(%d) ? null : BigDecimal.ONE.equals(ocs.getBigDecimal(%d)) ? true : BigDecimal.ZERO.equals(ocs.getBigDecimal(%d)) ? false : null); // %s", getJavaPropertyNameBig(), sequenceNumber, sequenceNumber, sequenceNumber, argumentName);
         } else if ("ResultSet".equals(getJavaDataType())) {
             return String.format("ctx.set%s((ResultSet)ocs.getObject(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);

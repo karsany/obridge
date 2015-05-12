@@ -29,7 +29,7 @@ public class ParameterGetSetRegisterBuilder {
             return MustacheRunner.build("sniplets/LIST-GET.mustache", pa);
         }
 
-        if (pa.getOracleType().equals("BOOLEAN")) {
+        if (pa.getJDBCType().equals("BOOLEAN")) {
             return MustacheRunner.build("sniplets/BOOLEAN-GET.mustache", pa);
         }
 
