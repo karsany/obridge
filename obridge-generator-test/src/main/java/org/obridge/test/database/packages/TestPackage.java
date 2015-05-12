@@ -10,7 +10,10 @@ import java.sql.*;
 import java.util.List;
 import java.util.Arrays;
 
-public class TestPackage {
+public final class TestPackage {
+
+    private TestPackage() {
+    }
 
 
     public static void allTypes(TestPackageAllTypes ctx, Connection connection) throws SQLException {

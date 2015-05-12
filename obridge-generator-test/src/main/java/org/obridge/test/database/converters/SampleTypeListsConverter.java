@@ -51,16 +51,21 @@ public final class SampleTypeListsConverter {
         }
         SampleTypeLists result = new SampleTypeLists();
         Object[] attr = struct.getAttributes();
-        if (attr[0] != null)
+        if (attr[0] != null) {
             result.setList1(SampleTypeOneConverter.getObjectList((Array)attr[0])); // LIST1
-        if (attr[1] != null)
+        }
+        if (attr[1] != null) {
             result.setList2(SampleTypeTwoConverter.getObjectList((Array)attr[1])); // LIST2
-        if (attr[2] != null)
+        }
+        if (attr[2] != null) {
             result.setList3(SampleTypeTwoConverter.getObjectList((Array)attr[2])); // LIST3
-        if (attr[3] != null)
+        }
+        if (attr[3] != null) {
             result.setList4(Arrays.asList(((String[]) ((Array) attr[3]).getArray()))); // LIST4
-        if (attr[4] != null)
+        }
+        if (attr[4] != null) {
             result.setList5(Arrays.asList(((Integer[]) ((Array) attr[4]).getArray()))); // LIST5
+        }
         return result;
     }
 

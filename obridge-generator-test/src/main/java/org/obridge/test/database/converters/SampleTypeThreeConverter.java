@@ -48,10 +48,12 @@ public final class SampleTypeThreeConverter {
         }
         SampleTypeThree result = new SampleTypeThree();
         Object[] attr = struct.getAttributes();
-        if (attr[0] != null)
+        if (attr[0] != null) {
             result.setField1(((BigDecimal)attr[0]).intValue()); // FIELD1
-        if (attr[1] != null)
+        }
+        if (attr[1] != null) {
             result.setField2((String)attr[1]); // FIELD2
+        }
         return result;
     }
 

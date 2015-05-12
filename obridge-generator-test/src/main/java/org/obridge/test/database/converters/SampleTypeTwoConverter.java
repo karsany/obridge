@@ -49,12 +49,15 @@ public final class SampleTypeTwoConverter {
         }
         SampleTypeTwo result = new SampleTypeTwo();
         Object[] attr = struct.getAttributes();
-        if (attr[0] != null)
+        if (attr[0] != null) {
             result.setField1((String)attr[0]); // FIELD1
-        if (attr[1] != null)
+        }
+        if (attr[1] != null) {
             result.setField2(SampleTypeOneConverter.getObject((Struct)attr[1])); // FIELD2
-        if (attr[2] != null)
+        }
+        if (attr[2] != null) {
             result.setField3(SampleTypeOneConverter.getObjectList((Array)attr[2])); // FIELD3
+        }
         return result;
     }
 

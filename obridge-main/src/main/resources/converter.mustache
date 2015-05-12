@@ -63,8 +63,9 @@ public final class {{javaClassName}}Converter {
         Object[] attr = struct.getAttributes();
 
         {{#attributeList}}
-        if (attr[{{attrNoIndex}}] != null)
+        if (attr[{{attrNoIndex}}] != null) {
             {{& objectAdder}}
+        }
         {{/attributeList}}
 
         return result;

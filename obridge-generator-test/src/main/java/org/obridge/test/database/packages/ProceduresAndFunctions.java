@@ -10,7 +10,10 @@ import java.sql.*;
 import java.util.List;
 import java.util.Arrays;
 
-public class ProceduresAndFunctions {
+public final class ProceduresAndFunctions {
+
+    private ProceduresAndFunctions() {
+    }
 
 
     public static void testProcedure(TestProcedure ctx, Connection connection) throws SQLException {
