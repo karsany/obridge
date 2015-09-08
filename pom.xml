@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.obridge</groupId>
@@ -25,21 +26,21 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
- <plugin>
-      <groupId>com.qulice</groupId>
-      <artifactId>qulice-maven-plugin</artifactId>
-      <version>0.12.2</version>
-      <configuration>
-        <license>file:${basedir}/LICENSE.txt</license>
-      </configuration>
-      <executions>
-        <execution>
-          <goals>
-            <goal>check</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>				
+                <plugin>
+                    <groupId>com.qulice</groupId>
+                    <artifactId>qulice-maven-plugin</artifactId>
+                    <version>0.12.2</version>
+                    <configuration>
+                        <license>file:${basedir}/LICENSE.txt</license>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
