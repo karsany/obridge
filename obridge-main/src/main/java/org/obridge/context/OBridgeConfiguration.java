@@ -1,7 +1,11 @@
 package org.obridge.context;
 
 /**
- * @author fkarsany
+ * OBridge Configuration package.
+ *
+ * @author Ferenc Karsany (karsany@karsany.hu)
+ * @version $Id$
+ * @since 1.0
  */
 public class OBridgeConfiguration {
 
