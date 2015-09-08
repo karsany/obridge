@@ -22,6 +22,7 @@ public class TypeMapper {
     public static final String ORACLE_BOOLEAN = "PL/SQL BOOLEAN";
     public static final String ORACLE_OBJECT = "OBJECT";
     public static final String ORACLE_TABLE = "TABLE";
+    public static final String ORACLE_COLLECTION = "COLLECTION";
 
     public static final String JAVA_STRING = "String";
     public static final String JAVA_INTEGER = "Integer";
@@ -39,6 +40,7 @@ public class TypeMapper {
     public static final String JDBC_ARRAY = "ARRAY";
     public static final String JDBC_BOOLEAN = "BOOLEAN";
     public static final String JDBC_NUMERIC = "NUMERIC";
+
 
     private static Map<String, String> oracleToJavaMapping = null;
     private static Map<String, String> oracleToJDBCMapping = null;

@@ -84,7 +84,7 @@ public class TypeAttribute {
 
     public String getJavaDataType() {
         if (multiType == 1) {
-            if ("COLLECTION".equals(typeCode)) {
+            if (TypeMapper.ORACLE_COLLECTION.equals(typeCode)) {
                 if (isPrimitiveList()) {
                     return "List<" + new TypeMapper().getJavaType(collectionBaseType, 0) + ">";
                 } else {
@@ -121,17 +121,17 @@ public class TypeAttribute {
     }
 
     public String getStructAdder() {
-        if ("COLLECTION".equals(typeCode) && !isPrimitiveList()) {
+        if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && !isPrimitiveList()) {
             return String.format("struct.add(%d, %sConverter.getListArray(o.get%s(), connection, \"%s\")); // %s", getAttrNoIndex(), getJavaCollectionBaseTypeNameBig(), getJavaPropertyNameBig(), getAttrTypeName(), attrName);
-        } else if ("COLLECTION".equals(typeCode) && isPrimitiveList()) {
+        } else if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && isPrimitiveList()) {
             return String.format("struct.add(%d, PrimitiveTypeConverter.getListArray(o.get%s(), connection, \"%s\")); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), getAttrTypeName(), attrName);
-        } else if ("OBJECT".equals(typeCode)) {
+        } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("struct.add(%d, %sConverter.getStruct(o.get%s(), connection)); // %s", getAttrNoIndex(), getJavaDataType(), getJavaPropertyNameBig(), attrName);
 //        } else if ("DATE".equals(attrTypeName)) {
 //            return String.format("struct.add(%d, new Date(o.get%s())); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), attrName);
 //        } else if ("TIMESTAMP".equals(attrTypeName)) {
 //            return String.format("struct.add(%d, new Timestamp(o.get%s())); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), attrName);
-        } else if ("CLOB".equals(attrTypeName)) {
+        } else if (TypeMapper.ORACLE_CLOB.equals(attrTypeName)) {
             return String.format("Clob cl%d = connection.createClob();\n" +
                     "        cl%d.setString(1, o.get%s());\n" +
                     "        struct.add(%d, cl%d); // %s", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
@@ -142,21 +142,21 @@ public class TypeAttribute {
     }
 
     public String getObjectAdder() {
-        if ("COLLECTION".equals(typeCode) && !isPrimitiveList()) {
+        if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && !isPrimitiveList()) {
             return String.format("result.set%s(%sConverter.getObjectList((Array)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaCollectionBaseTypeNameBig(), getAttrNoIndex(), attrName);
-        } else if ("COLLECTION".equals(typeCode) && isPrimitiveList()) {
+        } else if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && isPrimitiveList()) {
             return String.format("result.set%s(Arrays.asList(((%s[]) ((Array) attr[%d]).getArray()))); // %s", getJavaPropertyNameBig(), getUnderlyingJavaTypeName(), getAttrNoIndex(), attrName);
-        } else if ("OBJECT".equals(typeCode)) {
+        } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("result.set%s(%sConverter.getObject((Struct)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
-        } else if ("DATE".equals(attrTypeName)) {
+        } else if (TypeMapper.ORACLE_DATE.equals(attrTypeName)) {
             return String.format("result.set%s(new Date(((Timestamp)attr[%d]).getTime())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
-        } else if ("TIMESTAMP".equals(attrTypeName)) {
+        } else if (TypeMapper.ORACLE_TIMESTAMP.equals(attrTypeName)) {
             return String.format("result.set%s((Timestamp)attr[%d]); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
-        } else if ("CLOB".equals(attrTypeName)) {
+        } else if (TypeMapper.ORACLE_CLOB.equals(attrTypeName)) {
             return String.format("result.set%s(((Clob)attr[%d]).getSubString(1, (int)((Clob)attr[%d]).length())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
-        } else if ("INTEGER".equals(attrTypeName)) {
+        } else if (TypeMapper.ORACLE_INTEGER.equals(attrTypeName)) {
             return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
-        } else if ("Integer".equals(getJavaDataType())) {
+        } else if (TypeMapper.JAVA_INTEGER.equals(getJavaDataType())) {
             return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else {
             return String.format("result.set%s((%s)attr[%d]); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
@@ -179,7 +179,7 @@ public class TypeAttribute {
 
     public String getUnderlyingJavaTypeName() {
         if (multiType == 1) {
-            if ("COLLECTION".equals(typeCode)) {
+            if (TypeMapper.ORACLE_COLLECTION.equals(typeCode)) {
                 if (isPrimitiveList()) {
                     return new TypeMapper().getJavaType(collectionBaseType, 0);
                 } else {
