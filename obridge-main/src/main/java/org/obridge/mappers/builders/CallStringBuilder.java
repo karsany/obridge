@@ -3,6 +3,7 @@ package org.obridge.mappers.builders;
 import org.obridge.model.data.BindParam;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.data.ProcedureArgument;
+import org.obridge.util.TypeMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class CallStringBuilder {
     private void generateCall(StringBuilder callString) {
         generateOutReturnVariable(callString);
 
-        if(procedure.getObjectName() != null && !procedure.getObjectName().equals("")) {
+        if(procedure.getObjectName() != null && !"".equals(procedure.getObjectName())) {
             addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
         } else {
             addLine(callString, "  \\\"" + procedure.getProcedureName() + "\\\"( ");
@@ -75,7 +76,7 @@ public class CallStringBuilder {
 
 
         if ("FUNCTION".equals(procedure.getMethodType())) {
-            if (procedure.getReturnJavaType().equals("Boolean")) {
+            if (TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
                 addLine(callString, "  ) ");
             }
         }

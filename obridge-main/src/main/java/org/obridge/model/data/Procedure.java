@@ -3,6 +3,7 @@ package org.obridge.model.data;
 import org.obridge.mappers.builders.CallStringBuilder;
 import org.obridge.util.OBridgeException;
 import org.obridge.util.StringHelper;
+import org.obridge.util.TypeMapper;
 
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class Procedure {
     }
 
     public String getReturnJavaType() {
-        if (!methodType.equals("FUNCTION")) {
+        if (!"FUNCTION".equals(methodType)) {
             throw new OBridgeException("Only for functions.");
         }
         if (hasArguments()) {
@@ -126,7 +127,7 @@ public class Procedure {
 
     public boolean hasResultSetParam() {
         for (ProcedureArgument pa : this.argumentList) {
-            if (pa.getJavaDataType().equals("ResultSet")) {
+            if (TypeMapper.JAVA_RESULTSET.equals(pa.getJavaDataType())) {
                 return true;
             }
         }

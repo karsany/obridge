@@ -114,7 +114,7 @@ public class ProcedureArgument {
     public String getJavaTypeName() {
         if (isList()) {
             String mappedType = new TypeMapper().getJavaType(typeName, 0);
-            if (mappedType.equals("Object")) {
+            if ("Object".equals(mappedType)) {
                 return "List<" + StringHelper.toCamelCase(typeName) + ">";
             } else {
                 return "List<" + mappedType + ">";
@@ -125,11 +125,11 @@ public class ProcedureArgument {
     }
 
     public boolean isList() {
-        return dataType.equals("TABLE");
+        return "TABLE".equals(dataType);
     }
 
     public boolean isPrimitiveList() {
-        return isList() && !(new TypeMapper().getJavaType(typeName, 0).equals("Object"));
+        return isList() && !("Object".equals(new TypeMapper().getJavaType(typeName, 0)));
     }
 
     public String getUnderlyingTypeName() {
@@ -175,7 +175,7 @@ public class ProcedureArgument {
     public String getRegOutput(int sequenceNumber) {
         if ("OBJECT".equals(dataType) || "TABLE".equals(dataType)) {
             return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequenceNumber, getJDBCType(), origTypeName, argumentName);
-        } else if (getJDBCType().equals("BOOLEAN")) {
+        } else if ("BOOLEAN".equals(getJDBCType())) {
             return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         } else {
             return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);

@@ -2,6 +2,7 @@ package org.obridge.mappers.builders;
 
 import org.obridge.model.data.ProcedureArgument;
 import org.obridge.util.MustacheRunner;
+import org.obridge.util.TypeMapper;
 
 /**
  * Created by fkarsany on 2015.03.06..
@@ -17,7 +18,7 @@ public class ParameterGetSetRegisterBuilder {
 
         pa.setSequenceNumber(sequenceNumber);
 
-        if (pa.getDataType().equals("OBJECT")) {
+        if (TypeMapper.ORACLE_OBJECT.equals(pa.getDataType())) {
             return MustacheRunner.build("sniplets/OBJECT-GET.mustache", pa);
         }
 
@@ -25,15 +26,15 @@ public class ParameterGetSetRegisterBuilder {
             return MustacheRunner.build("sniplets/LIST-PRIMITIVE-GET.mustache", pa);
         }
 
-        if (pa.getDataType().equals("TABLE")) {
+        if (TypeMapper.ORACLE_TABLE.equals(pa.getDataType())) {
             return MustacheRunner.build("sniplets/LIST-GET.mustache", pa);
         }
 
-        if (pa.getJDBCType().equals("BOOLEAN")) {
+        if (TypeMapper.JDBC_BOOLEAN.equals(pa.getJDBCType())) {
             return MustacheRunner.build("sniplets/BOOLEAN-GET.mustache", pa);
         }
 
-        if (pa.getJavaDataType().equals("Integer")) {
+        if (TypeMapper.JAVA_INTEGER.equals(pa.getJavaDataType())) {
             return MustacheRunner.build("sniplets/INTEGER-GET.mustache", pa);
         }
 

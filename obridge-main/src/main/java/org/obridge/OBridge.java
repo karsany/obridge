@@ -29,7 +29,7 @@ public class OBridge {
 
         if (cmd.hasOption("v")) {
             final Properties properties = new Properties();
-            properties.load(new OBridge().getClass().getResourceAsStream("obridge-project.properties"));
+            properties.load(OBridge.class.getResourceAsStream("obridge-project.properties"));
             System.out.println("OBridge version " + properties.getProperty("version"));
             return;
         }

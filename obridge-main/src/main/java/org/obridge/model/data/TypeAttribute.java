@@ -100,7 +100,7 @@ public class TypeAttribute {
     }
 
     public boolean isPrimitiveList() {
-        return !(new TypeMapper().getJavaType(collectionBaseType, 0).equals("Object"));
+        return !("Object".equals(new TypeMapper().getJavaType(collectionBaseType, 0)));
     }
 
 
