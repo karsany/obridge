@@ -188,7 +188,7 @@ public class ProcedureArgument {
             return String.format("ctx.set%s(%sConverter.getObject((Struct)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         } else if ("TABLE".equals(dataType)) {
             if (isPrimitiveList()) {
-                return String.format("ctx.set%s(Arrays.asList(((%s[]) ((Array) ocs.getObject(%d)).getArray()))); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
+                return String.format("ctx.set%s(Arrays.asList((%s[]) ((Array) ocs.getObject(%d)).getArray())); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
             }
             return String.format("ctx.set%s(%sConverter.getObjectList((Array)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
         } else if ("Integer".equals(getJavaDataType())) {

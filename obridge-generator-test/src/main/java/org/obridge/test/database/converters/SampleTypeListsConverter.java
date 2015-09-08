@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public final class SampleTypeListsConverter {
 
-    private final static String TYPE_NAME = "SAMPLE_TYPE_LISTS";
+    public static final String TYPE_NAME = "SAMPLE_TYPE_LISTS";
 
     private SampleTypeListsConverter() {
     }
@@ -61,10 +61,10 @@ public final class SampleTypeListsConverter {
             result.setList3(SampleTypeTwoConverter.getObjectList((Array)attr[2])); // LIST3
         }
         if (attr[3] != null) {
-            result.setList4(Arrays.asList(((String[]) ((Array) attr[3]).getArray()))); // LIST4
+            result.setList4(Arrays.asList((String[]) ((Array) attr[3]).getArray())); // LIST4
         }
         if (attr[4] != null) {
-            result.setList5(Arrays.asList(((Integer[]) ((Array) attr[4]).getArray()))); // LIST5
+            result.setList5(Arrays.asList((Integer[]) ((Array) attr[4]).getArray())); // LIST5
         }
         return result;
     }

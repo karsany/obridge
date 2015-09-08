@@ -553,7 +553,7 @@ public final class TestPackage {
                                 "");
         ocs.registerOutParameter(1, Types.ARRAY, "SIMPLE_STRING_LIST"); // null
         ocs.execute();
-        ctx.setFunctionReturn(Arrays.asList(((String[]) ((Array) ocs.getObject(1)).getArray()))); // null
+        ctx.setFunctionReturn(Arrays.asList((String[]) ((Array) ocs.getObject(1)).getArray())); // null
         ocs.close();
     }
 

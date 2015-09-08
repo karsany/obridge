@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public final class SampleTypeThreeConverter {
 
-    private final static String TYPE_NAME = "SAMPLE_TYPE_THREE";
+    public static final String TYPE_NAME = "SAMPLE_TYPE_THREE";
 
     private SampleTypeThreeConverter() {
     }

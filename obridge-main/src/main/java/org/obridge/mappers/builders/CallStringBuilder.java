@@ -75,10 +75,8 @@ public class CallStringBuilder {
         generateParameters(callString);
 
 
-        if ("FUNCTION".equals(procedure.getMethodType())) {
-            if (TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
-                addLine(callString, "  ) ");
-            }
+        if ("FUNCTION".equals(procedure.getMethodType()) && TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
+            addLine(callString, "  ) ");
         }
 
         addLine(callString, "   );");
@@ -105,7 +103,7 @@ public class CallStringBuilder {
     private void generateOutReturnVariable(StringBuilder callString) {
         if ("FUNCTION".equals(procedure.getMethodType())) {
             addLine(callString, "  :result := ");
-            if (procedure.getReturnJavaType().equals("Boolean")) {
+            if (TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
                 addLine(callString, "  sys.diutil.bool_to_int( ");
             }
             addBindParam("result", procedure.getArgumentList().get(0), false, true);

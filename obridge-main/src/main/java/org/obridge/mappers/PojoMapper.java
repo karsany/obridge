@@ -62,9 +62,6 @@ public final class PojoMapper {
         p.getImports().add("java.math.BigDecimal");
         p.getImports().add("java.sql.ResultSet");
 
-//        p.setOtherCode(new ArrayList<String>());
-//        p.getOtherCode().add(String.format("public static final String CALL_STRING = \"%s\";", procedure.getCallString()));
-
         return p;
 
     }

@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public final class SampleTypeTwoConverter {
 
-    private final static String TYPE_NAME = "SAMPLE_TYPE_TWO";
+    public static final String TYPE_NAME = "SAMPLE_TYPE_TWO";
 
     private SampleTypeTwoConverter() {
     }

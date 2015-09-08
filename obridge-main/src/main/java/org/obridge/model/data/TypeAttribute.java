@@ -127,10 +127,6 @@ public class TypeAttribute {
             return String.format("struct.add(%d, PrimitiveTypeConverter.getListArray(o.get%s(), connection, \"%s\")); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), getAttrTypeName(), attrName);
         } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("struct.add(%d, %sConverter.getStruct(o.get%s(), connection)); // %s", getAttrNoIndex(), getJavaDataType(), getJavaPropertyNameBig(), attrName);
-//        } else if ("DATE".equals(attrTypeName)) {
-//            return String.format("struct.add(%d, new Date(o.get%s())); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), attrName);
-//        } else if ("TIMESTAMP".equals(attrTypeName)) {
-//            return String.format("struct.add(%d, new Timestamp(o.get%s())); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), attrName);
         } else if (TypeMapper.ORACLE_CLOB.equals(attrTypeName)) {
             return String.format("Clob cl%d = connection.createClob();\n" +
                     "        cl%d.setString(1, o.get%s());\n" +
@@ -145,7 +141,7 @@ public class TypeAttribute {
         if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && !isPrimitiveList()) {
             return String.format("result.set%s(%sConverter.getObjectList((Array)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaCollectionBaseTypeNameBig(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && isPrimitiveList()) {
-            return String.format("result.set%s(Arrays.asList(((%s[]) ((Array) attr[%d]).getArray()))); // %s", getJavaPropertyNameBig(), getUnderlyingJavaTypeName(), getAttrNoIndex(), attrName);
+            return String.format("result.set%s(Arrays.asList((%s[]) ((Array) attr[%d]).getArray())); // %s", getJavaPropertyNameBig(), getUnderlyingJavaTypeName(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("result.set%s(%sConverter.getObject((Struct)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_DATE.equals(attrTypeName)) {
