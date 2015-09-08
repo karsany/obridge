@@ -20,21 +20,10 @@ public class OBridge {
     public static void main(String... args) throws SQLException, IOException, PropertyVetoException, ParseException {
 
         Options o = new Options();
-        o.addOption("v", "version", false, "print version number");
-        o.addOption("h", "help", false, "prints this help");
-        o.addOption(OptionBuilder
-                .withArgName("file")
-                .hasArg()
-                .withDescription("OBridge XML config file")
-                .withLongOpt("config")
-                .create("c"));
-
-        CommandLineParser parser = new PosixParser();
-        CommandLine cmd = parser.parse(o, args);
+        CommandLine cmd = getCommandLine(o, args);
 
         if (cmd.hasOption("h")) {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("obridge", o, true);
+            printHelp(o);
             return;
         }
 
@@ -48,9 +37,27 @@ public class OBridge {
         if (cmd.hasOption("c")) {
             new OBridge().generate(new File(cmd.getOptionValue("c")));
         } else {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("obridge", o, true);
+            printHelp(o);
         }
+    }
+
+    private static void printHelp(Options o) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("obridge", o, true);
+    }
+
+    private static CommandLine getCommandLine(Options o, String[] args) throws ParseException {
+        o.addOption("v", "version", false, "print version number");
+        o.addOption("h", "help", false, "prints this help");
+        o.addOption(OptionBuilder
+                .withArgName("file")
+                .hasArg()
+                .withDescription("OBridge XML config file")
+                .withLongOpt("config")
+                .create("c"));
+
+        CommandLineParser parser = new PosixParser();
+        return parser.parse(o, args);
     }
 
     public void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
