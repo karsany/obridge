@@ -86,7 +86,7 @@ public class TypeAttribute {
         if (multiType == 1) {
             if ("COLLECTION".equals(typeCode)) {
                 if (isPrimitiveList()) {
-                    return "List<" + new TypeMapper().getMappedType(collectionBaseType, 0) + ">";
+                    return "List<" + new TypeMapper().getJavaType(collectionBaseType, 0) + ">";
                 } else {
                     return "List<" + getJavaCollectionBaseTypeNameBig() + ">";
                 }
@@ -94,13 +94,13 @@ public class TypeAttribute {
                 return StringHelper.toCamelCase(attrTypeName);
             }
         } else {
-            return new TypeMapper().getMappedType(this.attrTypeName, this.dataScale);
+            return new TypeMapper().getJavaType(this.attrTypeName, this.dataScale);
         }
 
     }
 
     public boolean isPrimitiveList() {
-        return !(new TypeMapper().getMappedType(collectionBaseType, 0).equals("Object"));
+        return !(new TypeMapper().getJavaType(collectionBaseType, 0).equals("Object"));
     }
 
 
@@ -181,7 +181,7 @@ public class TypeAttribute {
         if (multiType == 1) {
             if ("COLLECTION".equals(typeCode)) {
                 if (isPrimitiveList()) {
-                    return new TypeMapper().getMappedType(collectionBaseType, 0);
+                    return new TypeMapper().getJavaType(collectionBaseType, 0);
                 } else {
                     return getJavaCollectionBaseTypeNameBig();
                 }
@@ -189,7 +189,7 @@ public class TypeAttribute {
                 return StringHelper.toCamelCase(attrTypeName);
             }
         } else {
-            return new TypeMapper().getMappedType(this.attrTypeName, this.dataScale);
+            return new TypeMapper().getJavaType(this.attrTypeName, this.dataScale);
         }
 
     }

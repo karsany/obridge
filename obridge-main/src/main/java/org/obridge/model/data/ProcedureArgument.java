@@ -113,7 +113,7 @@ public class ProcedureArgument {
 
     public String getJavaTypeName() {
         if (isList()) {
-            String mappedType = new TypeMapper().getMappedType(typeName, 0);
+            String mappedType = new TypeMapper().getJavaType(typeName, 0);
             if (mappedType.equals("Object")) {
                 return "List<" + StringHelper.toCamelCase(typeName) + ">";
             } else {
@@ -129,12 +129,12 @@ public class ProcedureArgument {
     }
 
     public boolean isPrimitiveList() {
-        return isList() && !(new TypeMapper().getMappedType(typeName, 0).equals("Object"));
+        return isList() && !(new TypeMapper().getJavaType(typeName, 0).equals("Object"));
     }
 
     public String getUnderlyingTypeName() {
         if (isPrimitiveList()) {
-            return new TypeMapper().getMappedType(typeName, 0);
+            return new TypeMapper().getJavaType(typeName, 0);
         } else {
             return StringHelper.toCamelCase(typeName);
         }
@@ -144,31 +144,14 @@ public class ProcedureArgument {
         if (this.typeName != null) {
             return getJavaTypeName();
         } else {
-            return new TypeMapper().getMappedType(this.dataType, 1);
+            return new TypeMapper().getJavaType(this.dataType, 1);
         }
     }
 
     public String getJDBCType() {
-        if (dataType.equals("VARCHAR2")) {
-            return "VARCHAR";
-        } else if (dataType.equals("NVARCHAR2")) {
-            return "NVARCHAR";
-        } else if (dataType.equals("REF CURSOR")) {
-            return "CURSOR";
-        } else if (dataType.equals("BINARY_INTEGER")) {
-            return "INTEGER";
-        } else if (dataType.equals("OBJECT")) {
-            return "STRUCT";
-        } else if (dataType.equals("TABLE")) {
-            return "ARRAY";
-        } else if (dataType.equals("PL/SQL BOOLEAN")) {
-            return "BOOLEAN";
-        } else if (dataType.equals("NUMBER")) {
-            return "NUMERIC";
-        } else {
-            return dataType;
-        }
+        return new TypeMapper().getJDBCType(dataType);
     }
+
 
     public boolean isJDBCTypeBoolean() {
         return "BOOLEAN".equals(getJDBCType());
@@ -218,19 +201,6 @@ public class ProcedureArgument {
             return String.format("ctx.set%s(ocs.get%s(%d)); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         }
 
-    }
-
-    @Override
-    public String toString() {
-        return "ProcedureArgument{"
-                + "argumentName='" + argumentName + '\''
-                + ", dataType='" + dataType + '\''
-                + ", typeName='" + typeName + '\''
-                + ", defaulted='" + defaulted + '\''
-                + ", inParam=" + inParam
-                + ", outParam=" + outParam
-                + ", sequence=" + sequence
-                + "}\n";
     }
 
     public int getSequenceNumber() {

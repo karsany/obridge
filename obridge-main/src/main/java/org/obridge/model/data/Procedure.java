@@ -125,7 +125,7 @@ public class Procedure {
     }
 
     public boolean hasResultSetParam() {
-        for (ProcedureArgument pa : getArgumentList()) {
+        for (ProcedureArgument pa : this.argumentList) {
             if (pa.getJavaDataType().equals("ResultSet")) {
                 return true;
             }
