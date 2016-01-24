@@ -28,21 +28,25 @@ public final class EntityObjectGenerator {
             String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-            TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
+            TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = td.getTypeList();
+            List<String> types = typeDao.getTypeList();
 
             for (String typeName : types) {
-                Pojo pojo = PojoMapper.typeToPojo(typeName, td.getTypeAttributes(typeName));
-                pojo.setPackageName(packageName);
-                String javaSource = MustacheRunner.build("pojo.mustache", pojo);
-                FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
+                generateEntityObject(packageName, outputDir, typeDao, typeName);
             }
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
             throw new OBridgeException(e);
         }
+    }
+
+    private static void generateEntityObject(String packageName, String outputDir, TypeDao typeDao, String typeName) throws IOException {
+        Pojo pojo = PojoMapper.typeToPojo(typeName, typeDao.getTypeAttributes(typeName));
+        pojo.setPackageName(packageName);
+        String javaSource = MustacheRunner.build("pojo.mustache", pojo);
+        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
     }
 
 }
