@@ -36,16 +36,20 @@ public final class ProcedureContextGenerator {
             List<Procedure> allProcedures = procedureDao.getAllProcedure();
 
             for (Procedure p : allProcedures) {
-                Pojo pojo = PojoMapper.procedureToPojo(p);
-                pojo.setPackageName(packageName);
-                pojo.getImports().add(objectPackage + ".*");
-                String javaSource = MustacheRunner.build("pojo.mustache", pojo);
-                FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
+                generateProcedureContext(packageName, objectPackage, outputDir, p);
             }
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
             throw new OBridgeException(e);
         }
+    }
+
+    private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p) throws IOException {
+        Pojo pojo = PojoMapper.procedureToPojo(p);
+        pojo.setPackageName(packageName);
+        pojo.getImports().add(objectPackage + ".*");
+        String javaSource = MustacheRunner.build("pojo.mustache", pojo);
+        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
     }
 }
