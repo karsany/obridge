@@ -29,29 +29,38 @@ public final class ConverterObjectGenerator {
             String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-            TypeDao td = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
+            TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = td.getTypeList();
+            List<String> types = typeDao.getTypeList();
 
             for (String typeName : types) {
-                Type t = new Type();
-                t.setTypeName(typeName);
-                t.setAttributeList(td.getTypeAttributes(typeName));
-                t.setConverterPackageName(packageName);
-                t.setObjectPackage(objectPackage);
-                String javaSource = MustacheRunner.build("converter.mustache", t);
-                FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
+                generateType(packageName, objectPackage, outputDir, typeDao, typeName);
             }
 
-            Pojo pojo = new Pojo();
-            pojo.setPackageName(packageName);
-            String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
-            FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
+            generatePrimitiveTypeConverter(packageName, outputDir);
+
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
             throw new OBridgeException(e);
         }
+    }
+
+    private static void generatePrimitiveTypeConverter(String packageName, String outputDir) throws IOException {
+        Pojo pojo = new Pojo();
+        pojo.setPackageName(packageName);
+        String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
+        FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
+    }
+
+    private static void generateType(String packageName, String objectPackage, String outputDir, TypeDao typeDao, String typeName) throws IOException {
+        Type t = new Type();
+        t.setTypeName(typeName);
+        t.setAttributeList(typeDao.getTypeAttributes(typeName));
+        t.setConverterPackageName(packageName);
+        t.setObjectPackage(objectPackage);
+        String javaSource = MustacheRunner.build("converter.mustache", t);
+        FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
     }
 
 
