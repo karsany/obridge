@@ -12,7 +12,7 @@ public class CallStringBuilderTest extends BaseTest {
 
     @Before
     public void setUp() {
-        p = new ProcedureDao(ds).getAllProcedures(null, "SIMPLE_BOOLEAN_RETURN").get(0);
+        p = new ProcedureDao(ds).getAllProcedure(null, "SIMPLE_BOOLEAN_RETURN").get(0);
     }
 
     @Test

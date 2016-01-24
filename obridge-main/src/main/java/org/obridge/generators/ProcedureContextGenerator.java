@@ -33,7 +33,7 @@ public final class ProcedureContextGenerator {
 
             ProcedureDao procedureDao = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<Procedure> allProcedures = procedureDao.getAllProcedures();
+            List<Procedure> allProcedures = procedureDao.getAllProcedure();
 
             for (Procedure p : allProcedures) {
                 Pojo pojo = PojoMapper.procedureToPojo(p);

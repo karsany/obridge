@@ -23,7 +23,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllProcedures() {
-        List<Procedure> allProcedures = procedureDao.getAllProcedures();
+        List<Procedure> allProcedures = procedureDao.getAllProcedure();
         Collection<String> procedureNames = FuncUtils.pluck("storedProcedureClassName", String.class, allProcedures);
         Assert.assertTrue(procedureNames.contains("SimpleProceduresA"));
         Assert.assertTrue(procedureNames.contains("SimpleProceduresOverload1"));
@@ -42,7 +42,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllSimpleProcedureAndFunction() {
-        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedures();
+        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedure();
         System.out.println(procs);
     }
 }
