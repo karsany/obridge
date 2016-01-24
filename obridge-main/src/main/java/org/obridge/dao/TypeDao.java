@@ -15,6 +15,11 @@ import java.util.List;
  */
 public class TypeDao {
 
+    private static final String GET_TYPE_ATTRIBUTES = "SELECT attr_name, attr_type_name, attr_no, nvl(scale,-1) data_scale, case when attr_type_owner is not null then 1 else 0 end multi_type, bb.typecode, " +
+            "(select elem_type_name from user_coll_types t where t.TYPE_NAME = aa.attr_type_name) collection_base_type " +
+            "FROM user_type_attrs aa, user_types bb " +
+            "WHERE UPPER(aa.type_name) = ? and aa.attr_type_name = bb.type_name(+) ORDER BY attr_no ASC";
+
     private JdbcTemplate jdbcTemplate;
 
     public TypeDao(DataSource dataSource) {
@@ -26,11 +31,9 @@ public class TypeDao {
     }
 
     public List<TypeAttribute> getTypeAttributes(String typeName) {
+
         return jdbcTemplate.query(
-                "SELECT attr_name, attr_type_name, attr_no, nvl(scale,-1) data_scale, case when attr_type_owner is not null then 1 else 0 end multi_type, bb.typecode, " +
-                        "(select elem_type_name from user_coll_types t where t.TYPE_NAME = aa.attr_type_name) collection_base_type " +
-                        "FROM user_type_attrs aa, user_types bb " +
-                        "WHERE UPPER(aa.type_name) = ? and aa.attr_type_name = bb.type_name(+) ORDER BY attr_no ASC",
+                GET_TYPE_ATTRIBUTES,
                 new Object[]{typeName.toUpperCase()}, new RowMapper<TypeAttribute>() {
                     @Override
                     public TypeAttribute mapRow(ResultSet resultSet, int i) throws SQLException {
