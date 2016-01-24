@@ -34,17 +34,21 @@ public final class PackageObjectGenerator {
             List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages();
 
             for (OraclePackage oraclePackage : allPackages) {
-                oraclePackage.setJavaPackageName(packageName);
-                oraclePackage.setContextPackage(contextPackage);
-                oraclePackage.setConverterPackage(converterPackage);
-                oraclePackage.setObjectPackage(objectPackage);
-                String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
-                FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource));
+                generatePackageObject(packageName, contextPackage, converterPackage, objectPackage, outputDir, oraclePackage);
             }
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
             throw new OBridgeException(e);
         }
+    }
+
+    private static void generatePackageObject(String packageName, String contextPackage, String converterPackage, String objectPackage, String outputDir, OraclePackage oraclePackage) throws IOException {
+        oraclePackage.setJavaPackageName(packageName);
+        oraclePackage.setContextPackage(contextPackage);
+        oraclePackage.setConverterPackage(converterPackage);
+        oraclePackage.setObjectPackage(objectPackage);
+        String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
+        FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource));
     }
 }
