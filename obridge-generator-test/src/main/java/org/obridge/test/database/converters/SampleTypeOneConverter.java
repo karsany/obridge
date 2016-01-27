@@ -5,13 +5,14 @@ import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 
+import javax.annotation.Generated;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
-
+@Generated("org.obridge.generators.ConverterObjectGenerator")
 public final class SampleTypeOneConverter {
 
     public static final String TYPE_NAME = "SAMPLE_TYPE_ONE";

@@ -45,6 +45,8 @@ public final class EntityObjectGenerator {
     private static void generateEntityObject(String packageName, String outputDir, TypeDao typeDao, String typeName) throws IOException {
         Pojo pojo = PojoMapper.typeToPojo(typeName, typeDao.getTypeAttributes(typeName));
         pojo.setPackageName(packageName);
+        pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");
+        pojo.getImports().add("javax.annotation.Generated");
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
         FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
     }

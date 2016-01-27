@@ -48,7 +48,9 @@ public final class ProcedureContextGenerator {
     private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p) throws IOException {
         Pojo pojo = PojoMapper.procedureToPojo(p);
         pojo.setPackageName(packageName);
+        pojo.setGeneratorName("org.obridge.generators.ProcedureContextGenerator");
         pojo.getImports().add(objectPackage + ".*");
+        pojo.getImports().add("javax.annotation.Generated");
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
         FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
     }

@@ -4,7 +4,9 @@ import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.List;
 import java.math.BigDecimal;
+import javax.annotation.Generated;
 
+@Generated("org.obridge.generators.EntityObjectGenerator")
 public class SampleTypeOne {
 
 

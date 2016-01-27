@@ -13,6 +13,7 @@ public class Pojo {
     private String comment;
     private List<String> imports;
     private List<String> otherCode;
+    private String generatorName;
 
     public List<String> getOtherCode() {
         return otherCode;
@@ -72,5 +73,13 @@ public class Pojo {
                 ", imports=" + imports +
                 ", otherCode=" + otherCode +
                 '}';
+    }
+
+    public void setGeneratorName(String generatorName) {
+        this.generatorName = generatorName;
+    }
+
+    public String getGeneratorName() {
+        return generatorName;
     }
 }
