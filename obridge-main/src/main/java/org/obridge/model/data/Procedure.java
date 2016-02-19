@@ -98,6 +98,7 @@ public class Procedure {
         if (!"FUNCTION".equals(methodType)) {
             throw new OBridgeException("Only for functions.");
         }
+
         if (hasArguments()) {
             return argumentList.get(0).getJavaDataType();
         } else {
@@ -134,14 +135,4 @@ public class Procedure {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "Procedure{"
-                + "objectName='" + objectName + '\''
-                + ", procedureName='" + procedureName + '\''
-                + ", overload='" + overload + '\''
-                + ", methodType='" + methodType + '\''
-                + ", argumentList=" + argumentList
-                + '}';
-    }
 }

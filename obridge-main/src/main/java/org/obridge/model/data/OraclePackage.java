@@ -36,14 +36,6 @@ public class OraclePackage {
         return StringHelper.toCamelCase(name);
     }
 
-    @Override
-    public String toString() {
-        return "OraclePackage{"
-                + "name='" + name + '\''
-                + ", procedureList=" + procedureList
-                + '}';
-    }
-
     public String getJavaPackageName() {
         return javaPackageName;
     }

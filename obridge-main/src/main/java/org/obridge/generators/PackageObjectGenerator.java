@@ -36,6 +36,7 @@ public final class PackageObjectGenerator {
             for (OraclePackage oraclePackage : allPackages) {
                 generatePackageObject(packageName, contextPackage, converterPackage, objectPackage, outputDir, oraclePackage);
             }
+
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {

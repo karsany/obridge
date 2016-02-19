@@ -71,14 +71,4 @@ public class BindParam {
         this.outParam = outParam;
     }
 
-    @Override
-    public String toString() {
-        return "BindParam{" +
-                "procedureArgument=" + procedureArgument +
-                ", sequenceNumber=" + sequenceNumber +
-                ", paramName='" + paramName + '\'' +
-                ", inParam=" + inParam +
-                ", outParam=" + outParam +
-                '}';
-    }
 }

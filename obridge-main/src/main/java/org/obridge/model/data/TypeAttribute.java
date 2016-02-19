@@ -160,19 +160,6 @@ public class TypeAttribute {
 
     }
 
-    @Override
-    public String toString() {
-        return "TypeAttribute{" +
-                "attrName='" + attrName + '\'' +
-                ", attrTypeName='" + attrTypeName + '\'' +
-                ", attrNo=" + attrNo +
-                ", dataScale=" + dataScale +
-                ", multiType=" + multiType +
-                ", typeCode='" + typeCode + '\'' +
-                ", collectionBaseType='" + collectionBaseType + '\'' +
-                '}';
-    }
-
     public String getUnderlyingJavaTypeName() {
         if (multiType == 1) {
             if (TypeMapper.ORACLE_COLLECTION.equals(typeCode)) {

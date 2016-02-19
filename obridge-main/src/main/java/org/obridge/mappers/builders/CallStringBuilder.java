@@ -56,7 +56,7 @@ public class CallStringBuilder {
 
     private void generateBooleanOutputParameters(StringBuilder callString) {
         for (ProcedureArgument pa : procedure.getArgumentList()) {
-            if (pa.getArgumentName() != null && pa.isJDBCTypeBoolean() && pa.isOutParam()) {
+            if (pa.isOutputBooleanArgument()) {
                 addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
                 addBindParam("o" + pa.getArgumentName(), pa, false, true);
             }
@@ -66,7 +66,7 @@ public class CallStringBuilder {
     private void generateCall(StringBuilder callString) {
         generateOutReturnVariable(callString);
 
-        if(procedure.getObjectName() != null && !"".equals(procedure.getObjectName())) {
+        if (procedure.getObjectName() != null && !"".equals(procedure.getObjectName())) {
             addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
         } else {
             addLine(callString, "  \\\"" + procedure.getProcedureName() + "\\\"( ");
@@ -128,6 +128,5 @@ public class CallStringBuilder {
     public List<BindParam> getBindParams() {
         return bindParams;
     }
-
 
 }

@@ -218,4 +218,8 @@ public class ProcedureArgument {
     public void setOrigTypeName(String origTypeName) {
         this.origTypeName = origTypeName;
     }
+
+    public boolean isOutputBooleanArgument() {
+        return getArgumentName() != null && isJDBCTypeBoolean() && isOutParam();
+    }
 }
