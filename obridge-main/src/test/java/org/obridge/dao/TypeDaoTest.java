@@ -13,6 +13,7 @@ import java.util.List;
 
 public class TypeDaoTest extends BaseTest {
 
+    public static final String SAMPLE_TYPE_LISTS = "SAMPLE_TYPE_LISTS";
     private static final String SAMPLE_TYPE_ONE = "SAMPLE_TYPE_ONE";
     private static final String SAMPLE_TYPE_ONE_LIST = "SAMPLE_TYPE_ONE_LIST";
     private static final String SAMPLE_TYPE_TWO = "SAMPLE_TYPE_TWO";

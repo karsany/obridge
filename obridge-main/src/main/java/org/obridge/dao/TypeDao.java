@@ -39,10 +39,22 @@ import java.util.List;
  */
 public class TypeDao {
 
-    private static final String GET_TYPE_ATTRIBUTES = "SELECT attr_name, attr_type_name, attr_no, nvl(scale,-1) data_scale, case when attr_type_owner is not null then 1 else 0 end multi_type, bb.typecode, " +
-            "(select elem_type_name from user_coll_types t where t.TYPE_NAME = aa.attr_type_name) collection_base_type " +
-            "FROM user_type_attrs aa, user_types bb " +
-            "WHERE UPPER(aa.type_name) = ? and aa.attr_type_name = bb.type_name(+) ORDER BY attr_no ASC";
+    private static final String GET_TYPE_ATTRIBUTES = "Select attr_name,\n" +
+            "       attr_type_name,\n" +
+            "       attr_no,\n" +
+            "       nvl(nvl(scale, (Select scale From user_coll_types t Where t.type_name = aa.attr_type_name)), -1) data_scale,\n" +
+            "       Case\n" +
+            "         When attr_type_owner Is Not Null Then\n" +
+            "          1\n" +
+            "         Else\n" +
+            "          0\n" +
+            "       End multi_type,\n" +
+            "       bb.typecode,\n" +
+            "       (Select elem_type_name From user_coll_types t Where t.type_name = aa.attr_type_name) collection_base_type\n" +
+            "  From user_type_attrs aa, user_types bb\n" +
+            " Where upper(aa.type_name) = ?\n" +
+            "   And aa.attr_type_name = bb.type_name(+)\n" +
+            " Order By attr_no Asc";
 
     private JdbcTemplate jdbcTemplate;
 

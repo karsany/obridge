@@ -114,6 +114,11 @@ public class TypeMapper {
             return JAVA_INTEGER;
         }
 
+        // exception: if tpye is NUMBER with scale != 0
+        if (oracleTypeName.equals(ORACLE_NUMBER) && scale != 0) {
+            return JAVA_BIGDECIMAL;
+        }
+
         if (oracleToJavaMapping.containsKey(oracleTypeName)) {
             return oracleToJavaMapping.get(oracleTypeName);
         } else {

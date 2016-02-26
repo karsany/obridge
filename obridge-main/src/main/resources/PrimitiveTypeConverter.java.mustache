@@ -5,10 +5,12 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 
 import javax.annotation.Generated;
+import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Generated("org.obridge.generators.ConverterObjectGenerator")
@@ -29,4 +31,25 @@ public final class PrimitiveTypeConverter {
         }
         return new ARRAY(arrayDescriptor, connection, array.toArray());
     }
+
+    public static <T> List<T> asList(Array array, Class<T> targetClass) throws SQLException {
+
+
+        if (targetClass.equals(Integer.class)) {
+            List<T> r = new ArrayList<T>();
+
+            final BigDecimal[] baseArray = (BigDecimal[]) array.getArray();
+
+            for (BigDecimal b : baseArray) {
+                r.add((T) new Integer(b.intValue()));
+            }
+
+            return r;
+
+        } else {
+            return Arrays.asList((T[]) array.getArray());
+        }
+
+    }
+
 }

@@ -720,6 +720,104 @@ public final class TestPackage {
     }
 
 
+    public static void testManyNameList(TestPackageTestManyNameList ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"TEST_PACKAGE\".\"TEST_MANY_NAME_LIST\"( " +
+                                "    \"P_TP\" => :P_TP" +
+                                "   );" +
+                                "END;" +
+                                "");
+        // Set P_TP from context tp
+        if (ctx.getTp() != null) {
+            ocs.setObject(1, SampleTypeListsConverter.getStruct(ctx.getTp(), connection));
+        } else {
+            ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_LISTS");
+        }
+        ocs.registerOutParameter(1, Types.STRUCT, "SAMPLE_TYPE_LISTS"); // P_TP
+        ocs.execute();
+        ctx.setTp(SampleTypeListsConverter.getObject((Struct)ocs.getObject(1))); // P_TP
+        ocs.close();
+    }
+
+    public static TestPackageTestManyNameList testManyNameList(SampleTypeLists tp,  Connection connection) throws SQLException {
+        TestPackageTestManyNameList ctx = new TestPackageTestManyNameList();
+        ctx.setTp(tp);
+        testManyNameList(ctx, connection);
+        return ctx;
+    }
+
+    public static TestPackageTestManyNameList testManyNameList(SampleTypeLists tp,  DataSource dataSource) {
+        Connection conn = null;
+        TestPackageTestManyNameList ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return testManyNameList(tp,  conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public static void testManyNameMany(TestPackageTestManyNameMany ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"TEST_PACKAGE\".\"TEST_MANY_NAME_MANY\"( " +
+                                "    \"P_TP_GROUP\" => :P_TP_GROUP" +
+                                "   ,\"P_TP_LIST\" => :P_TP_LIST" +
+                                "   );" +
+                                "END;" +
+                                "");
+        // Set P_TP_GROUP from context tpGroup
+        ocs.setObject(1, SampleTypeTwoConverter.getListArray(ctx.getTpGroup(), connection, "SAMPLE_TYPE_TWO_GROUP"));
+        ocs.registerOutParameter(1, Types.ARRAY, "SAMPLE_TYPE_TWO_GROUP"); // P_TP_GROUP
+        // Set P_TP_LIST from context tpList
+        ocs.setObject(2, SampleTypeTwoConverter.getListArray(ctx.getTpList(), connection, "SAMPLE_TYPE_TWO_LIST"));
+        ocs.registerOutParameter(2, Types.ARRAY, "SAMPLE_TYPE_TWO_LIST"); // P_TP_LIST
+        ocs.execute();
+        ctx.setTpGroup(SampleTypeTwoConverter.getObjectList((Array)ocs.getObject(1))); // P_TP_GROUP
+        ctx.setTpList(SampleTypeTwoConverter.getObjectList((Array)ocs.getObject(2))); // P_TP_LIST
+        ocs.close();
+    }
+
+    public static TestPackageTestManyNameMany testManyNameMany(List<SampleTypeTwo> tpGroup, List<SampleTypeTwo> tpList,  Connection connection) throws SQLException {
+        TestPackageTestManyNameMany ctx = new TestPackageTestManyNameMany();
+        ctx.setTpGroup(tpGroup);
+        ctx.setTpList(tpList);
+        testManyNameMany(ctx, connection);
+        return ctx;
+    }
+
+    public static TestPackageTestManyNameMany testManyNameMany(List<SampleTypeTwo> tpGroup, List<SampleTypeTwo> tpList,  DataSource dataSource) {
+        Connection conn = null;
+        TestPackageTestManyNameMany ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return testManyNameMany(tpGroup, tpList,  conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void functionReturnsBoolean(TestPackageFunctionReturnsBoolean ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +

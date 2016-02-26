@@ -14,7 +14,8 @@ public class SampleTypeLists {
     private List<SampleTypeTwo> list2;
     private List<SampleTypeTwo> list3;
     private List<String> list4;
-    private List<Integer> list5;
+    private List<BigDecimal> list5;
+    private List<Integer> list6;
 
     public List<SampleTypeOne> getList1() {
         return this.list1;
@@ -48,12 +49,20 @@ public class SampleTypeLists {
         this.list4 = list4;
     }
 
-    public List<Integer> getList5() {
+    public List<BigDecimal> getList5() {
         return this.list5;
     }
 
-    public void setList5(List<Integer> list5) {
+    public void setList5(List<BigDecimal> list5) {
         this.list5 = list5;
+    }
+
+    public List<Integer> getList6() {
+        return this.list6;
+    }
+
+    public void setList6(List<Integer> list6) {
+        this.list6 = list6;
     }
 
 

@@ -110,7 +110,7 @@ public class TypeAttribute {
         if (multiType == 1) {
             if (TypeMapper.ORACLE_COLLECTION.equals(typeCode)) {
                 if (isPrimitiveList()) {
-                    return "List<" + new TypeMapper().getJavaType(collectionBaseType, 0) + ">";
+                    return "List<" + new TypeMapper().getJavaType(collectionBaseType, dataScale) + ">";
                 } else {
                     return "List<" + getJavaCollectionBaseTypeNameBig() + ">";
                 }
@@ -165,7 +165,7 @@ public class TypeAttribute {
         if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && !isPrimitiveList()) {
             return String.format("result.set%s(%sConverter.getObjectList((Array)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaCollectionBaseTypeNameBig(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_COLLECTION.equals(typeCode) && isPrimitiveList()) {
-            return String.format("result.set%s(Arrays.asList((%s[]) ((Array) attr[%d]).getArray())); // %s", getJavaPropertyNameBig(), getUnderlyingJavaTypeName(), getAttrNoIndex(), attrName);
+            return String.format("result.set%s(PrimitiveTypeConverter.asList((Array) attr[%d], %s.class)); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getUnderlyingJavaTypeName(), attrName);
         } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("result.set%s(%sConverter.getObject((Struct)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_DATE.equals(attrTypeName)) {
@@ -188,7 +188,7 @@ public class TypeAttribute {
         if (multiType == 1) {
             if (TypeMapper.ORACLE_COLLECTION.equals(typeCode)) {
                 if (isPrimitiveList()) {
-                    return new TypeMapper().getJavaType(collectionBaseType, 0);
+                    return new TypeMapper().getJavaType(collectionBaseType, dataScale);
                 } else {
                     return getJavaCollectionBaseTypeNameBig();
                 }

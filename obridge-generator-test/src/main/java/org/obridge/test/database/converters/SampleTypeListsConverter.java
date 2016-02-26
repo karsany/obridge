@@ -30,6 +30,7 @@ public final class SampleTypeListsConverter {
         struct.add(2, SampleTypeTwoConverter.getListArray(o.getList3(), connection, "SAMPLE_TYPE_TWO_LIST")); // LIST3
         struct.add(3, PrimitiveTypeConverter.getListArray(o.getList4(), connection, "SIMPLE_STRING_LIST")); // LIST4
         struct.add(4, PrimitiveTypeConverter.getListArray(o.getList5(), connection, "SIMPLE_NUMBER_LIST")); // LIST5
+        struct.add(5, PrimitiveTypeConverter.getListArray(o.getList6(), connection, "SIMPLE_INTEGER_LIST")); // LIST6
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
 
@@ -62,10 +63,13 @@ public final class SampleTypeListsConverter {
             result.setList3(SampleTypeTwoConverter.getObjectList((Array)attr[2])); // LIST3
         }
         if (attr[3] != null) {
-            result.setList4(Arrays.asList((String[]) ((Array) attr[3]).getArray())); // LIST4
+            result.setList4(PrimitiveTypeConverter.asList((Array) attr[3], String.class)); // LIST4
         }
         if (attr[4] != null) {
-            result.setList5(Arrays.asList((Integer[]) ((Array) attr[4]).getArray())); // LIST5
+            result.setList5(PrimitiveTypeConverter.asList((Array) attr[4], BigDecimal.class)); // LIST5
+        }
+        if (attr[5] != null) {
+            result.setList6(PrimitiveTypeConverter.asList((Array) attr[5], Integer.class)); // LIST6
         }
         return result;
     }
