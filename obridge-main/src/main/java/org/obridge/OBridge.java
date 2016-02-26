@@ -34,10 +34,8 @@ import org.obridge.generators.ProcedureContextGenerator;
 import org.obridge.util.OBridgeException;
 import org.obridge.util.XStreamFactory;
 
-import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Properties;
 
 public class OBridge {
@@ -70,12 +68,7 @@ public class OBridge {
             throw new OBridgeException("Exception in OBridge Main progam", e);
         } catch (IOException e) {
             throw new OBridgeException("Exception in OBridge Main progam", e);
-        } catch (SQLException e) {
-            throw new OBridgeException("Exception in OBridge Main progam", e);
-        } catch (PropertyVetoException e) {
-            throw new OBridgeException("Exception in OBridge Main progam", e);
         }
-
 
     }
 
@@ -104,7 +97,7 @@ public class OBridge {
         return parser.parse(o, args);
     }
 
-    public void generate(OBridgeConfiguration c) throws SQLException, IOException, PropertyVetoException {
+    public void generate(OBridgeConfiguration c) {
         // generate objects
         EntityObjectGenerator.generate(c);
 
@@ -116,7 +109,6 @@ public class OBridge {
 
         // generate packages
         PackageObjectGenerator.generate(c);
-
     }
 
     public OBridgeConfiguration loadConfiguration(File f) {
@@ -125,7 +117,7 @@ public class OBridge {
         return (OBridgeConfiguration) config;
     }
 
-    public void generate(File f) throws IOException, SQLException, PropertyVetoException {
+    public void generate(File f) {
         this.generate(loadConfiguration(f));
     }
 }
