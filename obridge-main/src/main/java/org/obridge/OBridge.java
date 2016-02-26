@@ -31,6 +31,7 @@ import org.obridge.generators.ConverterObjectGenerator;
 import org.obridge.generators.EntityObjectGenerator;
 import org.obridge.generators.PackageObjectGenerator;
 import org.obridge.generators.ProcedureContextGenerator;
+import org.obridge.util.OBridgeException;
 import org.obridge.util.XStreamFactory;
 
 import java.beans.PropertyVetoException;
@@ -41,28 +42,47 @@ import java.util.Properties;
 
 public class OBridge {
 
-    public static void main(String... args) throws SQLException, IOException, PropertyVetoException, ParseException {
+    public static void main(String... args) {
 
-        Options o = new Options();
-        CommandLine cmd = getCommandLine(o, args);
+        try {
 
-        if (cmd.hasOption("h")) {
-            printHelp(o);
-            return;
+            Options o = new Options();
+            CommandLine cmd = null;
+            cmd = getCommandLine(o, args);
+
+            if (cmd.hasOption("h")) {
+                printHelp(o);
+                return;
+            }
+
+            if (cmd.hasOption("v")) {
+                printVersion();
+                return;
+            }
+
+            if (cmd.hasOption("c")) {
+                new OBridge().generate(new File(cmd.getOptionValue("c")));
+            } else {
+                printHelp(o);
+            }
+
+        } catch (ParseException e) {
+            throw new OBridgeException("Exception in OBridge Main progam", e);
+        } catch (IOException e) {
+            throw new OBridgeException("Exception in OBridge Main progam", e);
+        } catch (SQLException e) {
+            throw new OBridgeException("Exception in OBridge Main progam", e);
+        } catch (PropertyVetoException e) {
+            throw new OBridgeException("Exception in OBridge Main progam", e);
         }
 
-        if (cmd.hasOption("v")) {
-            final Properties properties = new Properties();
-            properties.load(OBridge.class.getResourceAsStream("obridge-project.properties"));
-            System.out.println("OBridge version " + properties.getProperty("version"));
-            return;
-        }
 
-        if (cmd.hasOption("c")) {
-            new OBridge().generate(new File(cmd.getOptionValue("c")));
-        } else {
-            printHelp(o);
-        }
+    }
+
+    private static void printVersion() throws IOException {
+        final Properties properties = new Properties();
+        properties.load(OBridge.class.getResourceAsStream("obridge-project.properties"));
+        System.out.println("OBridge version " + properties.getProperty("version"));
     }
 
     private static void printHelp(Options o) {
