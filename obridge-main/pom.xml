@@ -144,7 +144,7 @@
                     </outputFormats>
                     <timestampedReports>false</timestampedReports>
                 </configuration>
-            </plugin>			
+            </plugin>
         </plugins>
         <resources>
             <resource>

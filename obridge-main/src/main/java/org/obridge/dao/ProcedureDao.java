@@ -124,15 +124,15 @@ public class ProcedureDao {
                 new RowMapper<Procedure>() {
                     @Override
                     public Procedure mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new Procedure(
-                                "",
-                                resultSet.getString("object_name"),
-                                resultSet.getString("overload") == null ? "" : resultSet.getString("overload"),
-                                resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION",
-                                getProcedureArguments("",
+                        return new Procedure.Builder()
+                                .objectName("")
+                                .procedureName(resultSet.getString("object_name"))
+                                .overload(resultSet.getString("overload") == null ? "" : resultSet.getString("overload"))
+                                .methodType(resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION")
+                                .argumentList(getProcedureArguments("",
                                         resultSet.getString("object_name"),
-                                        resultSet.getString("overload"))
-                        );
+                                        resultSet.getString("overload")))
+                                .build();
                     }
                 }
         );
@@ -161,15 +161,15 @@ public class ProcedureDao {
                 new RowMapper<Procedure>() {
                     @Override
                     public Procedure mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new Procedure(
-                                resultSet.getString("object_name"),
-                                resultSet.getString("procedure_name"),
-                                resultSet.getString("overload") == null ? "" : resultSet.getString("overload"),
-                                resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION",
-                                getProcedureArguments(resultSet.getString("object_name"),
+                        return new Procedure.Builder()
+                                .objectName(resultSet.getString("object_name"))
+                                .procedureName(resultSet.getString("procedure_name"))
+                                .overload(resultSet.getString("overload") == null ? "" : resultSet.getString("overload"))
+                                .methodType(resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION")
+                                .argumentList(getProcedureArguments(resultSet.getString("object_name"),
                                         resultSet.getString("procedure_name"),
-                                        resultSet.getString("overload"))
-                        );
+                                        resultSet.getString("overload")))
+                                .build();
                     }
                 }, packageNameFilter, procedureNameFilter
         );

@@ -44,31 +44,16 @@ public class Procedure {
     private List<BindParam> bindParams = null;
     private String callString;
 
-    public Procedure(String objectName, String procedureName, String overload, String methodType, List<ProcedureArgument> argumentList) {
-        this.objectName = objectName;
-        this.procedureName = procedureName;
-        this.overload = overload;
-        this.methodType = methodType;
-        this.argumentList = argumentList;
-        initBindParams();
+    private Procedure() {
     }
 
-    public Procedure(String objectName, String procedureName, String overload, String methodType) {
-        this.objectName = objectName;
-        this.procedureName = procedureName;
-        this.overload = overload;
-        this.methodType = methodType;
-        initBindParams();
-    }
-
-    public void initBindParams() {
+    private void initBindParams() {
         CallStringBuilder callStringBuilder = new CallStringBuilder(this);
         this.callString = callStringBuilder.build();
         this.bindParams = callStringBuilder.getBindParams();
     }
 
     public List<ProcedureArgument> getArgumentList() {
-
         return argumentList;
     }
 
@@ -85,7 +70,6 @@ public class Procedure {
     }
 
     public String getObjectName() {
-
         return objectName;
     }
 
@@ -157,6 +141,41 @@ public class Procedure {
             }
         }
         return false;
+    }
+
+    public static class Builder {
+        Procedure p = new Procedure();
+
+        public Builder objectName(String objectName) {
+            this.p.setObjectName(objectName);
+            return this;
+        }
+
+        public Builder procedureName(String procedureName) {
+            this.p.setProcedureName(procedureName);
+            return this;
+        }
+
+        public Builder overload(String overload) {
+            this.p.setOverload(overload);
+            return this;
+        }
+
+        public Builder methodType(String methodType) {
+            this.p.setMethodType(methodType);
+            return this;
+        }
+
+        public Builder argumentList(List<ProcedureArgument> argumentList) {
+            this.p.setArgumentList(argumentList);
+            return this;
+        }
+
+        public Procedure build() {
+            p.initBindParams();
+            return p;
+        }
+
     }
 
 }
