@@ -22,6 +22,7 @@ public final class ProceduresAndFunctions {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
                                 "BEGIN " +
+                                "  :result := " +
                                 "  \"EXECFUNCTION\"( " +
                                 "    \"PNUMBER\" => :PNUMBER" +
                                 "   ,\"PINTEXT\" => :PINTEXT" +
@@ -29,23 +30,25 @@ public final class ProceduresAndFunctions {
                                 "   );" +
                                 "END;" +
                                 "");
+        ocs.registerOutParameter(1, Types.VARCHAR); // null
         // Set PNUMBER from context pnumber
         if (ctx.getPnumber() != null) {
-            ocs.setBigDecimal(1, ctx.getPnumber());
+            ocs.setBigDecimal(2, ctx.getPnumber());
         } else {
-            ocs.setNull(1, Types.NUMERIC);
+            ocs.setNull(2, Types.NUMERIC);
         }
-        ocs.registerOutParameter(1, Types.NUMERIC); // PNUMBER
+        ocs.registerOutParameter(2, Types.NUMERIC); // PNUMBER
         // Set PINTEXT from context pintext
         if (ctx.getPintext() != null) {
-            ocs.setString(2, ctx.getPintext());
+            ocs.setString(3, ctx.getPintext());
         } else {
-            ocs.setNull(2, Types.VARCHAR);
+            ocs.setNull(3, Types.VARCHAR);
         }
-        ocs.registerOutParameter(3, Types.VARCHAR); // POUTTEXT
+        ocs.registerOutParameter(4, Types.VARCHAR); // POUTTEXT
         ocs.execute();
-        ctx.setPnumber(ocs.getBigDecimal(1)); // PNUMBER
-        ctx.setPouttext(ocs.getString(3)); // POUTTEXT
+        ctx.setFunctionReturn(ocs.getString(1)); // null
+        ctx.setPnumber(ocs.getBigDecimal(2)); // PNUMBER
+        ctx.setPouttext(ocs.getString(4)); // POUTTEXT
         ocs.close();
     }
 
