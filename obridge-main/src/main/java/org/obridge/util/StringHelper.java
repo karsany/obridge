@@ -24,6 +24,7 @@
 
 package org.obridge.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.Arrays;
@@ -65,7 +66,7 @@ public final class StringHelper {
         if (s != null && !s.isEmpty()) {
             for (int i = 0; i < s.length(); i++) {
                 currChar = s.substring(i, i + 1);
-                if (i != 0 && currChar.equals(currChar.toUpperCase())) {
+                if (i != 0 && StringUtils.isAllUpperCase(currChar)) {
                     result.append("_" + currChar);
                 } else {
                     result.append(currChar);
