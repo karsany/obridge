@@ -36,4 +36,6 @@ public class SimpleProceduresTest extends BaseTest {
         Assert.assertEquals("class java.lang.Integer", ret.getTp().getField1().getClass().toString());
 
     }
+
+
 }

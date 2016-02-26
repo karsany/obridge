@@ -18,6 +18,65 @@ public final class ProceduresAndFunctions {
     }
 
 
+    public static void execfunction(Execfunction ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"EXECFUNCTION\"( " +
+                                "    \"PNUMBER\" => :PNUMBER" +
+                                "   ,\"PINTEXT\" => :PINTEXT" +
+                                "   ,\"POUTTEXT\" => :POUTTEXT" +
+                                "   );" +
+                                "END;" +
+                                "");
+        // Set PNUMBER from context pnumber
+        if (ctx.getPnumber() != null) {
+            ocs.setBigDecimal(1, ctx.getPnumber());
+        } else {
+            ocs.setNull(1, Types.NUMERIC);
+        }
+        ocs.registerOutParameter(1, Types.NUMERIC); // PNUMBER
+        // Set PINTEXT from context pintext
+        if (ctx.getPintext() != null) {
+            ocs.setString(2, ctx.getPintext());
+        } else {
+            ocs.setNull(2, Types.VARCHAR);
+        }
+        ocs.registerOutParameter(3, Types.VARCHAR); // POUTTEXT
+        ocs.execute();
+        ctx.setPnumber(ocs.getBigDecimal(1)); // PNUMBER
+        ctx.setPouttext(ocs.getString(3)); // POUTTEXT
+        ocs.close();
+    }
+
+    public static Execfunction execfunction(BigDecimal pnumber, String pintext,  Connection connection) throws SQLException {
+        Execfunction ctx = new Execfunction();
+        ctx.setPnumber(pnumber);
+        ctx.setPintext(pintext);
+        execfunction(ctx, connection);
+        return ctx;
+    }
+
+    public static Execfunction execfunction(BigDecimal pnumber, String pintext,  DataSource dataSource) {
+        Connection conn = null;
+        Execfunction ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return execfunction(pnumber, pintext,  conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void testProcedure(TestProcedure ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
