@@ -199,7 +199,11 @@ Create Or Replace Package Body test_package Is
     p_tp.list5(p_tp.list5.last) := 3.5;
   
     p_tp.list6.extend;
-    p_tp.list6(p_tp.list6.last) := 28;  
+    p_tp.list6(p_tp.list6.last) := 28;
+  
+    p_tp.list7.extend;
+    p_tp.list7(p_tp.list7.last) := Date '2000-01-01';
+  
   End test_many_name_list;
 
   Procedure test_many_name_many(p_tp_group In Out sample_type_two_group, p_tp_list In Out sample_type_two_list) Is

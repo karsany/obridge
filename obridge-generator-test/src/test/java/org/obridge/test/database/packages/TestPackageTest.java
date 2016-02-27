@@ -9,6 +9,8 @@ import org.obridge.test.database.objects.SampleTypeOne;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -88,7 +90,7 @@ public class TestPackageTest extends BaseTest {
     }
 
     @Test
-    public void testSampleTypeLists() {
+    public void testSampleTypeLists() throws ParseException {
 
         SampleTypeLists sampleTypeLists = new SampleTypeLists();
         sampleTypeLists.setList4(Arrays.asList("a", "b", "c"));
@@ -98,6 +100,7 @@ public class TestPackageTest extends BaseTest {
         Assert.assertEquals("TEST", testPackageTestManyNameList.getTp().getList4().get(3));
         Assert.assertEquals(new BigDecimal(3.5), testPackageTestManyNameList.getTp().getList5().get(3));
         Assert.assertEquals(new Integer(28), testPackageTestManyNameList.getTp().getList6().get(3));
+        Assert.assertEquals(new java.sql.Date(new SimpleDateFormat("yyyyMMdd").parse("20000101").getTime()), testPackageTestManyNameList.getTp().getList7().get(0));
 
     }
 

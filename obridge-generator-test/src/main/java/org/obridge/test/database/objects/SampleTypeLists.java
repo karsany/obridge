@@ -16,6 +16,7 @@ public class SampleTypeLists {
     private List<String> list4;
     private List<BigDecimal> list5;
     private List<Integer> list6;
+    private List<Date> list7;
 
     public List<SampleTypeOne> getList1() {
         return this.list1;
@@ -63,6 +64,14 @@ public class SampleTypeLists {
 
     public void setList6(List<Integer> list6) {
         this.list6 = list6;
+    }
+
+    public List<Date> getList7() {
+        return this.list7;
+    }
+
+    public void setList7(List<Date> list7) {
+        this.list7 = list7;
     }
 
 

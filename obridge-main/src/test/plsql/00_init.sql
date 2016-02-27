@@ -52,6 +52,9 @@ create or replace type simple_integer_list force as table of number(10)
 create or replace type simple_number_list force as table of number
 /
 
+create or replace type simple_date_list force as table of date
+/
+
 
 create or replace type SAMPLE_TYPE_LISTS as object (
   list1  sample_type_one_list,
@@ -59,7 +62,8 @@ create or replace type SAMPLE_TYPE_LISTS as object (
   list3  sample_type_two_list,
   list4  SIMPLE_STRING_LIST,
   list5  SIMPLE_NUMBER_LIST,
-  list6  SIMPLE_INTEGER_LIST  
+  list6  SIMPLE_INTEGER_LIST,
+  list7  SIMPLE_DATE_LIST
 );
 /
 

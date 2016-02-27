@@ -31,6 +31,7 @@ public final class SampleTypeListsConverter {
         struct.add(3, PrimitiveTypeConverter.getListArray(o.getList4(), connection, "SIMPLE_STRING_LIST")); // LIST4
         struct.add(4, PrimitiveTypeConverter.getListArray(o.getList5(), connection, "SIMPLE_NUMBER_LIST")); // LIST5
         struct.add(5, PrimitiveTypeConverter.getListArray(o.getList6(), connection, "SIMPLE_INTEGER_LIST")); // LIST6
+        struct.add(6, PrimitiveTypeConverter.getListArray(o.getList7(), connection, "SIMPLE_DATE_LIST")); // LIST7
         return connection.createStruct(TYPE_NAME, struct.toArray());
     }
 
@@ -70,6 +71,9 @@ public final class SampleTypeListsConverter {
         }
         if (attr[5] != null) {
             result.setList6(PrimitiveTypeConverter.asList((Array) attr[5], Integer.class)); // LIST6
+        }
+        if (attr[6] != null) {
+            result.setList7(PrimitiveTypeConverter.asList((Array) attr[6], Date.class)); // LIST7
         }
         return result;
     }
