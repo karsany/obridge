@@ -171,14 +171,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return allTypes(n, bi, pi, vch, nvch, ch, nch, d, ts, cl, b, tbl, o,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -221,14 +221,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return booleanTest1(bool,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -295,14 +295,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return booleanTest2(n, boolIn, boolInout,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -349,14 +349,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return combinedTypesTest1(objectType, listOf,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -390,14 +390,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return getSysdate1( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -431,14 +431,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return getSysdate2( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -480,14 +480,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return helloWorld(name,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -531,14 +531,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return objectTypeTest1(objectType,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -572,14 +572,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return returnStringList( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -615,14 +615,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return simpleBooleanReturn( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -660,14 +660,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return sumList(list,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -707,14 +707,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return tableOfTest1(listOf,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -755,14 +755,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return testManyNameList(tp,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -805,14 +805,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return testManyNameMany(tpGroup, tpList,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -856,14 +856,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return functionReturnsBoolean(param1,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -907,14 +907,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return isitagoodfunction(param1,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -945,14 +945,14 @@ public final class TestPackage {
             conn = dataSource.getConnection();
             return quotedProcedureName( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }

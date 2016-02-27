@@ -67,14 +67,14 @@ public final class ProceduresAndFunctions {
             conn = dataSource.getConnection();
             return execfunction(pnumber, pintext,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -116,14 +116,14 @@ public final class ProceduresAndFunctions {
             conn = dataSource.getConnection();
             return testProcedure(name,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }

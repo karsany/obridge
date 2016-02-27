@@ -61,14 +61,14 @@ public final class {{javaClassName}} {
             conn = dataSource.getConnection();
             return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }

@@ -43,14 +43,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return a( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -209,14 +209,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return allTypes(n, bi, pi, vch, nvch, ch, nch, d, ts, cl, b, tbl, o,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -262,14 +262,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return funcWithTypes(param1, paramHello,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -300,14 +300,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return overload1( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -346,14 +346,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return overload2(a,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -402,14 +402,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return procWithLists(p1, p2, p3,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -440,14 +440,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return raiseError( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -480,14 +480,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return refcursorTest( conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -542,14 +542,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return simpleFunc(a, b,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }
@@ -590,14 +590,14 @@ public final class SimpleProcedures {
             conn = dataSource.getConnection();
             return testTypeWithIntegerField(tp,  conn);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new StoredProcedureCallException(e);
         } finally {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new StoredProcedureCallException(e);
             }
         }
     }

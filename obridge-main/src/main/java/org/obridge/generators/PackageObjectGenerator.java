@@ -61,6 +61,8 @@ public final class PackageObjectGenerator {
                 generatePackageObject(packageName, contextPackage, converterPackage, objectPackage, outputDir, oraclePackage);
             }
 
+            generateStoredProcedureCallExceptionClass(packageName, outputDir);
+
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
@@ -75,5 +77,12 @@ public final class PackageObjectGenerator {
         oraclePackage.setObjectPackage(objectPackage);
         String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
         FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource));
+    }
+
+    private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir) throws IOException {
+        OraclePackage op = new OraclePackage();
+        op.setJavaPackageName(packageName);
+        String javaSource = MustacheRunner.build("StoredProcedureCallException.java.mustache", op);
+        FileUtils.writeStringToFile(new File(outputDir + "StoredProcedureCallException.java"), CodeFormatter.format(javaSource));
     }
 }
