@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.obridge.test.BaseTest;
 import org.obridge.test.database.context.SimpleProceduresRefcursorTest;
 import org.obridge.test.database.context.SimpleProceduresTestTypeWithIntegerField;
+import org.obridge.test.database.util.StoredProcedureCallException;
 
 import java.sql.Connection;
 
@@ -34,6 +35,17 @@ public class SimpleProceduresTest extends BaseTest {
         Assert.assertEquals("ABCABC", ret.getTp().getField2());
 
         Assert.assertEquals("class java.lang.Integer", ret.getTp().getField1().getClass().toString());
+
+    }
+
+    @Test
+    public void testRaise() {
+        try {
+            SimpleProcedures.raiseError(ds);
+            Assert.assertFalse("should not be here", true);
+        } catch (StoredProcedureCallException e) {
+            Assert.assertTrue("Throwed exception", true);
+        }
 
     }
 

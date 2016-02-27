@@ -415,6 +415,44 @@ public final class SimpleProcedures {
     }
 
 
+    public static void raiseError(SimpleProceduresRaiseError ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"RAISE_ERROR\"( " +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.execute();
+        ocs.close();
+    }
+
+    public static SimpleProceduresRaiseError raiseError( Connection connection) throws SQLException {
+        SimpleProceduresRaiseError ctx = new SimpleProceduresRaiseError();
+        raiseError(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresRaiseError raiseError( DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresRaiseError ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return raiseError( conn);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
     public static void refcursorTest(SimpleProceduresRefcursorTest ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +

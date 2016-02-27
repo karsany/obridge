@@ -3,9 +3,7 @@ Create Or Replace Package simple_procedures Is
   Procedure a;
   Procedure overload;
   Procedure overload(a In Varchar2);
-  Function simple_func(a In Varchar2,
-                       b In Out Varchar2,
-                       c Out Varchar2) Return Number;
+  Function simple_func(a In Varchar2, b In Out Varchar2, c Out Varchar2) Return Number;
 
   Procedure func_with_types(p_param_1     In sample_type_one,
                             p_param_hello In sample_type_one_list,
@@ -34,6 +32,8 @@ Create Or Replace Package simple_procedures Is
 
   Procedure test_type_with_integer_field(p_tp In Out sample_type_three);
 
+  Procedure raise_error;
+
 End simple_procedures;
 /
 Create Or Replace Package Body simple_procedures Is
@@ -53,9 +53,7 @@ Create Or Replace Package Body simple_procedures Is
     Null;
   End;
 
-  Function simple_func(a In Varchar2,
-                       b In Out Varchar2,
-                       c Out Varchar2) Return Number Is
+  Function simple_func(a In Varchar2, b In Out Varchar2, c Out Varchar2) Return Number Is
   Begin
     b := b || 'a';
     c := 'c' || b;
@@ -97,20 +95,23 @@ Create Or Replace Package Body simple_procedures Is
   Procedure refcursor_test(p_refc Out Sys_Refcursor) Is
   Begin
     Open p_refc For
-      Select *
-        From dual;
+      Select * From dual;
   End refcursor_test;
 
   Procedure test_type_with_integer_field(p_tp In Out sample_type_three) Is
   Begin
-    If p_tp Is Null
-    Then
+    If p_tp Is Null Then
       p_tp := sample_type_three(field1 => 0, field2 => '');
     End If;
     p_tp.field1 := p_tp.field1 + 1;
     p_tp.field2 := p_tp.field2 || 'ABC';
   
   End test_type_with_integer_field;
+
+  Procedure raise_error Is
+  Begin
+    raise_application_error(-20001, 'Test Raise');
+  End raise_error;
 
 End simple_procedures;
 /
