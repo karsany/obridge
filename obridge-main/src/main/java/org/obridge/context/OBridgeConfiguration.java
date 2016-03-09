@@ -33,6 +33,8 @@ package org.obridge.context;
  */
 public class OBridgeConfiguration {
 
+    public final static boolean GENERATE_SOURCE_FOR_PLSQL_TYPES = false;
+
     private String jdbcUrl;
     private String sourceRoot;
     private String rootPackageName;

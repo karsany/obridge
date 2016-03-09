@@ -24,4 +24,5 @@ public class ProceduresAndFunctionsTest extends BaseTest {
         Assert.assertEquals("Out:  In: Hello", execfunctionTest.getPouttext());
     }
 
+
 }

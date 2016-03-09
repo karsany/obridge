@@ -24,6 +24,7 @@
 
 package org.obridge.dao;
 
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.model.data.OraclePackage;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.data.ProcedureArgument;
@@ -40,62 +41,66 @@ import java.util.List;
  */
 public class ProcedureDao {
 
-    private static final String GET_ALL_PROCEDURE = "Select object_name\n"
-            + "      ,procedure_name\n"
-            + "      ,overload\n"
-            + "      ,(Select Count(*)\n"
-            + "         From user_arguments a\n"
-            + "        Where a.object_name = t.procedure_name\n"
-            + "          And a.package_name = t.object_name\n"
-            + "          And nvl(a.overload,'##NVL##') = nvl(t.overload,'##NVL##')\n"
-            + "          And a.argument_name Is Null\n"
-            + "          And a.data_level = 0"
-            + "          And a.data_type is not null) proc_or_func\n"
-            + "  From user_procedures t\n"
-            + " Where procedure_name Is Not Null\n"
-            + "   And object_type = 'PACKAGE'"
-            + "   And object_name like ? "
-            + "   And procedure_name like ? "
-            + " and not ((object_name, procedure_name, nvl(overload, -1)) In\n"
-            + "       (Select package_name,\n"
-            + "               object_name,\n"
-            + "               nvl(overload, -1)\n"
-            + "          From user_arguments\n"
-            + "         Where data_type in ( 'PL/SQL RECORD', 'PL/SQL TABLE' )\n"
-            + "    Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n"
-            + ") or procedure_name = 'ASSERT')\n";
+    private static final String GET_ALL_PROCEDURE =
+            "Select object_name,\n" +
+                    "       procedure_name,\n" +
+                    "       overload,\n" +
+                    "       (Select Count(*)\n" +
+                    "          From user_arguments a\n" +
+                    "         Where a.object_name = t.procedure_name\n" +
+                    "           And a.package_name = t.object_name\n" +
+                    "           And nvl(a.overload, '##NVL##') = nvl(t.overload, '##NVL##')\n" +
+                    "           And a.argument_name Is Null\n" +
+                    "           And a.data_level = 0\n" +
+                    "           And a.data_type Is Not Null) proc_or_func\n" +
+                    "  From user_procedures t\n" +
+                    " Where procedure_name Is Not Null\n" +
+                    "   And object_type = 'PACKAGE'\n" +
+                    "   And object_name Like ?\n" +
+                    "   And procedure_name Like ?\n" +
+                    "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
+                    "        (Select package_name, object_name, nvl(overload, -1)\n" +
+                    "               From user_arguments\n" +
+                    "              Where data_type In ('PL/SQL TABLE')\n" +
+                    "                 Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n" +
+                    "                 Or (data_type = 'PL/SQL RECORD' " +
+                    (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
+                    ")))\n" +
+                    "    Or procedure_name = 'ASSERT'";
 
 
-    private static final String GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE = "Select object_name\n"
-            + "      ,procedure_name\n"
-            + "      ,overload\n"
-            + "      ,(Select Count(*)\n"
-            + "         From user_arguments a\n"
-            + "        Where a.object_name = t.object_name\n"
-            + "          And a.package_name Is Null\n"
-            + "          And nvl(a.overload,'##NVL##') = nvl(t.overload,'##NVL##')\n"
-            + "          And a.argument_name Is Null\n"
-            + "          And a.data_level = 0"
-            + "          And a.data_type is not null) proc_or_func\n"
-            + "  From user_procedures t\n"
-            + " Where procedure_name Is Null\n"
-            + "   And object_type in ( 'PROCEDURE', 'FUNCTION' )"
-            + " and not ((object_name, procedure_name, nvl(overload, -1)) In\n"
-            + "       (Select object_name,\n"
-            + "               package_name,\n"
-            + "               nvl(overload, -1)\n"
-            + "          From user_arguments\n"
-            + "         Where data_type in ( 'PL/SQL RECORD', 'PL/SQL TABLE' )\n"
-            + "    Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n"
-            + ") or object_name = 'ASSERT')\n";
+    private static final String GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE =
+            "Select object_name,\n" +
+                    "       procedure_name,\n" +
+                    "       overload,\n" +
+                    "       (Select Count(*)\n" +
+                    "          From user_arguments a\n" +
+                    "         Where a.object_name = t.object_name\n" +
+                    "           And a.package_name Is Null\n" +
+                    "           And nvl(a.overload, '##NVL##') = nvl(t.overload, '##NVL##')\n" +
+                    "           And a.argument_name Is Null\n" +
+                    "           And a.data_level = 0\n" +
+                    "           And a.data_type Is Not Null) proc_or_func\n" +
+                    "  From user_procedures t\n" +
+                    " Where procedure_name Is Null\n" +
+                    "   And object_type In ('PROCEDURE', 'FUNCTION')\n" +
+                    "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
+                    "        (Select object_name, package_name, nvl(overload, -1)\n" +
+                    "               From user_arguments\n" +
+                    "              Where data_type In ('PL/SQL TABLE')\n" +
+                    "                 Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n" +
+                    "                 Or (data_type = 'PL/SQL RECORD' " +
+                    (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
+                    ")))\n" +
+                    "    Or procedure_name = 'ASSERT'";
 
     private static final String GET_PROCEDURE_ARGUMENTS = "  select argument_name," +
             "data_type," +
-            "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name) type_name," +
+            "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
             "defaulted," +
             "in_out," +
             "rownum sequen, p.type_name orig_type_name " +
-            "from (Select argument_name, data_type, type_name, defaulted, in_out\n"
+            "from (Select argument_name, data_type, type_name, type_subname, defaulted, in_out\n"
             + "        From user_arguments t\n"
             + "       Where nvl(t.package_name, '###') = nvl((?), '###')\n"
             + "         And t.object_name = (?)\n"

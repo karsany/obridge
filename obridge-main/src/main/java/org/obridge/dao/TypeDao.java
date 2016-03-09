@@ -56,6 +56,28 @@ public class TypeDao {
             "   And aa.attr_type_name = bb.type_name(+)\n" +
             " Order By attr_no Asc";
 
+    final String GET_EMBEDDED_TYPE_ATTRIBUTES =
+            "Select *\n" +
+                    "  From (Select Distinct d.argument_name attr_name,\n" +
+                    "                        d.data_type attr_type_name,\n" +
+                    "                        d.position attr_no,\n" +
+                    "                        nvl(d.data_scale, -1) data_scale,\n" +
+                    "                        0 multi_type,\n" +
+                    "                        bb.typecode typecode,\n" +
+                    "                        Null collection_base_type\n" +
+                    "          From (Select t.*\n" +
+                    "                  From user_arguments t\n" +
+                    "                 Where t.type_name || '_' || t.type_subname = ?\n" +
+                    "                   And rownum < 2) m\n" +
+                    "          Left Join (Select * From user_arguments t Where data_level = 1) d\n" +
+                    "            On m.object_name = d.object_name\n" +
+                    "           And m.package_name = d.package_name\n" +
+                    "           And nvl(m.overload, -1) = nvl(d.overload, -1)\n" +
+                    "          Left Join user_types bb\n" +
+                    "            On d.data_type = bb.type_name)\n" +
+                    " Order By attr_no";
+
+
     private JdbcTemplate jdbcTemplate;
 
     public TypeDao(DataSource dataSource) {
@@ -85,5 +107,30 @@ public class TypeDao {
                     }
                 }
         );
+    }
+
+    public List<String> getEmbeddedTypeList() {
+        return jdbcTemplate.queryForList("Select Distinct type_name || '_' || type_subname\n" +
+                "  From user_arguments t\n" +
+                " Where type_subname Is Not Null");
+    }
+
+    public List<TypeAttribute> getEmbeddedTypeAttributes(String typeName) {
+
+        return jdbcTemplate.query(GET_EMBEDDED_TYPE_ATTRIBUTES,
+                new Object[]{typeName.toUpperCase()}, new RowMapper<TypeAttribute>() {
+                    @Override
+                    public TypeAttribute mapRow(ResultSet resultSet, int i) throws SQLException {
+                        return new TypeAttribute(
+                                resultSet.getString("attr_name"),
+                                resultSet.getString("attr_type_name"),
+                                resultSet.getInt("attr_no"),
+                                resultSet.getInt("data_scale"),
+                                resultSet.getInt("multi_type"),
+                                resultSet.getString("typecode"),
+                                resultSet.getString("collection_base_type")
+                        );
+                    }
+                });
     }
 }

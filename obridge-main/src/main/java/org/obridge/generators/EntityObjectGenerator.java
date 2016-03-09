@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.mappers.PojoMapper;
+import org.obridge.model.data.TypeAttribute;
 import org.obridge.model.generator.Pojo;
 import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
@@ -55,10 +56,18 @@ public final class EntityObjectGenerator {
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
             List<String> types = typeDao.getTypeList();
-
             for (String typeName : types) {
-                generateEntityObject(packageName, outputDir, typeDao, typeName);
+                generateEntityObject(packageName, outputDir, typeName, typeDao.getTypeAttributes(typeName));
             }
+
+            if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
+                List<String> embeddedTypes = typeDao.getEmbeddedTypeList();
+                for (String typeName : embeddedTypes) {
+                    generateEntityObject(packageName, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName));
+                }
+            }
+
+
         } catch (PropertyVetoException e) {
             throw new OBridgeException(e);
         } catch (IOException e) {
@@ -66,8 +75,8 @@ public final class EntityObjectGenerator {
         }
     }
 
-    private static void generateEntityObject(String packageName, String outputDir, TypeDao typeDao, String typeName) throws IOException {
-        Pojo pojo = PojoMapper.typeToPojo(typeName, typeDao.getTypeAttributes(typeName));
+    private static void generateEntityObject(String packageName, String outputDir, String typeName, List<TypeAttribute> typeAttributes) throws IOException {
+        Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");
         pojo.getImports().add("javax.annotation.Generated");

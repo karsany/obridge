@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.model.data.Type;
+import org.obridge.model.data.TypeAttribute;
 import org.obridge.model.generator.Pojo;
 import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
@@ -56,9 +57,15 @@ public final class ConverterObjectGenerator {
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
             List<String> types = typeDao.getTypeList();
-
             for (String typeName : types) {
-                generateType(packageName, objectPackage, outputDir, typeDao, typeName);
+                generateType(packageName, objectPackage, outputDir, typeName, typeDao.getTypeAttributes(typeName));
+            }
+
+            if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
+                List<String> embeddedTypes = typeDao.getEmbeddedTypeList();
+                for (String typeName : embeddedTypes) {
+                    generateType(packageName, objectPackage, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName));
+                }
             }
 
             generatePrimitiveTypeConverter(packageName, outputDir);
@@ -77,10 +84,10 @@ public final class ConverterObjectGenerator {
         FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
     }
 
-    private static void generateType(String packageName, String objectPackage, String outputDir, TypeDao typeDao, String typeName) throws IOException {
+    private static void generateType(String packageName, String objectPackage, String outputDir, String typeName, List<TypeAttribute> typeAttributes) throws IOException {
         Type t = new Type();
         t.setTypeName(typeName);
-        t.setAttributeList(typeDao.getTypeAttributes(typeName));
+        t.setAttributeList(typeAttributes);
         t.setConverterPackageName(packageName);
         t.setObjectPackage(objectPackage);
         String javaSource = MustacheRunner.build("converter.mustache", t);

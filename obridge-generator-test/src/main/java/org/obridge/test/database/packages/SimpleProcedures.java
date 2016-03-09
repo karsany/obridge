@@ -56,6 +56,205 @@ public final class SimpleProcedures {
     }
 
 
+    public static void overload1(SimpleProceduresOverload1 ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"OVERLOAD\"( " +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.execute();
+        ocs.close();
+    }
+
+    public static SimpleProceduresOverload1 overload1( Connection connection) throws SQLException {
+        SimpleProceduresOverload1 ctx = new SimpleProceduresOverload1();
+        overload1(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresOverload1 overload1( DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresOverload1 ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return overload1( conn);
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
+            }
+        }
+    }
+
+
+    public static void overload2(SimpleProceduresOverload2 ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"OVERLOAD\"( " +
+                                "    \"A\" => :A" +
+                                "   );" +
+                                "END;" +
+                                "");
+        // Set A from context a
+        if (ctx.getA() != null) {
+            ocs.setString(1, ctx.getA());
+        } else {
+            ocs.setNull(1, Types.VARCHAR);
+        }
+        ocs.execute();
+        ocs.close();
+    }
+
+    public static SimpleProceduresOverload2 overload2(String a,  Connection connection) throws SQLException {
+        SimpleProceduresOverload2 ctx = new SimpleProceduresOverload2();
+        ctx.setA(a);
+        overload2(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresOverload2 overload2(String a,  DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresOverload2 ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return overload2(a,  conn);
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
+            }
+        }
+    }
+
+
+    public static void simpleFunc(SimpleProceduresSimpleFunc ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  :result := " +
+                                "  \"SIMPLE_PROCEDURES\".\"SIMPLE_FUNC\"( " +
+                                "    \"A\" => :A" +
+                                "   ,\"B\" => :B" +
+                                "   ,\"C\" => :C" +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.registerOutParameter(1, Types.NUMERIC); // null
+        // Set A from context a
+        if (ctx.getA() != null) {
+            ocs.setString(2, ctx.getA());
+        } else {
+            ocs.setNull(2, Types.VARCHAR);
+        }
+        // Set B from context b
+        if (ctx.getB() != null) {
+            ocs.setString(3, ctx.getB());
+        } else {
+            ocs.setNull(3, Types.VARCHAR);
+        }
+        ocs.registerOutParameter(3, Types.VARCHAR); // B
+        ocs.registerOutParameter(4, Types.VARCHAR); // C
+        ocs.execute();
+        ctx.setFunctionReturn(ocs.getBigDecimal(1)); // null
+        ctx.setB(ocs.getString(3)); // B
+        ctx.setC(ocs.getString(4)); // C
+        ocs.close();
+    }
+
+    public static SimpleProceduresSimpleFunc simpleFunc(String a, String b,  Connection connection) throws SQLException {
+        SimpleProceduresSimpleFunc ctx = new SimpleProceduresSimpleFunc();
+        ctx.setA(a);
+        ctx.setB(b);
+        simpleFunc(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresSimpleFunc simpleFunc(String a, String b,  DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresSimpleFunc ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return simpleFunc(a, b,  conn);
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
+            }
+        }
+    }
+
+
+    public static void funcWithTypes(SimpleProceduresFuncWithTypes ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"FUNC_WITH_TYPES\"( " +
+                                "    \"P_PARAM_1\" => :P_PARAM_1" +
+                                "   ,\"P_PARAM_HELLO\" => :P_PARAM_HELLO" +
+                                "   ,\"P_PARAM_TWO\" => :P_PARAM_TWO" +
+                                "   );" +
+                                "END;" +
+                                "");
+        // Set P_PARAM_1 from context param1
+        if (ctx.getParam1() != null) {
+            ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
+        } else {
+            ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_ONE");
+        }
+        // Set P_PARAM_HELLO from context paramHello
+        ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getParamHello(), connection, "SAMPLE_TYPE_ONE_LIST"));
+        ocs.registerOutParameter(3, Types.STRUCT, "SAMPLE_TYPE_TWO"); // P_PARAM_TWO
+        ocs.execute();
+        ctx.setParamTwo(SampleTypeTwoConverter.getObject((Struct)ocs.getObject(3))); // P_PARAM_TWO
+        ocs.close();
+    }
+
+    public static SimpleProceduresFuncWithTypes funcWithTypes(SampleTypeOne param1, List<SampleTypeOne> paramHello,  Connection connection) throws SQLException {
+        SimpleProceduresFuncWithTypes ctx = new SimpleProceduresFuncWithTypes();
+        ctx.setParam1(param1);
+        ctx.setParamHello(paramHello);
+        funcWithTypes(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresFuncWithTypes funcWithTypes(SampleTypeOne param1, List<SampleTypeOne> paramHello,  DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresFuncWithTypes ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return funcWithTypes(param1, paramHello,  conn);
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
+            }
+        }
+    }
+
+
     public static void allTypes(SimpleProceduresAllTypes ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
@@ -222,143 +421,6 @@ public final class SimpleProcedures {
     }
 
 
-    public static void funcWithTypes(SimpleProceduresFuncWithTypes ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall(                "" +
-                                "DECLARE " +
-                                "BEGIN " +
-                                "  \"SIMPLE_PROCEDURES\".\"FUNC_WITH_TYPES\"( " +
-                                "    \"P_PARAM_1\" => :P_PARAM_1" +
-                                "   ,\"P_PARAM_HELLO\" => :P_PARAM_HELLO" +
-                                "   ,\"P_PARAM_TWO\" => :P_PARAM_TWO" +
-                                "   );" +
-                                "END;" +
-                                "");
-        // Set P_PARAM_1 from context param1
-        if (ctx.getParam1() != null) {
-            ocs.setObject(1, SampleTypeOneConverter.getStruct(ctx.getParam1(), connection));
-        } else {
-            ocs.setNull(1, Types.STRUCT, "SAMPLE_TYPE_ONE");
-        }
-        // Set P_PARAM_HELLO from context paramHello
-        ocs.setObject(2, SampleTypeOneConverter.getListArray(ctx.getParamHello(), connection, "SAMPLE_TYPE_ONE_LIST"));
-        ocs.registerOutParameter(3, Types.STRUCT, "SAMPLE_TYPE_TWO"); // P_PARAM_TWO
-        ocs.execute();
-        ctx.setParamTwo(SampleTypeTwoConverter.getObject((Struct)ocs.getObject(3))); // P_PARAM_TWO
-        ocs.close();
-    }
-
-    public static SimpleProceduresFuncWithTypes funcWithTypes(SampleTypeOne param1, List<SampleTypeOne> paramHello,  Connection connection) throws SQLException {
-        SimpleProceduresFuncWithTypes ctx = new SimpleProceduresFuncWithTypes();
-        ctx.setParam1(param1);
-        ctx.setParamHello(paramHello);
-        funcWithTypes(ctx, connection);
-        return ctx;
-    }
-
-    public static SimpleProceduresFuncWithTypes funcWithTypes(SampleTypeOne param1, List<SampleTypeOne> paramHello,  DataSource dataSource) {
-        Connection conn = null;
-        SimpleProceduresFuncWithTypes ret = null;
-        try {
-            conn = dataSource.getConnection();
-            return funcWithTypes(param1, paramHello,  conn);
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw new StoredProcedureCallException(e);
-            }
-        }
-    }
-
-
-    public static void overload1(SimpleProceduresOverload1 ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall(                "" +
-                                "DECLARE " +
-                                "BEGIN " +
-                                "  \"SIMPLE_PROCEDURES\".\"OVERLOAD\"( " +
-                                "   );" +
-                                "END;" +
-                                "");
-        ocs.execute();
-        ocs.close();
-    }
-
-    public static SimpleProceduresOverload1 overload1( Connection connection) throws SQLException {
-        SimpleProceduresOverload1 ctx = new SimpleProceduresOverload1();
-        overload1(ctx, connection);
-        return ctx;
-    }
-
-    public static SimpleProceduresOverload1 overload1( DataSource dataSource) {
-        Connection conn = null;
-        SimpleProceduresOverload1 ret = null;
-        try {
-            conn = dataSource.getConnection();
-            return overload1( conn);
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw new StoredProcedureCallException(e);
-            }
-        }
-    }
-
-
-    public static void overload2(SimpleProceduresOverload2 ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall(                "" +
-                                "DECLARE " +
-                                "BEGIN " +
-                                "  \"SIMPLE_PROCEDURES\".\"OVERLOAD\"( " +
-                                "    \"A\" => :A" +
-                                "   );" +
-                                "END;" +
-                                "");
-        // Set A from context a
-        if (ctx.getA() != null) {
-            ocs.setString(1, ctx.getA());
-        } else {
-            ocs.setNull(1, Types.VARCHAR);
-        }
-        ocs.execute();
-        ocs.close();
-    }
-
-    public static SimpleProceduresOverload2 overload2(String a,  Connection connection) throws SQLException {
-        SimpleProceduresOverload2 ctx = new SimpleProceduresOverload2();
-        ctx.setA(a);
-        overload2(ctx, connection);
-        return ctx;
-    }
-
-    public static SimpleProceduresOverload2 overload2(String a,  DataSource dataSource) {
-        Connection conn = null;
-        SimpleProceduresOverload2 ret = null;
-        try {
-            conn = dataSource.getConnection();
-            return overload2(a,  conn);
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw new StoredProcedureCallException(e);
-            }
-        }
-    }
-
-
     public static void procWithLists(SimpleProceduresProcWithLists ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
@@ -415,44 +477,6 @@ public final class SimpleProcedures {
     }
 
 
-    public static void raiseError(SimpleProceduresRaiseError ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall(                "" +
-                                "DECLARE " +
-                                "BEGIN " +
-                                "  \"SIMPLE_PROCEDURES\".\"RAISE_ERROR\"( " +
-                                "   );" +
-                                "END;" +
-                                "");
-        ocs.execute();
-        ocs.close();
-    }
-
-    public static SimpleProceduresRaiseError raiseError( Connection connection) throws SQLException {
-        SimpleProceduresRaiseError ctx = new SimpleProceduresRaiseError();
-        raiseError(ctx, connection);
-        return ctx;
-    }
-
-    public static SimpleProceduresRaiseError raiseError( DataSource dataSource) {
-        Connection conn = null;
-        SimpleProceduresRaiseError ret = null;
-        try {
-            conn = dataSource.getConnection();
-            return raiseError( conn);
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw new StoredProcedureCallException(e);
-            }
-        }
-    }
-
-
     public static void refcursorTest(SimpleProceduresRefcursorTest ctx, Connection connection) throws SQLException {
         CallableStatement ocs = connection.prepareCall(                "" +
                                 "DECLARE " +
@@ -479,68 +503,6 @@ public final class SimpleProcedures {
         try {
             conn = dataSource.getConnection();
             return refcursorTest( conn);
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw new StoredProcedureCallException(e);
-            }
-        }
-    }
-
-
-    public static void simpleFunc(SimpleProceduresSimpleFunc ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall(                "" +
-                                "DECLARE " +
-                                "BEGIN " +
-                                "  :result := " +
-                                "  \"SIMPLE_PROCEDURES\".\"SIMPLE_FUNC\"( " +
-                                "    \"A\" => :A" +
-                                "   ,\"B\" => :B" +
-                                "   ,\"C\" => :C" +
-                                "   );" +
-                                "END;" +
-                                "");
-        ocs.registerOutParameter(1, Types.NUMERIC); // null
-        // Set A from context a
-        if (ctx.getA() != null) {
-            ocs.setString(2, ctx.getA());
-        } else {
-            ocs.setNull(2, Types.VARCHAR);
-        }
-        // Set B from context b
-        if (ctx.getB() != null) {
-            ocs.setString(3, ctx.getB());
-        } else {
-            ocs.setNull(3, Types.VARCHAR);
-        }
-        ocs.registerOutParameter(3, Types.VARCHAR); // B
-        ocs.registerOutParameter(4, Types.VARCHAR); // C
-        ocs.execute();
-        ctx.setFunctionReturn(ocs.getBigDecimal(1)); // null
-        ctx.setB(ocs.getString(3)); // B
-        ctx.setC(ocs.getString(4)); // C
-        ocs.close();
-    }
-
-    public static SimpleProceduresSimpleFunc simpleFunc(String a, String b,  Connection connection) throws SQLException {
-        SimpleProceduresSimpleFunc ctx = new SimpleProceduresSimpleFunc();
-        ctx.setA(a);
-        ctx.setB(b);
-        simpleFunc(ctx, connection);
-        return ctx;
-    }
-
-    public static SimpleProceduresSimpleFunc simpleFunc(String a, String b,  DataSource dataSource) {
-        Connection conn = null;
-        SimpleProceduresSimpleFunc ret = null;
-        try {
-            conn = dataSource.getConnection();
-            return simpleFunc(a, b,  conn);
         } catch (SQLException e) {
             throw new StoredProcedureCallException(e);
         } finally {
@@ -589,6 +551,44 @@ public final class SimpleProcedures {
         try {
             conn = dataSource.getConnection();
             return testTypeWithIntegerField(tp,  conn);
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        } finally {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
+            }
+        }
+    }
+
+
+    public static void raiseError(SimpleProceduresRaiseError ctx, Connection connection) throws SQLException {
+        CallableStatement ocs = connection.prepareCall(                "" +
+                                "DECLARE " +
+                                "BEGIN " +
+                                "  \"SIMPLE_PROCEDURES\".\"RAISE_ERROR\"( " +
+                                "   );" +
+                                "END;" +
+                                "");
+        ocs.execute();
+        ocs.close();
+    }
+
+    public static SimpleProceduresRaiseError raiseError( Connection connection) throws SQLException {
+        SimpleProceduresRaiseError ctx = new SimpleProceduresRaiseError();
+        raiseError(ctx, connection);
+        return ctx;
+    }
+
+    public static SimpleProceduresRaiseError raiseError( DataSource dataSource) {
+        Connection conn = null;
+        SimpleProceduresRaiseError ret = null;
+        try {
+            conn = dataSource.getConnection();
+            return raiseError( conn);
         } catch (SQLException e) {
             throw new StoredProcedureCallException(e);
         } finally {

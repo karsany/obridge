@@ -55,7 +55,6 @@ create or replace type simple_number_list force as table of number
 create or replace type simple_date_list force as table of date
 /
 
-
 create or replace type SAMPLE_TYPE_LISTS as object (
   list1  sample_type_one_list,
   list2  sample_type_two_group,
