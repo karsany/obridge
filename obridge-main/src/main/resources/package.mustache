@@ -19,29 +19,39 @@ public final class {{javaClassName}} {
 
     {{#procedureList}}
 
-    public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) throws SQLException {
-        CallableStatement ocs = connection.prepareCall({{& callString}});
-        {{#bindParams}}
-        {{#inParam}}
-        {{& paramSet}}
-        {{/inParam}}
-        {{#outParam}}
-        {{& regOutput}}
-        {{/outParam}}
-        {{/bindParams}}
-        ocs.execute();
-        {{#bindParams}}
-        {{#outParam}}
-        {{& paramGet}}
-        {{/outParam}}
-        {{/bindParams}}
-        {{^hasResultSetParam}}
-        ocs.close();
-        {{/hasResultSetParam}}
+    public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) {
+        try {
+            final CallableStatement ocs = connection.prepareCall({{& callString}});
+            try {
+                {{#bindParams}}
+                {{#inParam}}
+                {{& paramSet}}
+                {{/inParam}}
+                {{#outParam}}
+                {{& regOutput}}
+                {{/outParam}}
+                {{/bindParams}}
+                ocs.execute();
+                {{#bindParams}}
+                {{#outParam}}
+                {{& paramGet}}
+                {{/outParam}}
+                {{/bindParams}}
+            } finally  {
+                {{^hasResultSetParam}}
+                ocs.close();
+                {{/hasResultSetParam}}
+                {{#hasResultSetParam}}
+                // ResultSet as return parameter, not closing connection
+                {{/hasResultSetParam}}
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
     }
 
-    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) throws SQLException {
-        {{storedProcedureClassName}} ctx = new {{storedProcedureClassName}}();
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) {
+        final {{storedProcedureClassName}} ctx = new {{storedProcedureClassName}}();
         {{#argumentList}}
         {{#inParam}}
         ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
@@ -54,22 +64,20 @@ public final class {{javaClassName}} {
     }
 
     public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
-        Connection conn = null;
-        {{storedProcedureClassName}} ret = null;
-
         try {
-            conn = dataSource.getConnection();
-            return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
+            final Connection conn = dataSource.getConnection();
+            try {
+                return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
+            } finally {
+                {{^hasResultSetParam}}
+                conn.close();
+                {{/hasResultSetParam}}
+                {{#hasResultSetParam}}
+                // ResultSet as return parameter, not closing callable statement
+                {{/hasResultSetParam}}
+            }
         } catch (SQLException e) {
             throw new StoredProcedureCallException(e);
-        } finally {
-            try {
-                if (conn != null && !conn.isClosed()) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw new StoredProcedureCallException(e);
-            }
         }
     }
 

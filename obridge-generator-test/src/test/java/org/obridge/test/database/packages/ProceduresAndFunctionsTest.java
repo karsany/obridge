@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class ProceduresAndFunctionsTest extends BaseTest {
 
     @Test
-    public void testTestProcedure() throws Exception {
+    public void testTestProcedure() {
         TestProcedure oBridge = ProceduresAndFunctions.testProcedure("OBridge", ds);
         Assert.assertEquals("Hello OBridge", oBridge.getOut());
     }

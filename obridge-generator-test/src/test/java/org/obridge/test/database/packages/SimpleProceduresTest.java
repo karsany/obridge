@@ -7,11 +7,12 @@ import org.obridge.test.database.context.SimpleProceduresRefcursorTest;
 import org.obridge.test.database.context.SimpleProceduresTestTypeWithIntegerField;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class SimpleProceduresTest extends BaseTest {
 
     @Test
-    public void testRefcursorTest() throws Exception {
+    public void testRefcursorTest() throws SQLException {
 
         Connection connection = this.ds.getConnection();
         SimpleProceduresRefcursorTest ctx = SimpleProcedures.refcursorTest(connection);

@@ -20,7 +20,7 @@ public class TestPackageBooleanTest extends BaseTest {
     }
 
     @Test
-    public void testBooleanTest2() throws SQLException // throws Exception
+    public void testBooleanTest2() throws SQLException  // throws Exception
     {
         TestPackageBooleanTest2 ctx = new TestPackageBooleanTest2();
         ctx.setN(BigDecimal.ZERO);

@@ -19,7 +19,7 @@ import java.util.List;
 public class TestPackageTest extends BaseTest {
 
     @Test
-    public void testGetSysdate1() throws Exception {
+    public void testGetSysdate1()  {
         java.sql.Date expected = new java.sql.Date(new Date().getTime());
         java.sql.Date actual = TestPackage.getSysdate1(ds).getFunctionReturn();
         Assert.assertEquals(expected.toString(), actual.toString());
@@ -33,7 +33,7 @@ public class TestPackageTest extends BaseTest {
     }
 
     @Test
-    public void testHelloWorld() throws Exception {
+    public void testHelloWorld() {
         final String name = "FERKO";
         Assert.assertEquals("Hello " + name + "!", TestPackage.helloWorld(name, ds).getOut());
     }
