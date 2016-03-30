@@ -56,7 +56,7 @@ public class TypeDao {
             "   And aa.attr_type_name = bb.type_name(+)\n" +
             " Order By attr_no Asc";
 
-    final String GET_EMBEDDED_TYPE_ATTRIBUTES =
+    private static final String GET_EMBEDDED_TYPE_ATTRIBUTES =
             "Select *\n" +
                     "  From (Select Distinct d.argument_name attr_name,\n" +
                     "                        d.data_type attr_type_name,\n" +
