@@ -81,6 +81,21 @@ public final class ProceduresAndFunctions {
     }
 
 
+    public static void execfunction(DataSource dataSource, Execfunction ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                execfunction(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void testProcedure(TestProcedure ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -129,6 +144,21 @@ public final class ProceduresAndFunctions {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void testProcedure(DataSource dataSource, TestProcedure ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                testProcedure(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
 }

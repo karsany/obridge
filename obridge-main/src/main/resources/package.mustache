@@ -63,23 +63,37 @@ public final class {{javaClassName}} {
         return ctx;
     }
 
+    {{^hasResultSetParam}}
     public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
         try {
             final Connection conn = dataSource.getConnection();
             try {
                 return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
             } finally {
-                {{^hasResultSetParam}}
                 conn.close();
-                {{/hasResultSetParam}}
-                {{#hasResultSetParam}}
-                // ResultSet as return parameter, not closing callable statement
-                {{/hasResultSetParam}}
             }
         } catch (SQLException e) {
             throw new StoredProcedureCallException(e);
         }
     }
+    {{/hasResultSetParam}}
+
+
+    {{^hasResultSetParam}}
+    public static void {{javaProcedureName}}(DataSource dataSource, {{storedProcedureClassName}} ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                {{javaProcedureName}}(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+    {{/hasResultSetParam}}
+
 
     {{/procedureList}}
 

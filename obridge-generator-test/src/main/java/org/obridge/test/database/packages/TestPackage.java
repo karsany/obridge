@@ -60,6 +60,21 @@ public final class TestPackage {
     }
 
 
+    public static void getSysdate1(DataSource dataSource, TestPackageGetSysdate1 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                getSysdate1(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void getSysdate2(TestPackageGetSysdate2 ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -100,6 +115,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void getSysdate2(DataSource dataSource, TestPackageGetSysdate2 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                getSysdate2(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void helloWorld(TestPackageHelloWorld ctx, Connection connection) {
@@ -150,6 +180,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void helloWorld(DataSource dataSource, TestPackageHelloWorld ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                helloWorld(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void booleanTest2(TestPackageBooleanTest2 ctx, Connection connection) {
@@ -227,6 +272,21 @@ public final class TestPackage {
     }
 
 
+    public static void booleanTest2(DataSource dataSource, TestPackageBooleanTest2 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                booleanTest2(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void booleanTest1(TestPackageBooleanTest1 ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -276,6 +336,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void booleanTest1(DataSource dataSource, TestPackageBooleanTest1 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                booleanTest1(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void objectTypeTest1(TestPackageObjectTypeTest1 ctx, Connection connection) {
@@ -330,6 +405,21 @@ public final class TestPackage {
     }
 
 
+    public static void objectTypeTest1(DataSource dataSource, TestPackageObjectTypeTest1 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                objectTypeTest1(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void tableOfTest1(TestPackageTableOfTest1 ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -376,6 +466,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void tableOfTest1(DataSource dataSource, TestPackageTableOfTest1 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                tableOfTest1(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void combinedTypesTest1(TestPackageCombinedTypesTest1 ctx, Connection connection) {
@@ -431,6 +536,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void combinedTypesTest1(DataSource dataSource, TestPackageCombinedTypesTest1 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                combinedTypesTest1(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void allTypes(TestPackageAllTypes ctx, Connection connection) {
@@ -600,6 +720,21 @@ public final class TestPackage {
     }
 
 
+    public static void allTypes(DataSource dataSource, TestPackageAllTypes ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                allTypes(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void quotedProcedureName(TestPackageQuotedProcedureName ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -637,6 +772,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void quotedProcedureName(DataSource dataSource, TestPackageQuotedProcedureName ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                quotedProcedureName(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void isitagoodfunction(TestPackageIsitagoodfunction ctx, Connection connection) {
@@ -691,6 +841,21 @@ public final class TestPackage {
     }
 
 
+    public static void isitagoodfunction(DataSource dataSource, TestPackageIsitagoodfunction ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                isitagoodfunction(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void functionReturnsBoolean(TestPackageFunctionReturnsBoolean ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -743,6 +908,21 @@ public final class TestPackage {
     }
 
 
+    public static void functionReturnsBoolean(DataSource dataSource, TestPackageFunctionReturnsBoolean ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                functionReturnsBoolean(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void simpleBooleanReturn(TestPackageSimpleBooleanReturn ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -787,6 +967,21 @@ public final class TestPackage {
     }
 
 
+    public static void simpleBooleanReturn(DataSource dataSource, TestPackageSimpleBooleanReturn ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                simpleBooleanReturn(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void returnStringList(TestPackageReturnStringList ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -827,6 +1022,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void returnStringList(DataSource dataSource, TestPackageReturnStringList ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                returnStringList(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void sumList(TestPackageSumList ctx, Connection connection) {
@@ -873,6 +1083,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void sumList(DataSource dataSource, TestPackageSumList ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                sumList(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void testManyNameList(TestPackageTestManyNameList ctx, Connection connection) {
@@ -924,6 +1149,21 @@ public final class TestPackage {
     }
 
 
+    public static void testManyNameList(DataSource dataSource, TestPackageTestManyNameList ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                testManyNameList(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void testManyNameMany(TestPackageTestManyNameMany ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -973,6 +1213,21 @@ public final class TestPackage {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void testManyNameMany(DataSource dataSource, TestPackageTestManyNameMany ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                testManyNameMany(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
 }

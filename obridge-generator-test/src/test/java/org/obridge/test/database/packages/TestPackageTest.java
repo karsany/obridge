@@ -19,14 +19,14 @@ import java.util.List;
 public class TestPackageTest extends BaseTest {
 
     @Test
-    public void testGetSysdate1()  {
+    public void testGetSysdate1() {
         java.sql.Date expected = new java.sql.Date(new Date().getTime());
         java.sql.Date actual = TestPackage.getSysdate1(ds).getFunctionReturn();
         Assert.assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
-    public void testGetSysdate2() throws Exception {
+    public void testGetSysdate2() {
         java.sql.Date expected = new java.sql.Date(new Date().getTime());
         java.sql.Date actual = TestPackage.getSysdate2(ds).getSysdate();
         Assert.assertEquals(expected.toString(), actual.toString());
@@ -40,14 +40,14 @@ public class TestPackageTest extends BaseTest {
 
 
     @Test
-    public void testObjectType() throws SQLException {
+    public void testObjectType() {
         TestPackageObjectTypeTest1 ctx = new TestPackageObjectTypeTest1();
 
         SampleTypeOne objectType = new SampleTypeOne();
         objectType.setAttrInt(3);
         ctx.setObjectType(objectType);
 
-        TestPackage.objectTypeTest1(ctx, ds.getConnection());
+        TestPackage.objectTypeTest1(ds, ctx);
 
         Assert.assertEquals(3, ctx.getFunctionReturn().intValue());
         Assert.assertEquals("Hello!", ctx.getObjectType().getAttrVarchar());

@@ -57,6 +57,21 @@ public final class SimpleProcedures {
     }
 
 
+    public static void a(DataSource dataSource, SimpleProceduresA ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                a(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void overload1(SimpleProceduresOverload1 ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -94,6 +109,21 @@ public final class SimpleProcedures {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void overload1(DataSource dataSource, SimpleProceduresOverload1 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                overload1(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void overload2(SimpleProceduresOverload2 ctx, Connection connection) {
@@ -141,6 +171,21 @@ public final class SimpleProcedures {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void overload2(DataSource dataSource, SimpleProceduresOverload2 ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                overload2(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void simpleFunc(SimpleProceduresSimpleFunc ctx, Connection connection) {
@@ -206,6 +251,21 @@ public final class SimpleProcedures {
     }
 
 
+    public static void simpleFunc(DataSource dataSource, SimpleProceduresSimpleFunc ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                simpleFunc(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void funcWithTypes(SimpleProceduresFuncWithTypes ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -258,6 +318,21 @@ public final class SimpleProcedures {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void funcWithTypes(DataSource dataSource, SimpleProceduresFuncWithTypes ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                funcWithTypes(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
     public static void allTypes(SimpleProceduresAllTypes ctx, Connection connection) {
@@ -427,6 +502,21 @@ public final class SimpleProcedures {
     }
 
 
+    public static void allTypes(DataSource dataSource, SimpleProceduresAllTypes ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                allTypes(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void procWithLists(SimpleProceduresProcWithLists ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -484,6 +574,21 @@ public final class SimpleProcedures {
     }
 
 
+    public static void procWithLists(DataSource dataSource, SimpleProceduresProcWithLists ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                procWithLists(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void refcursorTest(SimpleProceduresRefcursorTest ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -512,18 +617,9 @@ public final class SimpleProcedures {
         return ctx;
     }
 
-    public static SimpleProceduresRefcursorTest refcursorTest( DataSource dataSource) {
-        try {
-            final Connection conn = dataSource.getConnection();
-            try {
-                return refcursorTest( conn);
-            } finally {
-                // ResultSet as return parameter, not closing callable statement
-            }
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        }
-    }
+
+
+
 
 
     public static void testTypeWithIntegerField(SimpleProceduresTestTypeWithIntegerField ctx, Connection connection) {
@@ -575,6 +671,21 @@ public final class SimpleProcedures {
     }
 
 
+    public static void testTypeWithIntegerField(DataSource dataSource, SimpleProceduresTestTypeWithIntegerField ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                testTypeWithIntegerField(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
+
+
     public static void raiseError(SimpleProceduresRaiseError ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall(                "" +
@@ -612,6 +723,21 @@ public final class SimpleProcedures {
             throw new StoredProcedureCallException(e);
         }
     }
+
+
+    public static void raiseError(DataSource dataSource, SimpleProceduresRaiseError ctx) {
+        try {
+            final Connection conn = dataSource.getConnection();
+            try {
+                raiseError(ctx, conn);
+            } finally {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            throw new StoredProcedureCallException(e);
+        }
+    }
+
 
 
 }
