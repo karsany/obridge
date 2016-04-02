@@ -25,7 +25,7 @@ The following types will be supported:
   * Types declared in source code
   * %ROWTYPE parameters
   
-Generated code compiles with Java 1.6 and has no dependencies. Generated code compiles without ojdbc dependency.
+Generated code compiles with Java 1.6.
 
 Usage
 -----
