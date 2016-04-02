@@ -5,11 +5,11 @@
     <parent>
         <groupId>org.obridge</groupId>
         <artifactId>obridge-parent</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
     </parent>
     <groupId>org.obridge.test</groupId>
     <artifactId>obridge-generator-test</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <name>obridge-generator-test</name>
     <url>http://maven.apache.org</url>
     <properties>
