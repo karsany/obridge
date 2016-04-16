@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class SimpleProceduresTestTypeWithIntegerField {
 
-
     private SampleTypeThree tp;
 
     public SampleTypeThree getTp() {

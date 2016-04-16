@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class Execfunction {
 
-
     private String functionReturn;
     private BigDecimal pnumber;
     private String pintext;

@@ -14,10 +14,6 @@ import {{.}};
 @Generated("{{generatorName}}")
 public class {{className}} {
 
-{{#otherCode}}
-    {{& .}}
-{{/otherCode}}
-
 {{#fields}}
     private {{& fieldType}} {{fieldName}};
 {{/fields}}

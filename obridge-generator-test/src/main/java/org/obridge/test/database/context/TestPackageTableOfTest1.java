@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageTableOfTest1 {
 
-
     private BigDecimal functionReturn;
     private List<SampleTypeOne> listOf;
 

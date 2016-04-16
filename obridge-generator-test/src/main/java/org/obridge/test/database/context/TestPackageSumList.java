@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageSumList {
 
-
     private BigDecimal functionReturn;
     private List<Integer> list;
 

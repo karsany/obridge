@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class SimpleProceduresOverload2 {
 
-
     private String a;
 
     public String getA() {

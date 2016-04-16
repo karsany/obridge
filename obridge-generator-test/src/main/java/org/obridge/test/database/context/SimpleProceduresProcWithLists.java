@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class SimpleProceduresProcWithLists {
 
-
     private List<SampleTypeOne> p1;
     private List<SampleTypeTwo> p2;
     private List<SampleTypeTwo> p3;

@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageBooleanTest1 {
 
-
     private String functionReturn;
     private Boolean bool;
 

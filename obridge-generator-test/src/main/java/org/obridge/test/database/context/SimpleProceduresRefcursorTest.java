@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class SimpleProceduresRefcursorTest {
 
-
     private ResultSet refc;
 
     public ResultSet getRefc() {

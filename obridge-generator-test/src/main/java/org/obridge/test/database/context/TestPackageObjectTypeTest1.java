@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageObjectTypeTest1 {
 
-
     private BigDecimal functionReturn;
     private SampleTypeOne objectType;
 

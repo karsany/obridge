@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageReturnStringList {
 
-
     private List<String> functionReturn;
 
     public List<String> getFunctionReturn() {

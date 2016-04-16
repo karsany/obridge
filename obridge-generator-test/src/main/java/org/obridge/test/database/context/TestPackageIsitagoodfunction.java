@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageIsitagoodfunction {
 
-
     private Boolean functionReturn;
     private SampleTypeOne param1;
 

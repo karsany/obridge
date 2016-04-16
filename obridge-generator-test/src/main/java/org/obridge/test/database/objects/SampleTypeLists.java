@@ -9,7 +9,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.EntityObjectGenerator")
 public class SampleTypeLists {
 
-
     private List<SampleTypeOne> list1;
     private List<SampleTypeTwo> list2;
     private List<SampleTypeTwo> list3;

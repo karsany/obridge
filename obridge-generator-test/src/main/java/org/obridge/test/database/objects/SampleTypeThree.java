@@ -9,7 +9,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.EntityObjectGenerator")
 public class SampleTypeThree {
 
-
     private Integer field1;
     private String field2;
 

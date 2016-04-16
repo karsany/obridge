@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageCombinedTypesTest1 {
 
-
     private SampleTypeOne objectType;
     private List<SampleTypeOne> listOf;
 

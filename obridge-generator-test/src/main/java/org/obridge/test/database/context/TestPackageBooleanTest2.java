@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageBooleanTest2 {
 
-
     private BigDecimal n;
     private Boolean boolIn;
     private Boolean boolOut;

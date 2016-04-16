@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageGetSysdate2 {
 
-
     private Date sysdate;
 
     public Date getSysdate() {

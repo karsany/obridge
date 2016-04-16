@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class TestPackageTestManyNameList {
 
-
     private SampleTypeLists tp;
 
     public SampleTypeLists getTp() {

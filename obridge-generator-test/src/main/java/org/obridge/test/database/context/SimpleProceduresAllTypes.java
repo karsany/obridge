@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class SimpleProceduresAllTypes {
 
-
     private BigDecimal n;
     private Integer bi;
     private Integer pi;

@@ -36,16 +36,7 @@ public class Pojo {
     private List<PojoField> fields;
     private String comment;
     private List<String> imports;
-    private List<String> otherCode;
     private String generatorName;
-
-    public List<String> getOtherCode() {
-        return otherCode;
-    }
-
-    public void setOtherCode(List<String> otherCode) {
-        this.otherCode = otherCode;
-    }
 
     public List<String> getImports() {
         return imports;
@@ -87,23 +78,11 @@ public class Pojo {
         this.packageName = packageName;
     }
 
-    @Override
-    public String toString() {
-        return "Pojo{" +
-                "packageName='" + packageName + '\'' +
-                ", className='" + className + '\'' +
-                ", fields=" + fields +
-                ", comment='" + comment + '\'' +
-                ", imports=" + imports +
-                ", otherCode=" + otherCode +
-                '}';
+    public String getGeneratorName() {
+        return generatorName;
     }
 
     public void setGeneratorName(String generatorName) {
         this.generatorName = generatorName;
-    }
-
-    public String getGeneratorName() {
-        return generatorName;
     }
 }

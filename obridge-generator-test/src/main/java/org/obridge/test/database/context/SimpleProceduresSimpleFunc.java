@@ -11,7 +11,6 @@ import javax.annotation.Generated;
 @Generated("org.obridge.generators.ProcedureContextGenerator")
 public class SimpleProceduresSimpleFunc {
 
-
     private BigDecimal functionReturn;
     private String a;
     private String b;

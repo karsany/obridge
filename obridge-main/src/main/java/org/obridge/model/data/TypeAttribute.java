@@ -50,60 +50,12 @@ public class TypeAttribute {
 
     }
 
-    public String getCollectionBaseType() {
-        return collectionBaseType;
-    }
-
-    public void setCollectionBaseType(String collectionBaseType) {
-        this.collectionBaseType = collectionBaseType;
-    }
-
-    public String getTypeCode() {
-        return typeCode;
-    }
-
-    public void setTypeCode(String typeCode) {
-        this.typeCode = typeCode;
-    }
-
-    public int getMultiType() {
-        return multiType;
-    }
-
-    public void setMultiType(int multiType) {
-        this.multiType = multiType;
-    }
-
     public String getAttrName() {
         return attrName;
     }
 
-    public void setAttrName(String attrName) {
-        this.attrName = attrName;
-    }
-
     public String getAttrTypeName() {
         return attrTypeName;
-    }
-
-    public void setAttrTypeName(String attrTypeName) {
-        this.attrTypeName = attrTypeName;
-    }
-
-    public int getAttrNo() {
-        return attrNo;
-    }
-
-    public void setAttrNo(int attrNo) {
-        this.attrNo = attrNo;
-    }
-
-    public int getDataScale() {
-        return dataScale;
-    }
-
-    public void setDataScale(int dataScale) {
-        this.dataScale = dataScale;
     }
 
     public String getJavaDataType() {
