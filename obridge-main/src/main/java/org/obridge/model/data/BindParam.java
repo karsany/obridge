@@ -43,30 +43,6 @@ public class BindParam {
         this.outParam = outParam;
     }
 
-    public ProcedureArgument getProcedureArgument() {
-        return procedureArgument;
-    }
-
-    public void setProcedureArgument(ProcedureArgument procedureArgument) {
-        this.procedureArgument = procedureArgument;
-    }
-
-    public int getSequenceNumber() {
-        return sequenceNumber;
-    }
-
-    public void setSequenceNumber(int sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
-    }
-
-    public String getParamName() {
-        return paramName;
-    }
-
-    public void setParamName(String paramName) {
-        this.paramName = paramName;
-    }
-
     public String getParamSet() {
         return procedureArgument.getParamSet(sequenceNumber);
     }
@@ -83,16 +59,8 @@ public class BindParam {
         return inParam;
     }
 
-    public void setInParam(boolean inParam) {
-        this.inParam = inParam;
-    }
-
     public boolean isOutParam() {
         return outParam;
-    }
-
-    public void setOutParam(boolean outParam) {
-        this.outParam = outParam;
     }
 
 }

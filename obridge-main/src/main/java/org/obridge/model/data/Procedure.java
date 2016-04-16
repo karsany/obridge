@@ -25,7 +25,6 @@
 package org.obridge.model.data;
 
 import org.obridge.mappers.builders.CallStringBuilder;
-import org.obridge.util.OBridgeException;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
 
@@ -103,36 +102,18 @@ public class Procedure {
     }
 
     public String getReturnJavaType() {
-        if (!"FUNCTION".equals(methodType)) {
-            throw new OBridgeException("Only for functions.");
-        }
-
-        if (hasArguments()) {
-            return argumentList.get(0).getJavaDataType();
-        } else {
-            return "void";
-        }
-    }
-
-    public boolean hasArguments() {
-        return this.argumentList != null && !this.argumentList.isEmpty();
+        return argumentList.get(0).getJavaDataType();
     }
 
     public String getCallString() {
         return this.callString;
     }
 
-    public void setCallString(String callString) {
-        this.callString = callString;
-    }
 
     public List<BindParam> getBindParams() {
         return bindParams;
     }
 
-    public void setBindParams(List<BindParam> bindParams) {
-        this.bindParams = bindParams;
-    }
 
     public boolean hasResultSetParam() {
         for (ProcedureArgument pa : this.argumentList) {

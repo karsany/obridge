@@ -48,10 +48,6 @@ public class OraclePackage {
         this.procedureList = procedureList;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         this.name = name;
     }

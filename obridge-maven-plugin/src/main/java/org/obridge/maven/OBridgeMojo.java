@@ -67,11 +67,4 @@ public class OBridgeMojo extends AbstractMojo {
 
     }
 
-    @Override
-    public String toString() {
-        return "OBridgeMojo{"
-                + "baseDir='" + baseDir + '\''
-                + ", configurationFile=" + configurationFile
-                + '}';
-    }
 }

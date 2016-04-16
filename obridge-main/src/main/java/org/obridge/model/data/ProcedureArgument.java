@@ -54,61 +54,26 @@ public class ProcedureArgument {
         this.origTypeName = origTypeName;
     }
 
-    public int getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(int sequence) {
-        this.sequence = sequence;
-    }
 
     public boolean isInParam() {
         return inParam;
     }
 
-    public void setInParam(boolean inParam) {
-        this.inParam = inParam;
-    }
 
     public boolean isOutParam() {
         return outParam;
     }
 
-    public void setOutParam(boolean outParam) {
-        this.outParam = outParam;
-    }
-
-    public String getDefaulted() {
-        return defaulted;
-    }
-
-    public void setDefaulted(String defaulted) {
-        this.defaulted = defaulted;
-    }
 
     public String getArgumentName() {
         return argumentName;
     }
 
-    public void setArgumentName(String argumentName) {
-        this.argumentName = argumentName;
-    }
 
     public String getDataType() {
         return dataType;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
-    }
-
-    public String getTypeName() {
-        return typeName;
-    }
-
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
 
     public String getJavaPropertyName() {
 
@@ -181,17 +146,6 @@ public class ProcedureArgument {
         return "BOOLEAN".equals(getJDBCType());
     }
 
-    public String getInoutType() {
-        return (inParam ? "IN" : "") + (outParam ? "OUT" : "");
-    }
-
-    public String getArgumentParameterName() {
-        if (argumentName == null) {
-            return null;
-        }
-        return argumentName + " => ?";
-    }
-
     public String getParamSet(int sequenceNumber) {
         return new ParameterGetSetRegisterBuilder(this).setParameter(sequenceNumber);
     }
@@ -239,9 +193,6 @@ public class ProcedureArgument {
         return origTypeName;
     }
 
-    public void setOrigTypeName(String origTypeName) {
-        this.origTypeName = origTypeName;
-    }
 
     public boolean isOutputBooleanArgument() {
         return getArgumentName() != null && isJDBCTypeBoolean() && isOutParam();

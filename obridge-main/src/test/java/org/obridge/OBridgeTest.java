@@ -5,26 +5,54 @@
  */
 package org.obridge;
 
-import org.apache.commons.cli.ParseException;
+import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.obridge.context.OBridgeConfiguration;
+import org.obridge.context.Packages;
 
-import java.beans.PropertyVetoException;
+import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * @author fkarsany
  */
 public class OBridgeTest {
 
+    @Rule
+    public TemporaryFolder tempdir = new TemporaryFolder();
+
     public OBridgeTest() {
     }
 
     @Test
-    public void testMain() throws SQLException, IOException, PropertyVetoException, ParseException {
+    public void testMain() {
 
         OBridge.main("-h");
         OBridge.main("-v");
+
+    }
+
+
+    @Test
+    public void fullTest() throws IOException, InterruptedException {
+
+        Properties p = new Properties();
+        p.load(getClass().getClassLoader().getResourceAsStream("datasource.properties"));
+
+        OBridgeConfiguration oBridgeConfiguration = new OBridgeConfiguration();
+        oBridgeConfiguration.setJdbcUrl(p.getProperty("connectionString"));
+        oBridgeConfiguration.setPackages(new Packages());
+        oBridgeConfiguration.setRootPackageName("org.obridge.test");
+        oBridgeConfiguration.setSourceRoot(tempdir.getRoot().getAbsolutePath());
+
+        new OBridge().generate(oBridgeConfiguration);
+
+        Assert.assertTrue(tempdir.getRoot().exists());
+        Assert.assertTrue(new File(tempdir.getRoot().getAbsolutePath() + "\\org\\obridge\\test\\converters\\PrimitiveTypeConverter.java").exists());
+
 
     }
 

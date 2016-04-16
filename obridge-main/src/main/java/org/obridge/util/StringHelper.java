@@ -77,7 +77,7 @@ public final class StringHelper {
     }
 
     public static boolean isJavaKeyword(String s) {
-        return javaKeywords.contains(s);
+        return javaKeywords.contains(s.toLowerCase());
     }
 
     public static String unJavaKeyword(String s) {

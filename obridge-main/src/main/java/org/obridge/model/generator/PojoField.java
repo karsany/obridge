@@ -65,12 +65,4 @@ public class PojoField {
         return !isReadonly();
     }
 
-    @Override
-    public String toString() {
-        return "PojoField{" +
-                "fieldName='" + fieldName + '\'' +
-                ", fieldType='" + fieldType + '\'' +
-                ", readonly=" + readonly +
-                '}';
-    }
 }
