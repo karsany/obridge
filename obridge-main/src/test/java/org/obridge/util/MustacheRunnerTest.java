@@ -7,8 +7,10 @@ import org.obridge.model.generator.Pojo;
 import org.obridge.model.generator.PojoField;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class MustacheRunnerTest {
+
 
     public static final String COMMENT = "This is a comment";
     public static final String PACKAGE_NAME = "hu.karsany.tesztpackage";
@@ -16,6 +18,7 @@ public class MustacheRunnerTest {
 
     @Test
     public void pojoMustacheTest() {
+
 
         Pojo pojo = new Pojo();
         pojo.setClassName(CLASS_NAME);

@@ -39,6 +39,8 @@ public class OraclePackage {
     private String contextPackage;
     private String converterPackage;
     private String objectPackage;
+    private String loggingInitializer;
+    private String loggingMethod;
 
     public List<Procedure> getProcedureList() {
         return procedureList;
@@ -86,5 +88,21 @@ public class OraclePackage {
 
     public void setObjectPackage(String objectPackage) {
         this.objectPackage = objectPackage;
+    }
+
+    public String getLoggingInitializer() {
+        return loggingInitializer;
+    }
+
+    public void setLoggingInitializer(String loggingInitializer) {
+        this.loggingInitializer = loggingInitializer;
+    }
+
+    public String getLoggingMethod() {
+        return loggingMethod;
+    }
+
+    public void setLoggingMethod(String loggingMethod) {
+        this.loggingMethod = loggingMethod;
     }
 }

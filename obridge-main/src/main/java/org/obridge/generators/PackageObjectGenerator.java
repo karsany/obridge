@@ -54,11 +54,33 @@ public final class PackageObjectGenerator {
             String converterPackage = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
             String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
             String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+            String loggingClassInitializer = "";
+            String loggingMethod = "";
+
+            if (c.getLogging() != null) {
+                if (c.getLogging().getInitializer() != null
+                        && !c.getLogging().getInitializer().isEmpty()
+                        && c.getLogging().getMethod() != null
+                        && !c.getLogging().getMethod().isEmpty()) {
+                    loggingClassInitializer = c.getLogging().getInitializer();
+                    loggingMethod = c.getLogging().getMethod();
+                }
+            }
 
             List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages();
 
             for (OraclePackage oraclePackage : allPackages) {
-                generatePackageObject(packageName, contextPackage, converterPackage, objectPackage, outputDir, oraclePackage);
+                oraclePackage.setJavaPackageName(packageName);
+                oraclePackage.setContextPackage(contextPackage);
+                oraclePackage.setConverterPackage(converterPackage);
+                oraclePackage.setObjectPackage(objectPackage);
+
+                if (!loggingClassInitializer.isEmpty() && !loggingMethod.isEmpty()) {
+                    oraclePackage.setLoggingInitializer(String.format(loggingClassInitializer, oraclePackage.getJavaClassName()));
+                    oraclePackage.setLoggingMethod(loggingMethod);
+                }
+
+                generatePackageObject(outputDir, oraclePackage);
             }
 
             generateStoredProcedureCallExceptionClass(packageName, outputDir);
@@ -70,11 +92,7 @@ public final class PackageObjectGenerator {
         }
     }
 
-    private static void generatePackageObject(String packageName, String contextPackage, String converterPackage, String objectPackage, String outputDir, OraclePackage oraclePackage) throws IOException {
-        oraclePackage.setJavaPackageName(packageName);
-        oraclePackage.setContextPackage(contextPackage);
-        oraclePackage.setConverterPackage(converterPackage);
-        oraclePackage.setObjectPackage(objectPackage);
+    private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) throws IOException {
         String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
         FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource));
     }

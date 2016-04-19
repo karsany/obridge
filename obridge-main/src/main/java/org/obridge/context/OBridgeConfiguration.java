@@ -39,6 +39,7 @@ public class OBridgeConfiguration {
     private String sourceRoot;
     private String rootPackageName;
     private Packages packages;
+    private Logging logging;
 
     public String getJdbcUrl() {
         return jdbcUrl;
@@ -72,4 +73,11 @@ public class OBridgeConfiguration {
         this.packages = packages;
     }
 
+    public Logging getLogging() {
+        return logging;
+    }
+
+    public void setLogging(Logging logging) {
+        this.logging = logging;
+    }
 }

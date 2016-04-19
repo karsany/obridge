@@ -20,29 +20,29 @@ public final class PrimitiveTypeConverter {
     }
 
     public static Array getListArray(List o, Connection c, String typeName) throws SQLException {
-        OracleConnection connection = c.unwrap(OracleConnection.class);
-        ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
-        if (o == null) {
-            return new ARRAY(arrayDescriptor, connection, new Object[0]);
-        }
-        List<Object> array = new ArrayList<Object>(o.size());
-        for (Object e : o) {
-            array.add(e);
-        }
-        return new ARRAY(arrayDescriptor, connection, array.toArray());
+    OracleConnection connection = c.unwrap(OracleConnection.class);
+    ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
+    if (o == null) {
+        return new ARRAY(arrayDescriptor, connection, new Object[0]);
     }
+    List<Object> array = new ArrayList<Object>(o.size());
+    for (Object e : o) {
+        array.add(e);
+    }
+    return new ARRAY(arrayDescriptor, connection, array.toArray());
+}
 
     public static <T> List<T> asList(Array array, Class<T> targetClass) throws SQLException {
-        if (targetClass.equals(Integer.class)) {
-            List<T> r = new ArrayList<T>();
-            final BigDecimal[] baseArray = (BigDecimal[]) array.getArray();
-            for (BigDecimal b : baseArray) {
-                r.add((T) new Integer(b.intValue()));
-            }
-            return r;
-        } else {
-            return Arrays.asList((T[]) array.getArray());
+    if (targetClass.equals(Integer.class)) {
+        List<T> r = new ArrayList<T>();
+        final BigDecimal[] baseArray = (BigDecimal[]) array.getArray();
+        for (BigDecimal b : baseArray) {
+            r.add((T) new Integer(b.intValue()));
         }
+        return r;
+    } else {
+        return Arrays.asList((T[]) array.getArray());
     }
+}
 
 }
