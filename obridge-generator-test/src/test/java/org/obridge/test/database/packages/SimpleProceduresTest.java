@@ -3,6 +3,8 @@ package org.obridge.test.database.packages;
 import org.junit.Assert;
 import org.junit.Test;
 import org.obridge.test.BaseTest;
+import org.obridge.test.database.context.SimpleProceduresRawInTypeTest;
+import org.obridge.test.database.context.SimpleProceduresRawTest;
 import org.obridge.test.database.context.SimpleProceduresRefcursorTest;
 import org.obridge.test.database.context.SimpleProceduresTestTypeWithIntegerField;
 
@@ -47,6 +49,24 @@ public class SimpleProceduresTest extends BaseTest {
             Assert.assertTrue("Throwed exception", e.getStackTrace()[0].getClassName().contains("StoredProcedureCallException"));
         }
 
+    }
+
+    @Test
+    public void testRawTest() {
+        SimpleProceduresRawTest simpleProceduresRawTest = SimpleProcedures.rawTest(new byte[]{3, 2, 1, 0}, ds);
+        Assert.assertEquals(4, simpleProceduresRawTest.getR().length);
+        Assert.assertEquals(1, simpleProceduresRawTest.getR()[2]);
+    }
+
+    @Test
+    public void testRawInTypeTest() {
+        SimpleProceduresRawInTypeTest simpleProceduresRawInTypeTest = SimpleProcedures.rawInTypeTest(ds);
+        System.out.println();
+
+        Assert.assertEquals(5, simpleProceduresRawInTypeTest.getTt().getRawCol().length);
+        Assert.assertEquals('l', simpleProceduresRawInTypeTest.getTt().getRawCol()[2]);
+        Assert.assertEquals('l', simpleProceduresRawInTypeTest.getTt().getRawCol()[3]);
+        Assert.assertEquals('o', simpleProceduresRawInTypeTest.getTt().getRawCol()[4]);
     }
 
 

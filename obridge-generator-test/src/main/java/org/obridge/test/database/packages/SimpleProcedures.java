@@ -640,6 +640,131 @@ public final class SimpleProcedures {
 
 
 
+    public static void rawTest(SimpleProceduresRawTest ctx, Connection connection) {
+    try {
+        final CallableStatement ocs = connection.prepareCall(                "" +
+                                      "DECLARE " +
+                                      "BEGIN " +
+                                      "  \"SIMPLE_PROCEDURES\".\"RAW_TEST\"( " +
+                                      "    \"P_R\" => :P_R" +
+                                      "   );" +
+                                      "END;" +
+                                      "");
+        try {
+            // Set P_R from context r
+            if (ctx.getR() != null) {
+                ocs.setBytes(1, ctx.getR());
+            } else {
+                ocs.setNull(1, Types.VARBINARY);
+            }
+            ocs.registerOutParameter(1, Types.VARBINARY); // P_R
+            LOGGER.info("SimpleProcedures.rawTest called");
+            ocs.execute();
+            LOGGER.info("SimpleProcedures.rawTest executed");
+            ctx.setR(ocs.getBytes(1)); // P_R
+        } finally  {
+            ocs.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+    public static SimpleProceduresRawTest rawTest(byte[] r,  Connection connection) {
+    final SimpleProceduresRawTest ctx = new SimpleProceduresRawTest();
+    ctx.setR(r);
+    rawTest(ctx, connection);
+    return ctx;
+}
+
+    public static SimpleProceduresRawTest rawTest(byte[] r,  DataSource dataSource) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            return rawTest(r,  conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+    public static void rawTest(DataSource dataSource, SimpleProceduresRawTest ctx) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            rawTest(ctx, conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+
+    public static void rawInTypeTest(SimpleProceduresRawInTypeTest ctx, Connection connection) {
+    try {
+        final CallableStatement ocs = connection.prepareCall(                "" +
+                                      "DECLARE " +
+                                      "BEGIN " +
+                                      "  \"SIMPLE_PROCEDURES\".\"RAW_IN_TYPE_TEST\"( " +
+                                      "    \"P_TT\" => :P_TT" +
+                                      "   );" +
+                                      "END;" +
+                                      "");
+        try {
+            ocs.registerOutParameter(1, Types.STRUCT, "SAMPLE_TYPE_ONE"); // P_TT
+            LOGGER.info("SimpleProcedures.rawInTypeTest called");
+            ocs.execute();
+            LOGGER.info("SimpleProcedures.rawInTypeTest executed");
+            ctx.setTt(SampleTypeOneConverter.getObject((Struct)ocs.getObject(1))); // P_TT
+        } finally  {
+            ocs.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+    public static SimpleProceduresRawInTypeTest rawInTypeTest( Connection connection) {
+    final SimpleProceduresRawInTypeTest ctx = new SimpleProceduresRawInTypeTest();
+    rawInTypeTest(ctx, connection);
+    return ctx;
+}
+
+    public static SimpleProceduresRawInTypeTest rawInTypeTest( DataSource dataSource) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            return rawInTypeTest( conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+    public static void rawInTypeTest(DataSource dataSource, SimpleProceduresRawInTypeTest ctx) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            rawInTypeTest(ctx, conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+
     public static void testTypeWithIntegerField(SimpleProceduresTestTypeWithIntegerField ctx, Connection connection) {
     try {
         final CallableStatement ocs = connection.prepareCall(                "" +

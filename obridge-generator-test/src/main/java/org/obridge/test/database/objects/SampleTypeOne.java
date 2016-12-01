@@ -17,6 +17,7 @@ public class SampleTypeOne {
     private Date dateA;
     private Timestamp timestB;
     private Timestamp timestC;
+    private byte[] rawCol;
 
     public String getAttrVarchar() {
         return this.attrVarchar;
@@ -80,6 +81,14 @@ public class SampleTypeOne {
 
     public void setTimestC(Timestamp timestC) {
         this.timestC = timestC;
+    }
+
+    public byte[] getRawCol() {
+        return this.rawCol;
+    }
+
+    public void setRawCol(byte[] rawCol) {
+        this.rawCol = rawCol;
     }
 
 

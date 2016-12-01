@@ -3,7 +3,9 @@ Create Or Replace Package simple_procedures Is
   Procedure a;
   Procedure overload;
   Procedure overload(a In Varchar2);
-  Function simple_func(a In Varchar2, b In Out Varchar2, c Out Varchar2) Return Number;
+  Function simple_func(a In Varchar2,
+                       b In Out Varchar2,
+                       c Out Varchar2) Return Number;
 
   Procedure func_with_types(p_param_1     In sample_type_one,
                             p_param_hello In sample_type_one_list,
@@ -29,8 +31,10 @@ Create Or Replace Package simple_procedures Is
                             p3 In Out sample_type_two_list);
 
   Procedure refcursor_test(p_refc Out Sys_Refcursor);
-  
-  Procedure raw_test(p_r In Out Raw);  
+
+  Procedure raw_test(p_r In Out Raw);
+
+  Procedure raw_in_type_test(p_tt Out sample_type_one);
 
   Procedure test_type_with_integer_field(p_tp In Out sample_type_three);
 
@@ -55,7 +59,9 @@ Create Or Replace Package Body simple_procedures Is
     Null;
   End;
 
-  Function simple_func(a In Varchar2, b In Out Varchar2, c Out Varchar2) Return Number Is
+  Function simple_func(a In Varchar2,
+                       b In Out Varchar2,
+                       c Out Varchar2) Return Number Is
   Begin
     b := b || 'a';
     c := 'c' || b;
@@ -103,7 +109,8 @@ Create Or Replace Package Body simple_procedures Is
   Procedure test_type_with_integer_field(p_tp In Out sample_type_three) Is
   Begin
     If p_tp Is Null Then
-      p_tp := sample_type_three(field1 => 0, field2 => '');
+      p_tp := sample_type_three(field1 => 0,
+                                field2 => '');
     End If;
     p_tp.field1 := p_tp.field1 + 1;
     p_tp.field2 := p_tp.field2 || 'ABC';
@@ -112,13 +119,27 @@ Create Or Replace Package Body simple_procedures Is
 
   Procedure raise_error Is
   Begin
-    raise_application_error(-20001, 'Test Raise');
+    raise_application_error(-20001,
+                            'Test Raise');
   End raise_error;
-  
+
   Procedure raw_test(p_r In Out Raw) Is
   Begin
     Null;
   End raw_test;
+
+  Procedure raw_in_type_test(p_tt Out sample_type_one) Is
+  Begin
+    p_tt := sample_type_one(attr_varchar  => 'Hello!',
+                            attr_clob     => Null,
+                            attr_int      => 0,
+                            attr_bigdec_1 => Null,
+                            attr_bigdec_2 => Null,
+                            date_a        => Sysdate,
+                            timest_b      => Null,
+                            timest_c      => Null,
+                            raw_col       => utl_raw.cast_to_raw('hello'));
+  End raw_in_type_test;
 
 End simple_procedures;
 /

@@ -35,6 +35,7 @@ public final class SampleTypeOneConverter {
     struct.add(5, o.getDateA()); // DATE_A
     struct.add(6, o.getTimestB()); // TIMEST_B
     struct.add(7, o.getTimestC()); // TIMEST_C
+    struct.add(8, o.getRawCol()); // RAW_COL
     return connection.createStruct(TYPE_NAME, struct.toArray());
 }
 
@@ -80,6 +81,9 @@ public final class SampleTypeOneConverter {
     }
     if (attr[7] != null) {
         result.setTimestC((Timestamp)attr[7]); // TIMEST_C
+    }
+    if (attr[8] != null) {
+        result.setRawCol((byte[])attr[8]); // RAW_COL
     }
     return result;
 }
