@@ -29,6 +29,8 @@ Create Or Replace Package simple_procedures Is
                             p3 In Out sample_type_two_list);
 
   Procedure refcursor_test(p_refc Out Sys_Refcursor);
+  
+  Procedure raw_test(p_r In Out Raw);  
 
   Procedure test_type_with_integer_field(p_tp In Out sample_type_three);
 
@@ -112,6 +114,11 @@ Create Or Replace Package Body simple_procedures Is
   Begin
     raise_application_error(-20001, 'Test Raise');
   End raise_error;
+  
+  Procedure raw_test(p_r In Out Raw) Is
+  Begin
+    Null;
+  End raw_test;
 
 End simple_procedures;
 /

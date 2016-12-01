@@ -23,7 +23,8 @@ create or replace type SAMPLE_TYPE_ONE as object (
   attr_bigdec_2 number(5,2),
   date_a        date,
   timest_b      timestamp,
-  timest_c      timestamp(6)
+  timest_c      timestamp(6),
+  raw_col       raw(100)
 )
 /
 
