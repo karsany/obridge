@@ -1,0 +1,6 @@
+// Set {{argumentName}} from context {{javaPropertyName}}
+if (ctx.get{{javaPropertyNameBig}}() != null) {
+ocs.setBytes({{sequenceNumber}}, ctx.get{{javaPropertyNameBig}}());
+} else {
+ocs.setNull({{sequenceNumber}}, Types.{{JDBCType}});
+}
