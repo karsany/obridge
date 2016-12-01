@@ -30,7 +30,7 @@ public class PojoMapperTest extends BaseTest {
     public void testToPojo() {
         Pojo pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(SAMPLE_TYPE_ONE));
         Assert.assertEquals("SampleTypeOne", pojo.getClassName());
-        Assert.assertEquals(8, pojo.getFields().size());
+        Assert.assertEquals(9, pojo.getFields().size());
         for (PojoField f : pojo.getFields()) {
             Assert.assertFalse(f.isReadonly());
         }

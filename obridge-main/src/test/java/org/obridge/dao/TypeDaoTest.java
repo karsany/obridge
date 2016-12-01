@@ -37,7 +37,7 @@ public class TypeDaoTest extends BaseTest {
     @Test
     public void testGetTypeAttributes() {
         List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE);
-        Assert.assertEquals(8, typeAttributes.size());
+        Assert.assertEquals(9, typeAttributes.size());
         Assert.assertEquals("attrVarchar", typeAttributes.get(0).getJavaPropertyName());
         Assert.assertEquals("String", typeAttributes.get(0).getJavaDataType());
 
