@@ -20,8 +20,9 @@ Supported input, output parameters and return values are:
   * TABLE - Table of Oracle Object Type
   * TIMESTAMP
   * VARCHAR2
+  * RAW
   
-The following types will be supported:
+The following types cannot be implemented, because JDBC driver does not supports them:
   * Types declared in source code
   * %ROWTYPE parameters
   
