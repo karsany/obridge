@@ -47,6 +47,7 @@ public class TypeMapper {
     public static final String ORACLE_OBJECT = "OBJECT";
     public static final String ORACLE_TABLE = "TABLE";
     public static final String ORACLE_COLLECTION = "COLLECTION";
+    public static final String ORACLE_RAW = "RAW";
 
     public static final String JAVA_STRING = "String";
     public static final String JAVA_INTEGER = "Integer";
@@ -55,6 +56,7 @@ public class TypeMapper {
     public static final String JAVA_DATE = "Date";
     public static final String JAVA_TIMESTAMP = "Timestamp";
     public static final String JAVA_BOOLEAN = "Boolean";
+    public static final String JAVA_BYTEARRAY = "byte[]";
 
     public static final String JDBC_VARCHAR = "VARCHAR";
     public static final String JDBC_NVARCHAR = "NVARCHAR";
@@ -64,6 +66,10 @@ public class TypeMapper {
     public static final String JDBC_ARRAY = "ARRAY";
     public static final String JDBC_BOOLEAN = "BOOLEAN";
     public static final String JDBC_NUMERIC = "NUMERIC";
+    public static final String JDBC_VARBINARY = "VARBINARY";
+    
+     
+    
 
 
     private static Map<String, String> oracleToJavaMapping = null;
@@ -88,6 +94,7 @@ public class TypeMapper {
         oracleToJDBCMapping.put(ORACLE_TABLE, JDBC_ARRAY);
         oracleToJDBCMapping.put(ORACLE_BOOLEAN, JDBC_BOOLEAN);
         oracleToJDBCMapping.put(ORACLE_NUMBER, JDBC_NUMERIC);
+        oracleToJDBCMapping.put(ORACLE_RAW, JDBC_VARBINARY);
     }
 
     private void initOracleToJavaMapping() {
@@ -104,6 +111,7 @@ public class TypeMapper {
         oracleToJavaMapping.put(ORACLE_DATE, JAVA_DATE);
         oracleToJavaMapping.put(ORACLE_TIMESTAMP, JAVA_TIMESTAMP);
         oracleToJavaMapping.put(ORACLE_BOOLEAN, JAVA_BOOLEAN);
+        oracleToJavaMapping.put(ORACLE_RAW, JAVA_BYTEARRAY);
     }
 
 
