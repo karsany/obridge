@@ -72,3 +72,9 @@ create or replace type sample_type_three as object (
   field2  VARCHAR2(30)
 );
 /
+
+Create Or Replace Type tp_blob_test As Object (
+  this_is_a_blob Blob,
+  blob_size      Integer
+);
+/
