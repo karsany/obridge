@@ -48,6 +48,7 @@ public class TypeMapper {
     public static final String ORACLE_TABLE = "TABLE";
     public static final String ORACLE_COLLECTION = "COLLECTION";
     public static final String ORACLE_RAW = "RAW";
+    public static final String ORACLE_BLOB = "BLOB";
 
     public static final String JAVA_STRING = "String";
     public static final String JAVA_INTEGER = "Integer";
@@ -67,9 +68,6 @@ public class TypeMapper {
     public static final String JDBC_BOOLEAN = "BOOLEAN";
     public static final String JDBC_NUMERIC = "NUMERIC";
     public static final String JDBC_VARBINARY = "VARBINARY";
-    
-     
-    
 
 
     private static Map<String, String> oracleToJavaMapping = null;
@@ -95,6 +93,7 @@ public class TypeMapper {
         oracleToJDBCMapping.put(ORACLE_BOOLEAN, JDBC_BOOLEAN);
         oracleToJDBCMapping.put(ORACLE_NUMBER, JDBC_NUMERIC);
         oracleToJDBCMapping.put(ORACLE_RAW, JDBC_VARBINARY);
+        oracleToJDBCMapping.put(ORACLE_BLOB, JDBC_VARBINARY);
     }
 
     private void initOracleToJavaMapping() {
@@ -112,6 +111,7 @@ public class TypeMapper {
         oracleToJavaMapping.put(ORACLE_TIMESTAMP, JAVA_TIMESTAMP);
         oracleToJavaMapping.put(ORACLE_BOOLEAN, JAVA_BOOLEAN);
         oracleToJavaMapping.put(ORACLE_RAW, JAVA_BYTEARRAY);
+        oracleToJavaMapping.put(ORACLE_BLOB, JAVA_BYTEARRAY);
     }
 
 

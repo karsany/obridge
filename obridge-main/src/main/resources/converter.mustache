@@ -20,7 +20,8 @@ public final class {{javaClassName}}Converter {
     private {{javaClassName}}Converter() {
     }
 
-    public static Struct getStruct({{javaClassName}} o, Connection connection) throws SQLException {
+    public static Struct getStruct({{javaClassName}} o, Connection c) throws SQLException {
+        OracleConnection connection = c.unwrap(OracleConnection.class);
 
         if (o == null) {
             return null;

@@ -107,6 +107,10 @@ public class TypeAttribute {
             return String.format("Clob cl%d = connection.createClob();\n" +
                     "        cl%d.setString(1, o.get%s());\n" +
                     "        struct.add(%d, cl%d); // %s", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
+        } else if (TypeMapper.ORACLE_BLOB.equals(attrTypeName)) {
+            return String.format("Blob bl%d = connection.createBlob();\n" +
+                    "        bl%d.setBytes(1, o.get%s());\n" +
+                    "        struct.add(%d, bl%d); // %s", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
         } else {
             return String.format("struct.add(%d, o.get%s()); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), attrName);
         }
@@ -126,6 +130,8 @@ public class TypeAttribute {
             return String.format("result.set%s((Timestamp)attr[%d]); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_CLOB.equals(attrTypeName)) {
             return String.format("result.set%s(((Clob)attr[%d]).getSubString(1, (int)((Clob)attr[%d]).length())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
+        } else if (TypeMapper.ORACLE_BLOB.equals(attrTypeName)) {
+            return String.format("result.set%s(((Blob)attr[%d]).getBytes(1, (int)((Blob)attr[%d]).length())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_INTEGER.equals(attrTypeName)) {
             return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.JAVA_INTEGER.equals(getJavaDataType())) {
