@@ -11,6 +11,7 @@ Supported input, output parameters and return values are:
   * BOOLEAN
   * CHAR
   * CLOB
+  * BLOB
   * DATE
   * NCHAR
   * NUMBER
