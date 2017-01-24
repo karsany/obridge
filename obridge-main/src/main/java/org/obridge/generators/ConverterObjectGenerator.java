@@ -81,7 +81,7 @@ public final class ConverterObjectGenerator {
         Pojo pojo = new Pojo();
         pojo.setPackageName(packageName);
         String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource));
+        FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource), "utf-8");
     }
 
     private static void generateType(String packageName, String objectPackage, String outputDir, String typeName, List<TypeAttribute> typeAttributes) throws IOException {
@@ -91,7 +91,7 @@ public final class ConverterObjectGenerator {
         t.setConverterPackageName(packageName);
         t.setObjectPackage(objectPackage);
         String javaSource = MustacheRunner.build("converter.mustache", t);
-        FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource));
+        FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource), "utf-8");
     }
 
 

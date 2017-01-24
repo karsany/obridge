@@ -84,14 +84,30 @@ public class OBridge {
     }
 
     private static CommandLine getCommandLine(Options o, String[] args) throws ParseException {
-        o.addOption("v", "version", false, "print version number");
-        o.addOption("h", "help", false, "prints this help");
-        o.addOption(OptionBuilder
-                .withArgName("file")
-                .hasArg()
-                .withDescription("OBridge XML config file")
-                .withLongOpt("config")
-                .create("c"));
+
+
+        o.addOption(
+                Option.builder("v")
+                        .longOpt("version")
+                        .desc("print version number")
+                        .required(false)
+                        .build()
+        );
+        o.addOption(
+                Option.builder("h")
+                        .longOpt("help")
+                        .desc("prints this help")
+                        .required(false)
+                        .build()
+        );
+        o.addOption(
+                Option.builder("c")
+                        .desc("OBridge XML config file")
+                        .longOpt("config")
+                        .hasArg()
+                        .argName("file")
+                        .build()
+        );
 
         CommandLineParser parser = new PosixParser();
         return parser.parse(o, args);

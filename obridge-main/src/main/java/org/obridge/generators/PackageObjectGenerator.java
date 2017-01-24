@@ -94,13 +94,13 @@ public final class PackageObjectGenerator {
 
     private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) throws IOException {
         String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
-        FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource));
+        FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
     }
 
     private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir) throws IOException {
         OraclePackage op = new OraclePackage();
         op.setJavaPackageName(packageName);
         String javaSource = MustacheRunner.build("StoredProcedureCallException.java.mustache", op);
-        FileUtils.writeStringToFile(new File(outputDir + "StoredProcedureCallException.java"), CodeFormatter.format(javaSource));
+        FileUtils.writeStringToFile(new File(outputDir + "StoredProcedureCallException.java"), CodeFormatter.format(javaSource), "utf-8");
     }
 }

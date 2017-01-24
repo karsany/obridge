@@ -76,6 +76,6 @@ public final class ProcedureContextGenerator {
         pojo.getImports().add(objectPackage + ".*");
         pojo.getImports().add("javax.annotation.Generated");
         String javaSource = MustacheRunner.build("pojo.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource));
+        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
     }
 }
