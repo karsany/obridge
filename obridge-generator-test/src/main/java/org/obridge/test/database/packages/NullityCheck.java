@@ -138,4 +138,122 @@ public final class NullityCheck {
 
 
 
+    public static void checkOutNullObject(NullityCheckCheckOutNullObject ctx, Connection connection) {
+    try {
+        final CallableStatement ocs = connection.prepareCall(                "" +
+                                      "DECLARE " +
+                                      "BEGIN " +
+                                      "  \"NULLITY_CHECK\".\"CHECK_OUT_NULL_OBJECT\"( " +
+                                      "    \"P_SAMPLE_OBJECT\" => :P_SAMPLE_OBJECT" +
+                                      "   );" +
+                                      "END;" +
+                                      "");
+        try {
+            ocs.registerOutParameter(1, Types.STRUCT, "SAMPLE_TYPE_ONE"); // P_SAMPLE_OBJECT
+            LOGGER.info("NullityCheck.checkOutNullObject called");
+            ocs.execute();
+            LOGGER.info("NullityCheck.checkOutNullObject executed");
+            ctx.setSampleObject(SampleTypeOneConverter.getObject((Struct)ocs.getObject(1))); // P_SAMPLE_OBJECT
+        } finally  {
+            ocs.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+    public static NullityCheckCheckOutNullObject checkOutNullObject( Connection connection) {
+    final NullityCheckCheckOutNullObject ctx = new NullityCheckCheckOutNullObject();
+    checkOutNullObject(ctx, connection);
+    return ctx;
+}
+
+    public static NullityCheckCheckOutNullObject checkOutNullObject( DataSource dataSource) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            return checkOutNullObject( conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+    public static void checkOutNullObject(DataSource dataSource, NullityCheckCheckOutNullObject ctx) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            checkOutNullObject(ctx, conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+
+    public static void checkOutEmptyObject(NullityCheckCheckOutEmptyObject ctx, Connection connection) {
+    try {
+        final CallableStatement ocs = connection.prepareCall(                "" +
+                                      "DECLARE " +
+                                      "BEGIN " +
+                                      "  \"NULLITY_CHECK\".\"CHECK_OUT_EMPTY_OBJECT\"( " +
+                                      "    \"P_SAMPLE_OBJECT\" => :P_SAMPLE_OBJECT" +
+                                      "   );" +
+                                      "END;" +
+                                      "");
+        try {
+            ocs.registerOutParameter(1, Types.STRUCT, "SAMPLE_TYPE_ONE"); // P_SAMPLE_OBJECT
+            LOGGER.info("NullityCheck.checkOutEmptyObject called");
+            ocs.execute();
+            LOGGER.info("NullityCheck.checkOutEmptyObject executed");
+            ctx.setSampleObject(SampleTypeOneConverter.getObject((Struct)ocs.getObject(1))); // P_SAMPLE_OBJECT
+        } finally  {
+            ocs.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+    public static NullityCheckCheckOutEmptyObject checkOutEmptyObject( Connection connection) {
+    final NullityCheckCheckOutEmptyObject ctx = new NullityCheckCheckOutEmptyObject();
+    checkOutEmptyObject(ctx, connection);
+    return ctx;
+}
+
+    public static NullityCheckCheckOutEmptyObject checkOutEmptyObject( DataSource dataSource) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            return checkOutEmptyObject( conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+    public static void checkOutEmptyObject(DataSource dataSource, NullityCheckCheckOutEmptyObject ctx) {
+    try {
+        final Connection conn = dataSource.getConnection();
+        try {
+            checkOutEmptyObject(ctx, conn);
+        } finally {
+            conn.close();
+        }
+    } catch (SQLException e) {
+        throw new StoredProcedureCallException(e);
+    }
+}
+
+
+
 }
