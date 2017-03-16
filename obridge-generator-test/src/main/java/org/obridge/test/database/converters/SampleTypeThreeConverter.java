@@ -59,6 +59,9 @@ public final class SampleTypeThreeConverter {
 }
 
     public static List<SampleTypeThree> getObjectList(Array array) throws SQLException {
+    if (array == null) {
+        return null;
+    }
     List<SampleTypeThree> result = new ArrayList<SampleTypeThree>();
     ResultSet rs = null;
     try {

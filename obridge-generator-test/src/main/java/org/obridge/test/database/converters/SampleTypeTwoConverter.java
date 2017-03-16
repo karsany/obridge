@@ -63,6 +63,9 @@ public final class SampleTypeTwoConverter {
 }
 
     public static List<SampleTypeTwo> getObjectList(Array array) throws SQLException {
+    if (array == null) {
+        return null;
+    }
     List<SampleTypeTwo> result = new ArrayList<SampleTypeTwo>();
     ResultSet rs = null;
     try {

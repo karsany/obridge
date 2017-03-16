@@ -61,6 +61,9 @@ public final class TpBlobTestConverter {
 }
 
     public static List<TpBlobTest> getObjectList(Array array) throws SQLException {
+    if (array == null) {
+        return null;
+    }
     List<TpBlobTest> result = new ArrayList<TpBlobTest>();
     ResultSet rs = null;
     try {
