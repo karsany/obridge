@@ -73,6 +73,11 @@ public final class {{javaClassName}}Converter {
     }
 
     public static List<{{javaClassName}}> getObjectList(Array array) throws SQLException {
+
+        if (array == null) {
+            return null;
+        }
+
         List<{{javaClassName}}> result = new ArrayList<{{javaClassName}}>();
         ResultSet rs = null;
 

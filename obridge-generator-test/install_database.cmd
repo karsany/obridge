@@ -7,3 +7,4 @@ sqlplus %database_connection% @../obridge-main/src/test/plsql/03_test_procedure.
 sqlplus %database_connection% @../obridge-main/src/test/plsql/04_exec_function.fnc
 sqlplus %database_connection% @../obridge-main/src/test/plsql/05_plsql_type_example.pck
 sqlplus %database_connection% @../obridge-main/src/test/plsql/06_blob_test.pck
+sqlplus %database_connection% @../obridge-main/src/test/plsql/07_nullity_check.pck
