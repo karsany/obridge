@@ -27,23 +27,26 @@ package org.obridge.maven;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.obridge.OBridge;
 import org.obridge.context.OBridgeConfiguration;
 
 import java.io.File;
 
-@Mojo(name = "generate", requiresProject = true)
+@Mojo(name = "obridge", requiresProject = true, defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+        requiresDependencyResolution = ResolutionScope.COMPILE)
 public class OBridgeMojo extends AbstractMojo {
 
-    @Parameter(defaultValue = "${basedir}\\src\\main\\java")
+    @Parameter(defaultValue = "${project.build.directory}/generated-sources/obridge")
     private String baseDir;
 
     @Parameter(defaultValue = "${project.groupId}")
     private String groupId;
 
-    @Parameter(property = "obridge.configuration", defaultValue = "${basedir}\\obridge.xml")
+    @Parameter(property = "obridge.configuration", defaultValue = "${basedir}/obridge.xml")
     private File configurationFile;
 
     @Override
@@ -52,14 +55,8 @@ public class OBridgeMojo extends AbstractMojo {
 
         OBridge o = new OBridge();
         OBridgeConfiguration config = o.loadConfiguration(configurationFile);
-
-        if (config.getSourceRoot() == null || config.getSourceRoot().equals("")) {
-            config.setSourceRoot(baseDir);
-        }
-
-        if (config.getRootPackageName() == null || config.getRootPackageName().equals("")) {
-            config.setRootPackageName(groupId);
-        }
+        config.setSourceRoot(baseDir);
+        config.setRootPackageName(groupId);
 
         getLog().info(config.toString());
 
