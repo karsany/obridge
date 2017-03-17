@@ -23,13 +23,13 @@
         </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
-            <artifactId>oracle-jdbc</artifactId>
-            <version>12.1.0.2</version>
+            <artifactId>ojdbc6</artifactId>
+            <version>12.1.0.1-atlassian-hosted</version>
         </dependency>
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
-            <version>0.8.18</version>
+            <version>0.9.4</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -123,4 +123,11 @@
             </resource>
         </resources>
     </build>
+    <repositories>
+        <repository>
+            <id>my-repo2</id>
+            <name>your custom repo</name>
+            <url>https://maven.atlassian.com/3rdparty/</url>
+        </repository>
+    </repositories>
 </project>
