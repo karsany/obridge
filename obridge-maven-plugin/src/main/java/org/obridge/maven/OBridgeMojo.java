@@ -31,6 +31,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 import org.obridge.OBridge;
 import org.obridge.context.OBridgeConfiguration;
 
@@ -40,12 +41,12 @@ import java.io.File;
         requiresDependencyResolution = ResolutionScope.COMPILE)
 public class OBridgeMojo extends AbstractMojo {
 
+    @Parameter(property = "project", required = true, readonly = true)
+    protected MavenProject project;
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/obridge")
     private String baseDir;
-
     @Parameter(defaultValue = "${project.groupId}")
     private String groupId;
-
     @Parameter(property = "obridge.configuration", defaultValue = "${basedir}/obridge.xml")
     private File configurationFile;
 
@@ -56,12 +57,17 @@ public class OBridgeMojo extends AbstractMojo {
         OBridge o = new OBridge();
         OBridgeConfiguration config = o.loadConfiguration(configurationFile);
         config.setSourceRoot(baseDir);
-        config.setRootPackageName(groupId);
+
+        if (config.getRootPackageName() == null || config.getRootPackageName().equals("")) {
+            config.setRootPackageName(groupId);
+        }
 
         getLog().info(config.toString());
 
         o.generate(config);
 
+        project.addCompileSourceRoot(config.getSourceRoot());
+        project.addTestCompileSourceRoot(config.getSourceRoot());
     }
 
 }
