@@ -15,20 +15,22 @@ import java.util.Properties;
 
 public abstract class BaseTest {
 
-    protected DataSource ds;
+    protected static DataSource ds;
     protected String connectionString;
     private Properties p;
 
     @Before
     public void init() throws SQLException, IOException, PropertyVetoException {
-        p = new Properties();
-        p.load(getClass().getClassLoader().getResourceAsStream("datasource.properties"));
-        connectionString = p.getProperty("connectionString");
+        if (ds == null) {
+            p = new Properties();
+            p.load(getClass().getClassLoader().getResourceAsStream("datasource.properties"));
+            connectionString = p.getProperty("connectionString");
 
-        ComboPooledDataSource ds = new ComboPooledDataSource();
-        ds.setDriverClass("oracle.jdbc.OracleDriver"); //loads the jdbc driver
-        ds.setJdbcUrl(connectionString);
-        this.ds = ds;
+            ComboPooledDataSource ds = new ComboPooledDataSource();
+            ds.setDriverClass("oracle.jdbc.OracleDriver"); //loads the jdbc driver
+            ds.setJdbcUrl(connectionString);
+            this.ds = ds;
+        }
     }
 
 }

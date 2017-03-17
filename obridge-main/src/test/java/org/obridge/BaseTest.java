@@ -19,11 +19,13 @@ public abstract class BaseTest {
 
     @Before
     public void init() throws IOException, SQLException {
-        p = new Properties();
-        p.load(getClass().getClassLoader().getResourceAsStream("datasource.properties"));
-        connectionString = p.getProperty("connectionString");
-        ds = new OracleDataSource();
-        ds.setURL(connectionString);
+        if (ds == null) {
+            p = new Properties();
+            p.load(getClass().getClassLoader().getResourceAsStream("datasource.properties"));
+            connectionString = p.getProperty("connectionString");
+            ds = new OracleDataSource();
+            ds.setURL(connectionString);
+        }
     }
 
 }
