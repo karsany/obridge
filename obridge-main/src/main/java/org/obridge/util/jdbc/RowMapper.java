@@ -30,6 +30,7 @@ import java.sql.SQLException;
 /**
  * Created by fkarsany on 2015.03.04..
  */
+@FunctionalInterface
 public interface RowMapper<T> {
     T mapRow(ResultSet resultSet, int i) throws SQLException;
 }

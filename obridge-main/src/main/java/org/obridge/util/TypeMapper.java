@@ -82,8 +82,8 @@ public class TypeMapper {
         }
     }
 
-    private void initOracleToJDBCMapping() {
-        oracleToJDBCMapping = new HashMap<String, String>();
+    private static void initOracleToJDBCMapping() {
+        oracleToJDBCMapping = new HashMap<>();
         oracleToJDBCMapping.put(ORACLE_VARCHAR2, JDBC_VARCHAR);
         oracleToJDBCMapping.put(ORACLE_NVARCHAR2, JDBC_NVARCHAR);
         oracleToJDBCMapping.put(ORACLE_REF_CURSOR, JDBC_CURSOR);
@@ -96,8 +96,8 @@ public class TypeMapper {
         oracleToJDBCMapping.put(ORACLE_BLOB, JDBC_VARBINARY);
     }
 
-    private void initOracleToJavaMapping() {
-        oracleToJavaMapping = new HashMap<String, String>();
+    private static void initOracleToJavaMapping() {
+        oracleToJavaMapping = new HashMap<>();
         oracleToJavaMapping.put(ORACLE_CHAR, JAVA_STRING);
         oracleToJavaMapping.put(ORACLE_VARCHAR2, JAVA_STRING);
         oracleToJavaMapping.put(ORACLE_NCHAR, JAVA_STRING);
@@ -116,7 +116,6 @@ public class TypeMapper {
 
 
     public String getJavaType(String oracleTypeName, int scale) {
-
         // exception: if tpye is NUMBER with scale 0
         if (oracleTypeName.equals(ORACLE_NUMBER) && scale == 0) {
             return JAVA_INTEGER;

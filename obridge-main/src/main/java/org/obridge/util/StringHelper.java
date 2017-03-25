@@ -33,7 +33,7 @@ import java.util.Set;
 
 public final class StringHelper {
 
-    private static Set<String> javaKeywords = new HashSet<String>(Arrays.asList("abstract", "continue", "for", "new",
+    private static Set<String> javaKeywords = new HashSet<>(Arrays.asList("abstract", "continue", "for", "new",
             "switch", "assert", "default", "goto", "package", "synchronized",
             "boolean", "do", "if", "private", "this", "break", "double",
             "implements", "protected", "throw", "byte", "else", "import",

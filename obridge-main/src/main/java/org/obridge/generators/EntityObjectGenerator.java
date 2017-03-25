@@ -68,9 +68,7 @@ public final class EntityObjectGenerator {
             }
 
 
-        } catch (PropertyVetoException e) {
-            throw new OBridgeException(e);
-        } catch (IOException e) {
+        } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }

@@ -46,12 +46,6 @@ public class Procedure {
     private Procedure() {
     }
 
-    private void initBindParams() {
-        CallStringBuilder callStringBuilder = new CallStringBuilder(this);
-        this.callString = callStringBuilder.build();
-        this.bindParams = callStringBuilder.getBindParams();
-    }
-
     public List<ProcedureArgument> getArgumentList() {
         return argumentList;
     }
@@ -153,8 +147,14 @@ public class Procedure {
         }
 
         public Procedure build() {
-            p.initBindParams();
+            initBindParams();
             return p;
+        }
+
+        private void initBindParams() {
+            CallStringBuilder callStringBuilder = new CallStringBuilder(p);
+            p.callString = callStringBuilder.build();
+            p.bindParams = callStringBuilder.getBindParams();
         }
 
     }

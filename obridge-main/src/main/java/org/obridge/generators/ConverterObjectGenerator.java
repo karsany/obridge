@@ -70,9 +70,7 @@ public final class ConverterObjectGenerator {
 
             generatePrimitiveTypeConverter(packageName, outputDir);
 
-        } catch (PropertyVetoException e) {
-            throw new OBridgeException(e);
-        } catch (IOException e) {
+        } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }

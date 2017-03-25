@@ -62,9 +62,7 @@ public final class ProcedureContextGenerator {
             for (Procedure p : allProcedures) {
                 generateProcedureContext(packageName, objectPackage, outputDir, p);
             }
-        } catch (PropertyVetoException e) {
-            throw new OBridgeException(e);
-        } catch (IOException e) {
+        } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }

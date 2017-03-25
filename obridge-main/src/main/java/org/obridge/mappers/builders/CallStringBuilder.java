@@ -49,8 +49,8 @@ public class CallStringBuilder {
         sb.append("                \"" + line + "\" + \n");
     }
 
-    private void addBindParam(String paramName, ProcedureArgument pa, boolean inParam, boolean outParam) {
-        bindParams.add(new BindParam(pa, bindParamId, paramName, inParam, outParam));
+    private void addBindParam(ProcedureArgument pa, boolean inParam, boolean outParam) {
+        bindParams.add(new BindParam(pa, bindParamId, inParam, outParam));
         bindParamId++;
     }
 
@@ -82,7 +82,7 @@ public class CallStringBuilder {
         for (ProcedureArgument pa : procedure.getArgumentList()) {
             if (pa.isOutputBooleanArgument()) {
                 addLine(callString, "  :o" + pa.getArgumentName() + " := sys.diutil.bool_to_int(" + pa.getArgumentName() + ");");
-                addBindParam("o" + pa.getArgumentName(), pa, false, true);
+                addBindParam(pa, false, true);
             }
         }
     }
@@ -116,7 +116,7 @@ public class CallStringBuilder {
                     ln.append("\\\"" + pa.getArgumentName() + "\\\" => " + pa.getArgumentName());
                 } else {
                     ln.append("\\\"" + pa.getArgumentName() + "\\\" => :" + pa.getArgumentName());
-                    addBindParam(pa.getArgumentName(), pa, pa.isInParam(), pa.isOutParam());
+                    addBindParam(pa, pa.isInParam(), pa.isOutParam());
                 }
                 first = false;
                 addLine(callString, ln.toString());
@@ -130,7 +130,7 @@ public class CallStringBuilder {
             if (TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
                 addLine(callString, "  sys.diutil.bool_to_int( ");
             }
-            addBindParam("result", procedure.getArgumentList().get(0), false, true);
+            addBindParam(procedure.getArgumentList().get(0), false, true);
         }
     }
 
@@ -141,7 +141,7 @@ public class CallStringBuilder {
                 StringBuilder ln = new StringBuilder("  " + pa.getArgumentName() + " BOOLEAN");
                 if (pa.isInParam()) {
                     ln.append(" := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")");
-                    addBindParam("i" + pa.getArgumentName(), pa, true, false);
+                    addBindParam(pa, true, false);
                 }
                 ln.append("; ");
                 addLine(callString, ln.toString());

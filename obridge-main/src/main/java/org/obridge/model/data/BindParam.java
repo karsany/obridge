@@ -31,14 +31,12 @@ public class BindParam {
 
     private ProcedureArgument procedureArgument;
     private int sequenceNumber;
-    private String paramName;
     private boolean inParam;
     private boolean outParam;
 
-    public BindParam(ProcedureArgument procedureArgument, int sequenceNumber, String paramName, boolean inParam, boolean outParam) {
+    public BindParam(ProcedureArgument procedureArgument, int sequenceNumber, boolean inParam, boolean outParam) {
         this.procedureArgument = procedureArgument;
         this.sequenceNumber = sequenceNumber;
-        this.paramName = paramName;
         this.inParam = inParam;
         this.outParam = outParam;
     }

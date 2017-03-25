@@ -44,7 +44,7 @@ public final class DataSourceProvider {
     public static DataSource getDataSource(String jdbcURL) throws PropertyVetoException {
 
         if (dataSourcePool == null) {
-            dataSourcePool = new HashMap<String, ComboPooledDataSource>();
+            dataSourcePool = new HashMap<>();
         }
 
         if (!dataSourcePool.containsKey(jdbcURL)) {

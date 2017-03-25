@@ -39,7 +39,7 @@ public final class FuncUtils {
 
     public static <T, F> List<F> pluck(String fieldName, Class<F> fieldType, List<T> list) {
         try {
-            List<F> result = new ArrayList<F>();
+            List<F> result = new ArrayList<>();
             for (T element : list) {
                 result.add(fieldType.cast(PropertyUtils.getProperty(element, fieldName)));
             }

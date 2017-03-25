@@ -33,6 +33,7 @@ import org.obridge.util.TypeMapper;
  */
 public class ProcedureArgument {
 
+    public static final String TABLE_DATATYPE_NAME = "TABLE";
     private String argumentName;
     private String dataType;
     private String typeName;
@@ -110,7 +111,7 @@ public class ProcedureArgument {
     }
 
     public boolean isList() {
-        return "TABLE".equals(dataType);
+        return TABLE_DATATYPE_NAME.equals(dataType);
     }
 
     public boolean isPrimitiveList() {
@@ -147,7 +148,7 @@ public class ProcedureArgument {
     }
 
     public String getRegOutput(int sequenceNumber) {
-        if ("OBJECT".equals(dataType) || "TABLE".equals(dataType)) {
+        if ("OBJECT".equals(dataType) || TABLE_DATATYPE_NAME.equals(dataType)) {
             return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequenceNumber, getJDBCType(), origTypeName, argumentName);
         } else {
             return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
@@ -158,7 +159,7 @@ public class ProcedureArgument {
     public String getParamGet(int sequenceNumber) {
         if ("OBJECT".equals(dataType)) {
             return String.format("ctx.set%s(%sConverter.getObject((Struct)ocs.getObject(%d))); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
-        } else if ("TABLE".equals(dataType)) {
+        } else if (TABLE_DATATYPE_NAME.equals(dataType)) {
             if (isPrimitiveList()) {
                 return String.format("ctx.set%s(Arrays.asList((%s[]) ((Array) ocs.getObject(%d)).getArray())); // %s", getJavaPropertyNameBig(), getUnderlyingTypeName(), sequenceNumber, argumentName);
             }
