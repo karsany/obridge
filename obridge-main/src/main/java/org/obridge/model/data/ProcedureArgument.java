@@ -36,21 +36,17 @@ public class ProcedureArgument {
     private String argumentName;
     private String dataType;
     private String typeName;
-    private String defaulted;
     private boolean inParam;
     private boolean outParam;
-    private int sequence;
     private String origTypeName;
     private int sequenceNumber;
 
-    public ProcedureArgument(String argumentName, String dataType, String typeName, String defaulted, boolean inParam, boolean outParam, int sequence, String origTypeName) {
+    public ProcedureArgument(String argumentName, String dataType, String typeName, boolean inParam, boolean outParam, String origTypeName) {
         this.argumentName = argumentName;
         this.dataType = dataType;
         this.typeName = typeName;
-        this.defaulted = defaulted;
         this.inParam = inParam;
         this.outParam = outParam;
-        this.sequence = sequence;
         this.origTypeName = origTypeName;
     }
 
@@ -77,7 +73,7 @@ public class ProcedureArgument {
 
     public String getJavaPropertyName() {
 
-        String r = null;
+        String r;
 
         if (this.argumentName == null) {
             return "functionReturn";
@@ -153,8 +149,6 @@ public class ProcedureArgument {
     public String getRegOutput(int sequenceNumber) {
         if ("OBJECT".equals(dataType) || "TABLE".equals(dataType)) {
             return String.format("ocs.registerOutParameter(%d, Types.%s, \"%s\"); // %s", sequenceNumber, getJDBCType(), origTypeName, argumentName);
-        } else if ("BOOLEAN".equals(getJDBCType())) {
-            return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         } else {
             return String.format("ocs.registerOutParameter(%d, %s); // %s", sequenceNumber, ("Types." + getJDBCType()).replace("Types.CURSOR", "-10").replace("Types.BOOLEAN", "Types.INTEGER"), argumentName);
         }

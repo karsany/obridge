@@ -29,11 +29,8 @@ import org.obridge.model.data.OraclePackage;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.data.ProcedureArgument;
 import org.obridge.util.jdbc.JdbcTemplate;
-import org.obridge.util.jdbc.RowMapper;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -126,27 +123,22 @@ public class ProcedureDao {
     public List<Procedure> getAllSimpleFunctionAndProcedure() {
         return jdbcTemplate.query(
                 GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE,
-                new RowMapper<Procedure>() {
-                    @Override
-                    public Procedure mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new Procedure.Builder()
-                                .objectName("")
-                                .procedureName(resultSet.getString("object_name"))
-                                .overload(resultSet.getString("overload") == null ? "" : resultSet.getString("overload"))
-                                .methodType(resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION")
-                                .argumentList(getProcedureArguments("",
-                                        resultSet.getString("object_name"),
-                                        resultSet.getString("overload")))
-                                .build();
-                    }
-                }
+                (resultSet, i) -> new Procedure.Builder()
+                        .objectName("")
+                        .procedureName(resultSet.getString("object_name"))
+                        .overload(resultSet.getString("overload") == null ? "" : resultSet.getString("overload"))
+                        .methodType(resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION")
+                        .argumentList(getProcedureArguments("",
+                                resultSet.getString("object_name"),
+                                resultSet.getString("overload")))
+                        .build()
         );
 
     }
 
     public List<Procedure> getAllProcedure(String packageName, String procedureName) {
-        String packageNameFilter = "";
-        String procedureNameFilter = "";
+        String packageNameFilter;
+        String procedureNameFilter;
 
         if (packageName == null || packageName.isEmpty() || "".equals(packageName)) {
             packageNameFilter = "%";
@@ -163,20 +155,15 @@ public class ProcedureDao {
 
         return jdbcTemplate.query(
                 GET_ALL_PROCEDURE,
-                new RowMapper<Procedure>() {
-                    @Override
-                    public Procedure mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new Procedure.Builder()
-                                .objectName(resultSet.getString("object_name"))
-                                .procedureName(resultSet.getString("procedure_name"))
-                                .overload(resultSet.getString("overload") == null ? "" : resultSet.getString("overload"))
-                                .methodType(resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION")
-                                .argumentList(getProcedureArguments(resultSet.getString("object_name"),
-                                        resultSet.getString("procedure_name"),
-                                        resultSet.getString("overload")))
-                                .build();
-                    }
-                }, packageNameFilter, procedureNameFilter
+                (resultSet, i) -> new Procedure.Builder()
+                        .objectName(resultSet.getString("object_name"))
+                        .procedureName(resultSet.getString("procedure_name"))
+                        .overload(resultSet.getString("overload") == null ? "" : resultSet.getString("overload"))
+                        .methodType(resultSet.getInt("proc_or_func") == 0 ? "PROCEDURE" : "FUNCTION")
+                        .argumentList(getProcedureArguments(resultSet.getString("object_name"),
+                                resultSet.getString("procedure_name"),
+                                resultSet.getString("overload")))
+                        .build(), packageNameFilter, procedureNameFilter
         );
 
     }
@@ -184,21 +171,14 @@ public class ProcedureDao {
     public List<ProcedureArgument> getProcedureArguments(String packageName, String procedureName, String overLoadNo) {
         return jdbcTemplate.query(
                 GET_PROCEDURE_ARGUMENTS,
-                new Object[]{packageName, procedureName, overLoadNo}, new RowMapper<ProcedureArgument>() {
-                    @Override
-                    public ProcedureArgument mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new ProcedureArgument(
-                                resultSet.getString("argument_name"),
-                                resultSet.getString("data_type"),
-                                resultSet.getString("type_name"),
-                                resultSet.getString("defaulted"),
-                                resultSet.getString("in_out").contains("IN"),
-                                resultSet.getString("in_out").contains("OUT"),
-                                resultSet.getInt("sequen"),
-                                resultSet.getString("orig_type_name")
-                        );
-                    }
-                }
+                new Object[]{packageName, procedureName, overLoadNo}, (resultSet, i) -> new ProcedureArgument(
+                        resultSet.getString("argument_name"),
+                        resultSet.getString("data_type"),
+                        resultSet.getString("type_name"),
+                        resultSet.getString("in_out").contains("IN"),
+                        resultSet.getString("in_out").contains("OUT"),
+                        resultSet.getString("orig_type_name")
+                )
         );
 
     }
@@ -217,14 +197,11 @@ public class ProcedureDao {
     }
 
     private List<OraclePackage> getAllRealOraclePackage() {
-        return jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", new RowMapper<OraclePackage>() {
-            @Override
-            public OraclePackage mapRow(ResultSet resultSet, int i) throws SQLException {
-                OraclePackage p = new OraclePackage();
-                p.setName(resultSet.getString("object_name"));
-                p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), ""));
-                return p;
-            }
+        return jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", (resultSet, i) -> {
+            OraclePackage p = new OraclePackage();
+            p.setName(resultSet.getString("object_name"));
+            p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), ""));
+            return p;
         });
     }
 

@@ -8,7 +8,7 @@ public class ParameterGetSetRegisterBuilderTest {
 
     @Test
     public void testSetParameter() throws Exception {
-        ParameterGetSetRegisterBuilder parameterGetSetRegisterBuilder = new ParameterGetSetRegisterBuilder(new ProcedureArgument("P_HELLO", "VARCHAR2", null, null, true, false, 1, "VARCHAR2"));
+        ParameterGetSetRegisterBuilder parameterGetSetRegisterBuilder = new ParameterGetSetRegisterBuilder(new ProcedureArgument("P_HELLO", "VARCHAR2", null, true, false, "VARCHAR2"));
         String s = parameterGetSetRegisterBuilder.setParameter(1);
         Assert.assertTrue(s.contains("Types.VARCHAR"));
     }

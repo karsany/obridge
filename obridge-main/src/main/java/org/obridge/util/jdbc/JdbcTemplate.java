@@ -43,24 +43,19 @@ public class JdbcTemplate {
         this.dataSource = dataSource;
     }
 
-    public <T> List<T> queryForList(String sql) throws JdbcTemplateException {
-        return query(sql, new RowMapper<T>() {
-            @Override
-            public T mapRow(ResultSet resultSet, int i) throws SQLException {
-                return (T) resultSet.getObject(1);
-            }
-        });
+    public <T> List<T> queryForList(String sql) {
+        return query(sql, (resultSet, i) -> (T) resultSet.getObject(1));
     }
 
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper) throws JdbcTemplateException {
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper) {
         return query(sql, null, rowMapper);
     }
 
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) throws JdbcTemplateException {
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
         return query(sql, args, rowMapper);
     }
 
-    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper) throws JdbcTemplateException {
+    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper) {
 
         List<T> ret = null;
         Connection connection = null;
@@ -82,7 +77,6 @@ public class JdbcTemplate {
             ps.close();
             ps = null;
             connection.close();
-            connection = null;
 
             return ret;
 
@@ -110,8 +104,7 @@ public class JdbcTemplate {
     }
 
     private <T> List<T> fetchData(RowMapper<T> rowMapper, ResultSet resultSet) throws SQLException {
-        List<T> ret;
-        ret = new ArrayList<T>();
+        List<T> ret = new ArrayList<>();
         int i = 0;
         while (resultSet.next()) {
             i++;

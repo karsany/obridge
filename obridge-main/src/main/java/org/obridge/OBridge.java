@@ -45,8 +45,7 @@ public class OBridge {
         try {
 
             Options o = new Options();
-            CommandLine cmd = null;
-            cmd = getCommandLine(o, args);
+            CommandLine cmd = getCommandLine(o, args);
 
             if (cmd.hasOption("h")) {
                 printHelp(o);

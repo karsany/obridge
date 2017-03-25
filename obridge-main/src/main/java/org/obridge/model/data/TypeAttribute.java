@@ -132,9 +132,7 @@ public class TypeAttribute {
             return String.format("result.set%s(((Clob)attr[%d]).getSubString(1, (int)((Clob)attr[%d]).length())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_BLOB.equals(attrTypeName)) {
             return String.format("result.set%s(((Blob)attr[%d]).getBytes(1, (int)((Blob)attr[%d]).length())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
-        } else if (TypeMapper.ORACLE_INTEGER.equals(attrTypeName)) {
-            return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
-        } else if (TypeMapper.JAVA_INTEGER.equals(getJavaDataType())) {
+        } else if (TypeMapper.ORACLE_INTEGER.equals(attrTypeName) || TypeMapper.JAVA_INTEGER.equals(getJavaDataType())) {
             return String.format("result.set%s(((BigDecimal)attr[%d]).intValue()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else {
             return String.format("result.set%s((%s)attr[%d]); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);

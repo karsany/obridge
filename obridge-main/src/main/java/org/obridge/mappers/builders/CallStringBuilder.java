@@ -55,7 +55,7 @@ public class CallStringBuilder {
     }
 
     public String build() {
-        bindParams = new ArrayList<BindParam>();
+        bindParams = new ArrayList<>();
 
         StringBuilder callString = new StringBuilder();
 
@@ -110,16 +110,16 @@ public class CallStringBuilder {
         boolean first = true;
         for (ProcedureArgument pa : procedure.getArgumentList()) {
             if (pa.getArgumentName() != null) {
-                String ln = "  ";
-                ln += !first ? " ," : "  ";
+                StringBuilder ln = new StringBuilder("  ");
+                ln.append(!first ? " ," : "  ");
                 if (pa.isJDBCTypeBoolean()) {
-                    ln += "\\\"" + pa.getArgumentName() + "\\\" => " + pa.getArgumentName();
+                    ln.append("\\\"" + pa.getArgumentName() + "\\\" => " + pa.getArgumentName());
                 } else {
-                    ln += "\\\"" + pa.getArgumentName() + "\\\" => :" + pa.getArgumentName();
+                    ln.append("\\\"" + pa.getArgumentName() + "\\\" => :" + pa.getArgumentName());
                     addBindParam(pa.getArgumentName(), pa, pa.isInParam(), pa.isOutParam());
                 }
                 first = false;
-                addLine(callString, ln);
+                addLine(callString, ln.toString());
             }
         }
     }
@@ -138,13 +138,13 @@ public class CallStringBuilder {
         // DECLARE BOOLEAN INPUT VARIABLES
         for (ProcedureArgument pa : procedure.getArgumentList()) {
             if (pa.isJDBCTypeBoolean() && pa.getArgumentName() != null) {
-                String ln = "  " + pa.getArgumentName() + " BOOLEAN";
+                StringBuilder ln = new StringBuilder("  " + pa.getArgumentName() + " BOOLEAN");
                 if (pa.isInParam()) {
-                    ln += " := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")";
+                    ln.append(" := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")");
                     addBindParam("i" + pa.getArgumentName(), pa, true, false);
                 }
-                ln += "; ";
-                addLine(callString, ln);
+                ln.append("; ");
+                addLine(callString, ln.toString());
             }
         }
     }

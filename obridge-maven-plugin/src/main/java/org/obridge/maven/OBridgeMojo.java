@@ -58,7 +58,7 @@ public class OBridgeMojo extends AbstractMojo {
         OBridgeConfiguration config = o.loadConfiguration(configurationFile);
         config.setSourceRoot(baseDir);
 
-        if (config.getRootPackageName() == null || config.getRootPackageName().equals("")) {
+        if (config.getRootPackageName() == null || "".equals(config.getRootPackageName())) {
             config.setRootPackageName(groupId);
         }
 

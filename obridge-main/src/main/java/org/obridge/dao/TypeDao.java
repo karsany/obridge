@@ -26,11 +26,8 @@ package org.obridge.dao;
 
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.util.jdbc.JdbcTemplate;
-import org.obridge.util.jdbc.RowMapper;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -92,20 +89,15 @@ public class TypeDao {
 
         return jdbcTemplate.query(
                 GET_TYPE_ATTRIBUTES,
-                new Object[]{typeName.toUpperCase()}, new RowMapper<TypeAttribute>() {
-                    @Override
-                    public TypeAttribute mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new TypeAttribute(
-                                resultSet.getString("attr_name"),
-                                resultSet.getString("attr_type_name"),
-                                resultSet.getInt("attr_no"),
-                                resultSet.getInt("data_scale"),
-                                resultSet.getInt("multi_type"),
-                                resultSet.getString("typecode"),
-                                resultSet.getString("collection_base_type")
-                        );
-                    }
-                }
+                new Object[]{typeName.toUpperCase()}, (resultSet, i) -> new TypeAttribute(
+                        resultSet.getString("attr_name"),
+                        resultSet.getString("attr_type_name"),
+                        resultSet.getInt("attr_no"),
+                        resultSet.getInt("data_scale"),
+                        resultSet.getInt("multi_type"),
+                        resultSet.getString("typecode"),
+                        resultSet.getString("collection_base_type")
+                )
         );
     }
 
@@ -118,19 +110,14 @@ public class TypeDao {
     public List<TypeAttribute> getEmbeddedTypeAttributes(String typeName) {
 
         return jdbcTemplate.query(GET_EMBEDDED_TYPE_ATTRIBUTES,
-                new Object[]{typeName.toUpperCase()}, new RowMapper<TypeAttribute>() {
-                    @Override
-                    public TypeAttribute mapRow(ResultSet resultSet, int i) throws SQLException {
-                        return new TypeAttribute(
-                                resultSet.getString("attr_name"),
-                                resultSet.getString("attr_type_name"),
-                                resultSet.getInt("attr_no"),
-                                resultSet.getInt("data_scale"),
-                                resultSet.getInt("multi_type"),
-                                resultSet.getString("typecode"),
-                                resultSet.getString("collection_base_type")
-                        );
-                    }
-                });
+                new Object[]{typeName.toUpperCase()}, (resultSet, i) -> new TypeAttribute(
+                        resultSet.getString("attr_name"),
+                        resultSet.getString("attr_type_name"),
+                        resultSet.getInt("attr_no"),
+                        resultSet.getInt("data_scale"),
+                        resultSet.getInt("multi_type"),
+                        resultSet.getString("typecode"),
+                        resultSet.getString("collection_base_type")
+                ));
     }
 }
