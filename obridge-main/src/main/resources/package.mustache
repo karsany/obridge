@@ -23,7 +23,7 @@ public final class {{javaClassName}} {
 
     {{#procedureList}}
 
-    public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) {
+    public static void {{javaProcedureName}}({{contextPackage}}.{{storedProcedureClassName}} ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall({{& callString}});
             try {
@@ -60,8 +60,8 @@ public final class {{javaClassName}} {
         }
     }
 
-    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) {
-        final {{storedProcedureClassName}} ctx = new {{storedProcedureClassName}}();
+    public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) {
+        final {{contextPackage}}.{{storedProcedureClassName}} ctx = new {{contextPackage}}.{{storedProcedureClassName}}();
         {{#argumentList}}
         {{#inParam}}
         ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
@@ -74,7 +74,7 @@ public final class {{javaClassName}} {
     }
 
     {{^hasResultSetParam}}
-    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
+    public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
         try {
             final Connection conn = dataSource.getConnection();
             try {
@@ -90,7 +90,7 @@ public final class {{javaClassName}} {
 
 
     {{^hasResultSetParam}}
-    public static void {{javaProcedureName}}(DataSource dataSource, {{storedProcedureClassName}} ctx) {
+    public static void {{javaProcedureName}}(DataSource dataSource, {{contextPackage}}.{{storedProcedureClassName}} ctx) {
         try {
             final Connection conn = dataSource.getConnection();
             try {
