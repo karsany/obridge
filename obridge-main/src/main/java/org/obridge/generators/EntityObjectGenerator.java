@@ -38,6 +38,7 @@ import org.obridge.util.OBridgeException;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,6 +61,10 @@ public final class EntityObjectGenerator {
                 generateEntityObject(packageName, outputDir, typeName, typeDao.getTypeAttributes(typeName));
             }
 
+            if (types.size() == 0) {
+                generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>());
+            }
+
             if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
                 List<String> embeddedTypes = typeDao.getEmbeddedTypeList();
                 for (String typeName : embeddedTypes) {
@@ -72,6 +77,7 @@ public final class EntityObjectGenerator {
             throw new OBridgeException(e);
         }
     }
+
 
     private static void generateEntityObject(String packageName, String outputDir, String typeName, List<TypeAttribute> typeAttributes) throws IOException {
         Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
