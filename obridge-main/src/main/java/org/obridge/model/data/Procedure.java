@@ -118,6 +118,13 @@ public class Procedure {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "Procedure{" +
+                "procedureName='" + procedureName + '\'' +
+                '}';
+    }
+
     public static class Builder {
         Procedure p = new Procedure();
 

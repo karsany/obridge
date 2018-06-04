@@ -57,7 +57,7 @@ public final class ProcedureContextGenerator {
 
             ProcedureDao procedureDao = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<Procedure> allProcedures = procedureDao.getAllProcedure();
+            List<Procedure> allProcedures = procedureDao.getAllProcedure(c.getSourceOwner());
 
             for (Procedure p : allProcedures) {
                 generateProcedureContext(packageName, objectPackage, outputDir, p);

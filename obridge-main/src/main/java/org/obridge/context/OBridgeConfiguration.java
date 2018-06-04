@@ -40,6 +40,15 @@ public class OBridgeConfiguration {
     private String rootPackageName;
     private Packages packages;
     private Logging logging;
+    private String sourceOwner;
+
+    public String getSourceOwner() {
+        return sourceOwner;
+    }
+
+    public void setSourceOwner(String sourceOwner) {
+        this.sourceOwner = sourceOwner;
+    }
 
     public String getJdbcUrl() {
         return jdbcUrl;

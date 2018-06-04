@@ -67,7 +67,10 @@ public final class PackageObjectGenerator {
                 }
             }
 
-            List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages();
+
+            List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages(c.getSourceOwner());
+
+            System.out.println(allPackages);
 
             for (OraclePackage oraclePackage : allPackages) {
                 oraclePackage.setJavaPackageName(packageName);
