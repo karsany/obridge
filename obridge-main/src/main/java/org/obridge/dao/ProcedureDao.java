@@ -113,8 +113,8 @@ public class ProcedureDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<Procedure> getAllProcedure() {
-        List<Procedure> allProcedures = getAllProcedure("", "");
+    public List<Procedure> getAllProcedure(OBridgeConfiguration c) {
+        List<Procedure> allProcedures = getAllProcedure(c.getPackagesLike(), "");
         allProcedures.addAll(getAllSimpleFunctionAndProcedure());
 
         return allProcedures;
@@ -183,8 +183,8 @@ public class ProcedureDao {
 
     }
 
-    public List<OraclePackage> getAllPackages() {
-        List<OraclePackage> allPackage = getAllRealOraclePackage();
+    public List<OraclePackage> getAllPackages(OBridgeConfiguration c) {
+        List<OraclePackage> allPackage = getAllRealOraclePackage(c);
         allPackage.add(getAllStandaloneProcedureAndFunction());
         return allPackage;
     }
@@ -196,8 +196,9 @@ public class ProcedureDao {
         return oraclePackage;
     }
 
-    private List<OraclePackage> getAllRealOraclePackage() {
-        return jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", (resultSet, i) -> {
+    private List<OraclePackage> getAllRealOraclePackage(OBridgeConfiguration c) {
+        String query = "select object_name from user_objects where object_type = 'PACKAGE' and object_name like '" + c.getPackagesLike() + "'";
+        return jdbcTemplate.query(query, (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
             p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), ""));
