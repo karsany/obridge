@@ -57,8 +57,8 @@ public class ProcedureDao {
                     "   And procedure_name Like ?\n" +
                     "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
                     "        (Select package_name, object_name, nvl(overload, -1)\n" +
-                    "               From user_arguments\n" +
-                    "              Where data_type In ('PL/SQL TABLE')\n" +
+                    "               From all_arguments\n" +
+                    "              Where owner = ? and data_type In ('PL/SQL TABLE')\n" +
                     "                 Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n" +
                     "                 Or (data_type = 'PL/SQL RECORD' " +
                     (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
@@ -71,8 +71,8 @@ public class ProcedureDao {
                     "       procedure_name,\n" +
                     "       overload,\n" +
                     "       (Select Count(*)\n" +
-                    "          From user_arguments a\n" +
-                    "         Where a.object_name = t.object_name\n" +
+                    "          From all_arguments a\n" +
+                    "         Where owner = ? and a.object_name = t.object_name\n" +
                     "           And a.package_name Is Null\n" +
                     "           And nvl(a.overload, '##NVL##') = nvl(t.overload, '##NVL##')\n" +
                     "           And a.argument_name Is Null\n" +
@@ -93,7 +93,7 @@ public class ProcedureDao {
 
     private static final String GET_PROCEDURE_ARGUMENTS = "  select argument_name," +
             "data_type," +
-            "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
+            "nvl( (select max(elem_type_name) from all_coll_types w where owner = ? and w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
             "defaulted," +
             "in_out," +
             "rownum sequen, p.type_name orig_type_name " +
@@ -131,7 +131,7 @@ public class ProcedureDao {
                         .argumentList(getProcedureArguments("",
                                 resultSet.getString("object_name"),
                                 resultSet.getString("overload"), owner))
-                        .build(), owner, owner
+                        .build(), owner, owner, owner
         );
 
     }
@@ -163,7 +163,7 @@ public class ProcedureDao {
                         .argumentList(getProcedureArguments(resultSet.getString("object_name"),
                                 resultSet.getString("procedure_name"),
                                 resultSet.getString("overload"), owner))
-                        .build(), owner, owner, packageNameFilter, procedureNameFilter
+                        .build(), owner, owner, packageNameFilter, procedureNameFilter, owner
         );
 
     }
