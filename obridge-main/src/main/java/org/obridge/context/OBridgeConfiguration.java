@@ -41,7 +41,7 @@ public class OBridgeConfiguration {
     private Packages packages;
     private Logging logging;
     private String packagesLike;
-
+    private String sourceOwner;
 
     public String getPackagesLike() {
         if (packagesLike == null) {
@@ -50,7 +50,17 @@ public class OBridgeConfiguration {
         return packagesLike;
     }
 
-    public void setPackagesLike(String packagesLike) { this.packagesLike = packagesLike; }
+    public void setPackagesLike(String packagesLike) {
+        this.packagesLike = packagesLike;
+    }
+
+    public String getSourceOwner() {
+        return sourceOwner;
+    }
+
+    public void setSourceOwner(String sourceOwner) {
+        this.sourceOwner = sourceOwner;
+    }
 
     public String getJdbcUrl() {
         return jdbcUrl;
