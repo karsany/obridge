@@ -70,6 +70,7 @@ public final class PackageObjectGenerator {
 
             List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages(c.getSourceOwner());
 
+            System.out.println(c.getSourceOwner());
             System.out.println(allPackages);
 
             for (OraclePackage oraclePackage : allPackages) {
