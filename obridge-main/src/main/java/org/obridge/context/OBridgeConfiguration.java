@@ -40,6 +40,17 @@ public class OBridgeConfiguration {
     private String rootPackageName;
     private Packages packages;
     private Logging logging;
+    private String packagesLike;
+
+
+    public String getPackagesLike() {
+        if (packagesLike == null) {
+            return "%";
+        }
+        return packagesLike;
+    }
+
+    public void setPackagesLike(String packagesLike) { this.packagesLike = packagesLike; }
 
     public String getJdbcUrl() {
         return jdbcUrl;

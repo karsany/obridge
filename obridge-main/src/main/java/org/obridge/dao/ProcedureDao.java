@@ -106,6 +106,7 @@ public class ProcedureDao {
             + "         And not(pls_type is null and argument_name is null and data_type is null)"
             + "       Order By t.sequence) p\n";
 
+    private static final String GET_ALL_REAL_ORACLE_PACKAGE = "select object_name from user_objects where object_type = 'PACKAGE' and object_name like ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -113,8 +114,8 @@ public class ProcedureDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<Procedure> getAllProcedure() {
-        List<Procedure> allProcedures = getAllProcedure("", "");
+    public List<Procedure> getAllProcedure(String nameFilter) {
+        List<Procedure> allProcedures = getAllProcedure(nameFilter, "");
         allProcedures.addAll(getAllSimpleFunctionAndProcedure());
 
         return allProcedures;
@@ -183,8 +184,12 @@ public class ProcedureDao {
 
     }
 
-    public List<OraclePackage> getAllPackages() {
-        List<OraclePackage> allPackage = getAllRealOraclePackage();
+    public List<OraclePackage> getAllPackages(String nameFilter) {
+        String realNameFilter = "%";
+        if (nameFilter != null && !nameFilter.isEmpty()) {
+            realNameFilter = nameFilter;
+        }
+        List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter);
         allPackage.add(getAllStandaloneProcedureAndFunction());
         return allPackage;
     }
@@ -196,13 +201,13 @@ public class ProcedureDao {
         return oraclePackage;
     }
 
-    private List<OraclePackage> getAllRealOraclePackage() {
-        return jdbcTemplate.query("select object_name from user_objects where object_type = 'PACKAGE'", (resultSet, i) -> {
+    private List<OraclePackage> getAllRealOraclePackage(String nameFilter) {
+        return jdbcTemplate.query(GET_ALL_REAL_ORACLE_PACKAGE, (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
             p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), ""));
             return p;
-        });
+        }, nameFilter);
     }
 
 }
