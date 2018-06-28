@@ -20,7 +20,7 @@ public final class PrimitiveTypeConverter {
 
     public static Array getListArray(List o, Connection c, String typeName) throws SQLException {
         OracleConnection connection = c.unwrap(OracleConnection.class);
-        ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
+
         if (o == null) {
             return connection.createOracleArray(typeName, new Object[0]);
         }
@@ -28,7 +28,7 @@ public final class PrimitiveTypeConverter {
         for (Object e : o) {
             array.add(e);
         }
-        return connection.createOracleArray(typeName, array.toArray());;;
+        return connection.createOracleArray(typeName, array.toArray());
     }
 
     public static <T> List<T> asList(Array array, Class<T> targetClass) throws SQLException {
