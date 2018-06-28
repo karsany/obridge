@@ -1,8 +1,7 @@
 package {{packageName}};
 
 import oracle.jdbc.OracleConnection;
-import oracle.sql.ARRAY;
-import oracle.sql.ArrayDescriptor;
+import java.sql.Array;
 
 import javax.annotation.Generated;
 import java.math.BigDecimal;
@@ -21,15 +20,15 @@ public final class PrimitiveTypeConverter {
 
     public static Array getListArray(List o, Connection c, String typeName) throws SQLException {
         OracleConnection connection = c.unwrap(OracleConnection.class);
-        ArrayDescriptor arrayDescriptor = new ArrayDescriptor(typeName, connection);
+
         if (o == null) {
-            return new ARRAY(arrayDescriptor, connection, new Object[0]);
+            return connection.createOracleArray(typeName, new Object[0]);
         }
         List<Object> array = new ArrayList<Object>(o.size());
         for (Object e : o) {
             array.add(e);
         }
-        return new ARRAY(arrayDescriptor, connection, array.toArray());
+        return connection.createOracleArray(typeName, array.toArray());
     }
 
     public static <T> List<T> asList(Array array, Class<T> targetClass) throws SQLException {
