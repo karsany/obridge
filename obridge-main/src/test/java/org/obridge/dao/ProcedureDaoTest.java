@@ -23,7 +23,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllProcedures() {
-        List<Procedure> allProcedures = procedureDao.getAllProcedure();
+        List<Procedure> allProcedures = procedureDao.getAllProcedure("");
         Collection<String> procedureNames = FuncUtils.pluck("storedProcedureClassName", String.class, allProcedures);
         Assert.assertTrue(procedureNames.contains("SimpleProceduresA"));
         Assert.assertTrue(procedureNames.contains("SimpleProceduresOverload1"));
@@ -32,7 +32,9 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetProcedureArguments() {
-        List<OraclePackage> allPackages = procedureDao.getAllPackages();
+        List<OraclePackage> allPackages = procedureDao.getAllPackages(null);
+
+        Assert.assertTrue(allPackages.size() > 0);
 
         for (OraclePackage p : allPackages) {
             MustacheRunner.build("package.mustache", p);
@@ -44,5 +46,12 @@ public class ProcedureDaoTest extends BaseTest {
     public void testGetAllSimpleProcedureAndFunction() {
         List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedure();
         System.out.println(procs);
+    }
+
+    @Test
+    public void testAllPckNoFilter() {
+        List<OraclePackage> allPackages = procedureDao.getAllPackages("ABCDE");
+        Assert.assertTrue(allPackages.size() == 1);
+
     }
 }
