@@ -57,8 +57,8 @@ public class ProcedureDao {
                     "   And procedure_name Like ?\n" +
                     "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
                     "        (Select package_name, object_name, nvl(overload, -1)\n" +
-                    "               From all_arguments\n" +
-                    "              Where owner = ? and data_type In ('PL/SQL TABLE')\n" +
+                    "               From user_arguments\n" +
+                    "              Where data_type In ('PL/SQL TABLE')\n" +
                     "                 Or (data_type = 'REF CURSOR' And in_out Like '%IN%')\n" +
                     "                 Or (data_type = 'PL/SQL RECORD' " +
                     (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
@@ -71,8 +71,8 @@ public class ProcedureDao {
                     "       procedure_name,\n" +
                     "       overload,\n" +
                     "       (Select Count(*)\n" +
-                    "          From all_arguments a\n" +
-                    "         Where owner = ? and a.object_name = t.object_name\n" +
+                    "          From user_arguments a\n" +
+                    "         Where a.object_name = t.object_name\n" +
                     "           And a.package_name Is Null\n" +
                     "           And nvl(a.overload, '##NVL##') = nvl(t.overload, '##NVL##')\n" +
                     "           And a.argument_name Is Null\n" +
@@ -93,7 +93,7 @@ public class ProcedureDao {
 
     private static final String GET_PROCEDURE_ARGUMENTS = "  select argument_name," +
             "data_type," +
-            "nvl( (select max(elem_type_name) from all_coll_types w where owner = ? and w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
+            "nvl( (select max(elem_type_name) from user_coll_types w where w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
             "defaulted," +
             "in_out," +
             "rownum sequen, p.type_name orig_type_name " +
@@ -106,6 +106,7 @@ public class ProcedureDao {
             + "         And not(pls_type is null and argument_name is null and data_type is null)"
             + "       Order By t.sequence) p\n";
 
+    private static final String GET_ALL_REAL_ORACLE_PACKAGE = "select object_name from all_objects where object_type = 'PACKAGE' and object_name like ? and owner = ?";
 
     private JdbcTemplate jdbcTemplate;
 
@@ -113,10 +114,9 @@ public class ProcedureDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<Procedure> getAllProcedure(String owner) {
-        List<Procedure> allProcedures = getAllProcedure("", "", owner);
+    public List<Procedure> getAllProcedure(String nameFilter, String owner) {
+        List<Procedure> allProcedures = getAllProcedure(nameFilter, "", owner);
         allProcedures.addAll(getAllSimpleFunctionAndProcedure(owner));
-
         return allProcedures;
     }
 
@@ -131,7 +131,7 @@ public class ProcedureDao {
                         .argumentList(getProcedureArguments("",
                                 resultSet.getString("object_name"),
                                 resultSet.getString("overload"), owner))
-                        .build(), owner, owner, owner
+                        .build(), owner, owner
         );
 
     }
@@ -163,7 +163,7 @@ public class ProcedureDao {
                         .argumentList(getProcedureArguments(resultSet.getString("object_name"),
                                 resultSet.getString("procedure_name"),
                                 resultSet.getString("overload"), owner))
-                        .build(), owner, owner, packageNameFilter, procedureNameFilter, owner
+                        .build(), owner, owner, packageNameFilter, procedureNameFilter
         );
 
     }
@@ -183,8 +183,12 @@ public class ProcedureDao {
 
     }
 
-    public List<OraclePackage> getAllPackages(String owner) {
-        List<OraclePackage> allPackage = getAllRealOraclePackage(owner);
+    public List<OraclePackage> getAllPackages(String nameFilter, String owner) {
+        String realNameFilter = "%";
+        if (nameFilter != null && !nameFilter.isEmpty()) {
+            realNameFilter = nameFilter;
+        }
+        List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter, owner);
         allPackage.add(getAllStandaloneProcedureAndFunction(owner));
         return allPackage;
     }
@@ -196,13 +200,13 @@ public class ProcedureDao {
         return oraclePackage;
     }
 
-    private List<OraclePackage> getAllRealOraclePackage(String owner) {
-        return jdbcTemplate.query("select object_name from all_objects where owner = ? and object_type = 'PACKAGE'", (resultSet, i) -> {
+    private List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner) {
+        return jdbcTemplate.query(GET_ALL_REAL_ORACLE_PACKAGE, (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
             p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), "", owner));
             return p;
-        }, owner);
+        }, nameFilter, owner);
     }
 
 }
