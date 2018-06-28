@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.obridge.BaseTest;
 import org.obridge.model.data.OraclePackage;
 import org.obridge.model.data.Procedure;
+import org.obridge.model.data.ProcedureArgument;
 import org.obridge.util.FuncUtils;
 import org.obridge.util.MustacheRunner;
 
@@ -52,5 +53,12 @@ public class ProcedureDaoTest extends BaseTest {
         List<OraclePackage> allPackages = procedureDao.getAllPackages("ABCDE", "OBRIDGE");
         Assert.assertTrue(allPackages.size() == 1);
 
+    }
+
+    @Test
+    public void getProcedureArguments() {
+        final List<ProcedureArgument> procedureArguments = procedureDao.getProcedureArguments("NULLITY_CHECK", "CHECK_OUT_NULL_LIST", null, "OBRIDGE");
+        Assert.assertEquals(1, procedureArguments.size());
+        Assert.assertEquals("P_LIST_OBJECT", procedureArguments.get(0).getArgumentName());
     }
 }

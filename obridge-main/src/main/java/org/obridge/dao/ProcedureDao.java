@@ -91,6 +91,7 @@ public class ProcedureDao {
                     "))))\n" +
                     "    Or procedure_name = 'ASSERT'";
 
+
     private static final String GET_PROCEDURE_ARGUMENTS = "  select argument_name," +
             "data_type," +
             "nvl( (select max(elem_type_name) from all_coll_types w where owner = ? and w.TYPE_NAME = p.type_name) , p.type_name || case when p.type_subname is not null then '_' || p.type_subname end) type_name," +
@@ -171,7 +172,7 @@ public class ProcedureDao {
     public List<ProcedureArgument> getProcedureArguments(String packageName, String procedureName, String overLoadNo, String owner) {
         return jdbcTemplate.query(
                 GET_PROCEDURE_ARGUMENTS,
-                new Object[]{owner, packageName, procedureName, overLoadNo}, (resultSet, i) -> new ProcedureArgument(
+                new Object[]{owner, owner, packageName, procedureName, overLoadNo}, (resultSet, i) -> new ProcedureArgument(
                         resultSet.getString("argument_name"),
                         resultSet.getString("data_type"),
                         resultSet.getString("type_name"),
