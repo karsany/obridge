@@ -1,22 +1,27 @@
 <configuration>
-	<jdbcUrl>jdbc:oracle:thin:obridge/obridge@localhost:1521:xe</jdbcUrl>
-	<!-- jdbc connection string for obridge -->
-	<sourceRoot>src/main/java</sourceRoot>
-	<!-- where to generate sources - related to this configuration file -->
-	<rootPackageName>org.obridge.test.database</rootPackageName>
-	<!-- root Java package, generator builds the directory structure -->
-	<packages>
-		<entityObjects>objects</entityObjects>
-		<!-- object types are going to this package -->
-		<converterObjects>converters</converterObjects>
-		<!-- converter util classes are going to this package -->
-		<procedureContextObjects>context</procedureContextObjects>
-		<!-- procedure parameter entities are going to this package -->
-		<packageObjects>packages</packageObjects>
-		<!-- procedure calling utility classes are going to this package -->
-	</packages>
-	<logging>
-		<initializer>private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(%s.class.getName());</initializer>
-		<method>LOGGER.info</method>
-	</logging>
+    <jdbcUrl>jdbc:oracle:thin:obridge/obridge@localhost:1521:xe</jdbcUrl>
+    <sourceOwner>OBRIDGE</sourceOwner>
+    <!-- jdbc connection string for obridge -->
+    <sourceRoot>src/main/java</sourceRoot>
+    <!-- where to generate sources - related to this configuration file -->
+    <rootPackageName>org.obridge.test.database</rootPackageName>
+    <!-- root Java package, generator builds the directory structure -->
+    <packages>
+        <entityObjects>objects</entityObjects>
+        <!-- object types are going to this package -->
+        <converterObjects>converters</converterObjects>
+        <!-- converter util classes are going to this package -->
+        <procedureContextObjects>context</procedureContextObjects>
+        <!-- procedure parameter entities are going to this package -->
+        <packageObjects>packages</packageObjects>
+        <!-- procedure calling utility classes are going to this package -->
+    </packages>
+    <logging>
+        <initializer>private static final java.util.logging.Logger LOGGER =
+            java.util.logging.Logger.getLogger(%s.class.getName());
+        </initializer>
+        <method>LOGGER.info</method>
+    </logging>
+
+
 </configuration>

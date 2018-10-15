@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.obridge.BaseTest;
 import org.obridge.model.data.OraclePackage;
 import org.obridge.model.data.Procedure;
+import org.obridge.model.data.ProcedureArgument;
 import org.obridge.util.FuncUtils;
 import org.obridge.util.MustacheRunner;
 
@@ -23,7 +24,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllProcedures() {
-        List<Procedure> allProcedures = procedureDao.getAllProcedure("");
+        List<Procedure> allProcedures = procedureDao.getAllProcedure("", "OBRIDGE");
         Collection<String> procedureNames = FuncUtils.pluck("storedProcedureClassName", String.class, allProcedures);
         Assert.assertTrue(procedureNames.contains("SimpleProceduresA"));
         Assert.assertTrue(procedureNames.contains("SimpleProceduresOverload1"));
@@ -32,8 +33,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetProcedureArguments() {
-        List<OraclePackage> allPackages = procedureDao.getAllPackages(null);
-
+        List<OraclePackage> allPackages = procedureDao.getAllPackages(null, "OBRIDGE");
         Assert.assertTrue(allPackages.size() > 0);
 
         for (OraclePackage p : allPackages) {
@@ -44,14 +44,28 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllSimpleProcedureAndFunction() {
-        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedure();
+        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedure("OBRIDGE");
         System.out.println(procs);
     }
 
     @Test
     public void testAllPckNoFilter() {
-        List<OraclePackage> allPackages = procedureDao.getAllPackages("ABCDE");
+        List<OraclePackage> allPackages = procedureDao.getAllPackages("ABCDE", "OBRIDGE");
         Assert.assertTrue(allPackages.size() == 1);
+
+    }
+
+    @Test
+    public void getProcedureArguments() {
+        final List<ProcedureArgument> procedureArguments = procedureDao.getProcedureArguments("NULLITY_CHECK", "CHECK_OUT_NULL_LIST", null, "OBRIDGE");
+        Assert.assertEquals(1, procedureArguments.size());
+        Assert.assertEquals("P_LIST_OBJECT", procedureArguments.get(0).getArgumentName());
+    }
+
+    @Test
+    public void getAllPackage() {
+        List<OraclePackage> obridge = procedureDao.getAllPackages("", "OBRIDGE");
+        Assert.assertTrue(obridge.size() > 0);
 
     }
 }

@@ -105,4 +105,12 @@ public class OraclePackage {
     public void setLoggingMethod(String loggingMethod) {
         this.loggingMethod = loggingMethod;
     }
+
+    @Override
+    public String toString() {
+        return "OraclePackage{" +
+                "name='" + name + '\'' +
+                ", procedureList=" + procedureList +
+                '}';
+    }
 }
