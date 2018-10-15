@@ -47,11 +47,14 @@ public class OBridgeTest {
         oBridgeConfiguration.setPackages(new Packages());
         oBridgeConfiguration.setRootPackageName("org.obridge.test");
         oBridgeConfiguration.setSourceRoot(tempdir.getRoot().getAbsolutePath());
+        oBridgeConfiguration.setSourceOwner("OBRIDGE");
 
         new OBridge().generate(oBridgeConfiguration);
 
         Assert.assertTrue(tempdir.getRoot().exists());
         Assert.assertTrue(new File(tempdir.getRoot().getAbsolutePath() + "\\org\\obridge\\test\\converters\\PrimitiveTypeConverter.java").exists());
+        Assert.assertTrue(new File(tempdir.getRoot().getAbsolutePath() + "\\org\\obridge\\test\\packages\\ProceduresAndFunctions.java").exists());
+        Assert.assertTrue(new File(tempdir.getRoot().getAbsolutePath() + "\\org\\obridge\\test\\packages\\TestPackage.java").exists());
 
 
     }

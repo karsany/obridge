@@ -185,13 +185,19 @@ public class ProcedureDao {
     }
 
     public List<OraclePackage> getAllPackages(String nameFilter, String owner) {
-        String realNameFilter = "%";
-        if (nameFilter != null && !nameFilter.isEmpty()) {
-            realNameFilter = nameFilter;
-        }
+        String realNameFilter = getNameFilter(nameFilter);
+
         List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter, owner);
         allPackage.add(getAllStandaloneProcedureAndFunction(owner));
         return allPackage;
+    }
+
+    private String getNameFilter(String nameFilter) {
+        String realNameFilter = "%";
+        if (nameFilter != null && !nameFilter.isEmpty() && !nameFilter.equals("")) {
+            realNameFilter = nameFilter;
+        }
+        return realNameFilter;
     }
 
     private OraclePackage getAllStandaloneProcedureAndFunction(String owner) {
@@ -201,13 +207,13 @@ public class ProcedureDao {
         return oraclePackage;
     }
 
-    private List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner) {
+    protected List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner) {
         return jdbcTemplate.query(GET_ALL_REAL_ORACLE_PACKAGE, (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
             p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), "", owner));
             return p;
-        }, nameFilter, owner);
+        }, getNameFilter(nameFilter), owner);
     }
 
 }

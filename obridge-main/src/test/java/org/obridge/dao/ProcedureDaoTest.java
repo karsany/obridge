@@ -61,4 +61,11 @@ public class ProcedureDaoTest extends BaseTest {
         Assert.assertEquals(1, procedureArguments.size());
         Assert.assertEquals("P_LIST_OBJECT", procedureArguments.get(0).getArgumentName());
     }
+
+    @Test
+    public void getAllPackage() {
+        List<OraclePackage> obridge = procedureDao.getAllPackages("", "OBRIDGE");
+        Assert.assertTrue(obridge.size() > 0);
+
+    }
 }
