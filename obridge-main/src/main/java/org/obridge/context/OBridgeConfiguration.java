@@ -42,6 +42,8 @@ public class OBridgeConfiguration {
     private Logging logging;
     private String packagesLike;
     private String sourceOwner;
+    private String sourcesTableProc;
+    private String sourcesTable;
 
     public String getPackagesLike() {
         if (packagesLike == null) {
@@ -100,5 +102,17 @@ public class OBridgeConfiguration {
 
     public void setLogging(Logging logging) {
         this.logging = logging;
+    }
+
+    public String getSourcesTable() {
+        return sourcesTable;
+    }
+
+    public void setSourcesTable(String sourcesTable) {
+        this.sourcesTable = sourcesTable;
+    }
+
+    public String getSourcesTableProc() {
+        return sourcesTableProc;
     }
 }

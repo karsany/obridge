@@ -27,10 +27,7 @@ package org.obridge;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.cli.*;
 import org.obridge.context.OBridgeConfiguration;
-import org.obridge.generators.ConverterObjectGenerator;
-import org.obridge.generators.EntityObjectGenerator;
-import org.obridge.generators.PackageObjectGenerator;
-import org.obridge.generators.ProcedureContextGenerator;
+import org.obridge.generators.*;
 import org.obridge.util.OBridgeException;
 import org.obridge.util.XStreamFactory;
 
@@ -113,6 +110,9 @@ public class OBridge {
     }
 
     public void generate(OBridgeConfiguration c) {
+        // populate objects table
+        PopulateObjectsTable.run(c);
+
         // generate objects
         EntityObjectGenerator.generate(c);
 

@@ -24,6 +24,7 @@
 
 package org.obridge.dao;
 
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.util.jdbc.JdbcTemplate;
 
@@ -81,8 +82,13 @@ public class TypeDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<String> getTypeList() {
-        return jdbcTemplate.queryForList("SELECT type_name FROM user_types WHERE typecode = 'OBJECT'");
+    public List<String> getTypeList(OBridgeConfiguration c) {
+        String sourcesTable = c != null ? c.getSourcesTable() : null;
+        String query = "SELECT type_name FROM user_types WHERE typecode = 'OBJECT'";
+        if (sourcesTable != null) {
+            query += " AND type_name in (SELECT object_name from " + sourcesTable + " where object_type = 'TYPE')";
+        }
+        return jdbcTemplate.queryForList(query);
     }
 
     public List<TypeAttribute> getTypeAttributes(String typeName) {

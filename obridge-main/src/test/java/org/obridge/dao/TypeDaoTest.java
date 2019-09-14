@@ -27,7 +27,7 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testGetTypeList() {
-        List<String> typeList = typeDao.getTypeList();
+        List<String> typeList = typeDao.getTypeList(null);
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_ONE));
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_TWO));
         Assert.assertFalse(typeList.contains(SAMPLE_TYPE_ONE_LIST));

@@ -56,7 +56,7 @@ public final class EntityObjectGenerator {
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = typeDao.getTypeList();
+            List<String> types = typeDao.getTypeList(c);
             for (String typeName : types) {
                 generateEntityObject(packageName, outputDir, typeName, typeDao.getTypeAttributes(typeName));
             }

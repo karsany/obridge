@@ -38,6 +38,8 @@ import java.util.List;
  */
 public class ProcedureDao {
 
+    private static String SOURCESTABLE = "%sourcesTable%";
+
     private static final String GET_ALL_PROCEDURE =
             "Select object_name,\n" +
                     "       procedure_name,\n" +
@@ -55,6 +57,7 @@ public class ProcedureDao {
                     "   And object_type = 'PACKAGE'\n" +
                     "   And object_name Like ?\n" +
                     "   And procedure_name Like ?\n" +
+                        SOURCESTABLE +
                     "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
                     "        (Select package_name, object_name, nvl(overload, -1)\n" +
                     "               From all_arguments\n" +
@@ -81,6 +84,7 @@ public class ProcedureDao {
                     "  From all_procedures t\n" +
                     " Where owner = ? and procedure_name Is Null\n" +
                     "   And object_type In ('PROCEDURE', 'FUNCTION')\n" +
+                        SOURCESTABLE +
                     "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
                     "        (Select object_name, package_name, nvl(overload, -1)\n" +
                     "               From all_arguments\n" +
@@ -115,15 +119,48 @@ public class ProcedureDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<Procedure> getAllProcedure(String nameFilter, String owner) {
-        List<Procedure> allProcedures = getAllProcedure(nameFilter, "", owner);
-        allProcedures.addAll(getAllSimpleFunctionAndProcedure(owner));
+    private String getAllProcedureQuery(String sourcesTable) {
+        String result = GET_ALL_PROCEDURE;
+        String sourcesTableWhere;
+        if (sourcesTable == null) {
+            sourcesTableWhere = "";
+        } else {
+            sourcesTableWhere = " AND (procedure_name in (select object_name from " + sourcesTable + " where object_type = 'PROCEDURE')  or object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') )";
+        }
+        result = result.replace(SOURCESTABLE, sourcesTableWhere);
+        return result;
+    }
+
+    private String getAllRealOraclePackageQuery(String sourcesTable) {
+        String result = GET_ALL_REAL_ORACLE_PACKAGE;
+        String sourcesTableWhere;
+        if (sourcesTable != null) {
+            result += " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') ";
+        }
+        return result;
+    }
+
+    private String getAllSimpleFunctionAndProcedureQuery(String sourcesTable) {
+        String result = GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE;
+        String sourcesTableWhere;
+        if (sourcesTable == null) {
+            sourcesTableWhere = "";
+        } else {
+            sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PROCEDURE') ";
+        }
+        result = result.replace(SOURCESTABLE, sourcesTableWhere);
+        return result;
+    }
+
+    public List<Procedure> getAllProcedure(String nameFilter, String owner, String sourcesTable) {
+        List<Procedure> allProcedures = getAllProcedure(nameFilter, "", owner, sourcesTable);
+        allProcedures.addAll(getAllSimpleFunctionAndProcedure(owner, sourcesTable));
         return allProcedures;
     }
 
-    public List<Procedure> getAllSimpleFunctionAndProcedure(String owner) {
+    public List<Procedure> getAllSimpleFunctionAndProcedure(String owner, String sourcesTable) {
         return jdbcTemplate.query(
-                GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE,
+                getAllSimpleFunctionAndProcedureQuery(sourcesTable),
                 (resultSet, i) -> new Procedure.Builder()
                         .objectName("")
                         .procedureName(resultSet.getString("object_name"))
@@ -137,7 +174,7 @@ public class ProcedureDao {
 
     }
 
-    public List<Procedure> getAllProcedure(String packageName, String procedureName, String owner) {
+    public List<Procedure> getAllProcedure(String packageName, String procedureName, String owner, String sourcesTable) {
         String packageNameFilter;
         String procedureNameFilter;
 
@@ -155,7 +192,7 @@ public class ProcedureDao {
 
 
         return jdbcTemplate.query(
-                GET_ALL_PROCEDURE,
+                getAllProcedureQuery(sourcesTable),
                 (resultSet, i) -> new Procedure.Builder()
                         .objectName(resultSet.getString("object_name"))
                         .procedureName(resultSet.getString("procedure_name"))
@@ -184,11 +221,11 @@ public class ProcedureDao {
 
     }
 
-    public List<OraclePackage> getAllPackages(String nameFilter, String owner) {
+    public List<OraclePackage> getAllPackages(String nameFilter, String owner, String sourcesTable) {
         String realNameFilter = getNameFilter(nameFilter);
 
-        List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter, owner);
-        allPackage.add(getAllStandaloneProcedureAndFunction(owner));
+        List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter, owner, sourcesTable);
+        allPackage.add(getAllStandaloneProcedureAndFunction(owner, sourcesTable));
         return allPackage;
     }
 
@@ -200,18 +237,18 @@ public class ProcedureDao {
         return realNameFilter;
     }
 
-    private OraclePackage getAllStandaloneProcedureAndFunction(String owner) {
+    private OraclePackage getAllStandaloneProcedureAndFunction(String owner, String sourcesTable) {
         OraclePackage oraclePackage = new OraclePackage();
         oraclePackage.setName("PROCEDURES_AND_FUNCTIONS");
-        oraclePackage.setProcedureList(getAllSimpleFunctionAndProcedure(owner));
+        oraclePackage.setProcedureList(getAllSimpleFunctionAndProcedure(owner, sourcesTable));
         return oraclePackage;
     }
 
-    protected List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner) {
-        return jdbcTemplate.query(GET_ALL_REAL_ORACLE_PACKAGE, (resultSet, i) -> {
+    protected List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner, String sourcesTable) {
+        return jdbcTemplate.query(getAllRealOraclePackageQuery(sourcesTable), (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
-            p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), "", owner));
+            p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), owner, sourcesTable));
             return p;
         }, getNameFilter(nameFilter), owner);
     }

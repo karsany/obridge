@@ -56,7 +56,7 @@ public final class ConverterObjectGenerator {
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = typeDao.getTypeList();
+            List<String> types = typeDao.getTypeList(c);
             for (String typeName : types) {
                 generateType(packageName, objectPackage, outputDir, typeName, typeDao.getTypeAttributes(typeName));
             }
