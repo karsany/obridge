@@ -111,7 +111,7 @@ public class ProcedureDao {
             + "         And not(pls_type is null and argument_name is null and data_type is null)"
             + "       Order By t.sequence) p\n";
 
-    private static final String GET_ALL_REAL_ORACLE_PACKAGE = "select object_name from all_objects where object_type = 'PACKAGE' and object_name like ? and owner = ?";
+    private static final String GET_ALL_REAL_ORACLE_PACKAGE = "select object_name from all_objects where object_type = 'PACKAGE' and object_name like ? and owner = ? " +  SOURCESTABLE;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -119,37 +119,39 @@ public class ProcedureDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    private String replaceSourceTable(String query, String sourcesTableWhere) {
+        String result = query;
+        if (sourcesTableWhere == null) {
+            return result;
+        }
+        return result.replace(SOURCESTABLE, sourcesTableWhere);
+    }
+
     private String getAllProcedureQuery(String sourcesTable) {
         String result = GET_ALL_PROCEDURE;
-        String sourcesTableWhere;
-        if (sourcesTable == null) {
-            sourcesTableWhere = "";
-        } else {
+        String sourcesTableWhere = null;
+        if (sourcesTable != null) {
             sourcesTableWhere = " AND (procedure_name in (select object_name from " + sourcesTable + " where object_type = 'PROCEDURE')  or object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') )";
         }
-        result = result.replace(SOURCESTABLE, sourcesTableWhere);
-        return result;
+        return replaceSourceTable(result, sourcesTableWhere);
     }
 
     private String getAllRealOraclePackageQuery(String sourcesTable) {
         String result = GET_ALL_REAL_ORACLE_PACKAGE;
-        String sourcesTableWhere;
+        String sourcesTableWhere = null;
         if (sourcesTable != null) {
-            result += " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') ";
+            sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') ";
         }
-        return result;
+        return replaceSourceTable(result, sourcesTableWhere);
     }
 
     private String getAllSimpleFunctionAndProcedureQuery(String sourcesTable) {
         String result = GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE;
-        String sourcesTableWhere;
-        if (sourcesTable == null) {
-            sourcesTableWhere = "";
-        } else {
+        String sourcesTableWhere = null;
+        if (sourcesTable != null) {
             sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PROCEDURE') ";
         }
-        result = result.replace(SOURCESTABLE, sourcesTableWhere);
-        return result;
+        return replaceSourceTable(result, sourcesTableWhere);
     }
 
     public List<Procedure> getAllProcedure(String nameFilter, String owner, String sourcesTable) {
