@@ -124,8 +124,7 @@ public class ProcedureDao {
         if (sourcesTableWhere == null) {
             return result;
         }
-        result = replaceSourceTable(SOURCESTABLE, sourcesTableWhere);
-        return result;
+        return result.replace(SOURCESTABLE, sourcesTableWhere);
     }
 
     private String getAllProcedureQuery(String sourcesTable) {
@@ -144,7 +143,7 @@ public class ProcedureDao {
         if (sourcesTable != null) {
             sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') ";
         }
-        result = replaceSourceTable(SOURCESTABLE, sourcesTableWhere);
+        result = replaceSourceTable(result, sourcesTableWhere);
         return result;
     }
 

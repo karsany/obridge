@@ -36,7 +36,7 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testGetTypeAttributes() {
-        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE);
+        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE, "OBRIDGE");
         Assert.assertEquals(9, typeAttributes.size());
         Assert.assertEquals("attrVarchar", typeAttributes.get(0).getJavaPropertyName());
         Assert.assertEquals("String", typeAttributes.get(0).getJavaDataType());
@@ -45,7 +45,7 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testConverterMustache() {
-        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE);
+        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE, "OBRIDGE");
         Type t = new Type();
         t.setTypeName(SAMPLE_TYPE_ONE);
         t.setAttributeList(typeAttributes);
