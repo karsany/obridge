@@ -66,7 +66,7 @@ public class ProcedureDao {
                     "                 Or (data_type = 'PL/SQL RECORD' " +
                     (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
                     ")))\n" +
-                    "    Or procedure_name = 'ASSERT'";
+                    (OBridgeConfiguration.ADD_ASSERT ? "Or procedure_name = 'ASSERT'" : "") ;
 
 
     private static final String GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE =
@@ -93,7 +93,7 @@ public class ProcedureDao {
                     "                 Or (data_type = 'PL/SQL RECORD' " +
                     (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
                     "))))\n" +
-                    "    Or procedure_name = 'ASSERT'";
+                    (OBridgeConfiguration.ADD_ASSERT ? "Or procedure_name = 'ASSERT'" : "") ;
 
 
     private static final String GET_PROCEDURE_ARGUMENTS = "  select argument_name," +
@@ -124,7 +124,8 @@ public class ProcedureDao {
         if (sourcesTableWhere == null) {
             return result;
         }
-        return result.replace(SOURCESTABLE, sourcesTableWhere);
+        result = replaceSourceTable(SOURCESTABLE, sourcesTableWhere);
+        return result;
     }
 
     private String getAllProcedureQuery(String sourcesTable) {
@@ -133,7 +134,8 @@ public class ProcedureDao {
         if (sourcesTable != null) {
             sourcesTableWhere = " AND (procedure_name in (select object_name from " + sourcesTable + " where object_type = 'PROCEDURE')  or object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') )";
         }
-        return replaceSourceTable(result, sourcesTableWhere);
+        result = replaceSourceTable(result, sourcesTableWhere);
+        return result;
     }
 
     private String getAllRealOraclePackageQuery(String sourcesTable) {
@@ -142,7 +144,8 @@ public class ProcedureDao {
         if (sourcesTable != null) {
             sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where object_type = 'PACKAGE') ";
         }
-        return replaceSourceTable(result, sourcesTableWhere);
+        result = replaceSourceTable(SOURCESTABLE, sourcesTableWhere);
+        return result;
     }
 
     private String getAllSimpleFunctionAndProcedureQuery(String sourcesTable) {
