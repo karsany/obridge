@@ -56,9 +56,9 @@ public final class EntityObjectGenerator {
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = typeDao.getTypeList();
+            List<String> types = typeDao.getTypeList(c);
             for (String typeName : types) {
-                generateEntityObject(packageName, outputDir, typeName, typeDao.getTypeAttributes(typeName));
+                generateEntityObject(packageName, outputDir, typeName, typeDao.getTypeAttributes(typeName, c.getSourceOwner()));
             }
 
             if (types.size() == 0) {
@@ -66,9 +66,9 @@ public final class EntityObjectGenerator {
             }
 
             if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
-                List<String> embeddedTypes = typeDao.getEmbeddedTypeList();
+                List<String> embeddedTypes = typeDao.getEmbeddedTypeList(c.getSourceOwner());
                 for (String typeName : embeddedTypes) {
-                    generateEntityObject(packageName, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName));
+                    generateEntityObject(packageName, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
                 }
             }
 

@@ -56,15 +56,15 @@ public final class ConverterObjectGenerator {
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = typeDao.getTypeList();
+            List<String> types = typeDao.getTypeList(c);
             for (String typeName : types) {
-                generateType(packageName, objectPackage, outputDir, typeName, typeDao.getTypeAttributes(typeName));
+                generateType(packageName, objectPackage, outputDir, typeName, typeDao.getTypeAttributes(typeName, c.getSourceOwner()));
             }
 
             if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
-                List<String> embeddedTypes = typeDao.getEmbeddedTypeList();
+                List<String> embeddedTypes = typeDao.getEmbeddedTypeList(c.getSourceOwner());
                 for (String typeName : embeddedTypes) {
-                    generateType(packageName, objectPackage, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName));
+                    generateType(packageName, objectPackage, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
                 }
             }
 

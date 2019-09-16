@@ -34,6 +34,7 @@ package org.obridge.context;
 public class OBridgeConfiguration {
 
     public static final boolean GENERATE_SOURCE_FOR_PLSQL_TYPES = false;
+    public static final boolean ADD_ASSERT = false;
 
     private String jdbcUrl;
     private String sourceRoot;
@@ -42,6 +43,9 @@ public class OBridgeConfiguration {
     private Logging logging;
     private String packagesLike;
     private String sourceOwner;
+    private String projectName;
+    private String sourcesTableProc;
+    private String sourcesTable;
 
     public String getPackagesLike() {
         if (packagesLike == null) {
@@ -101,4 +105,20 @@ public class OBridgeConfiguration {
     public void setLogging(Logging logging) {
         this.logging = logging;
     }
+
+    public String getSourcesTable() {
+        return sourcesTable;
+    }
+
+    public void setSourcesTable(String sourcesTable) {
+        this.sourcesTable = sourcesTable;
+    }
+
+    public String getSourcesTableProc() {
+        return sourcesTableProc;
+    }
+
+    public String getProjectName() { return projectName == null ? "default": projectName; }
+
+    public void setProjectName(String projectName) { this.projectName = projectName; }
 }

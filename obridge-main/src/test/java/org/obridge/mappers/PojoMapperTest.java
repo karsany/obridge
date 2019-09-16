@@ -28,7 +28,7 @@ public class PojoMapperTest extends BaseTest {
 
     @Test
     public void testToPojo() {
-        Pojo pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(SAMPLE_TYPE_ONE));
+        Pojo pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(SAMPLE_TYPE_ONE, "OBRIDGE"));
         Assert.assertEquals("SampleTypeOne", pojo.getClassName());
         Assert.assertEquals(9, pojo.getFields().size());
         for (PojoField f : pojo.getFields()) {
@@ -40,7 +40,7 @@ public class PojoMapperTest extends BaseTest {
     @Test
     public void testToPojo2() {
 
-        List<Procedure> simple_procedures = procedureDao.getAllProcedure("SIMPLE_PROCEDURES", null, "OBRIDGE");
+        List<Procedure> simple_procedures = procedureDao.getAllProcedure("SIMPLE_PROCEDURES", "OBRIDGE", null, null);
 
         Procedure ppp = null;
 
@@ -58,7 +58,7 @@ public class PojoMapperTest extends BaseTest {
 
     @Test
     public void testToPojo3() {
-        List<Procedure> simple_procedures = procedureDao.getAllProcedure("SIMPLE_PROCEDURES", null, "OBRIDGE");
+        List<Procedure> simple_procedures = procedureDao.getAllProcedure("SIMPLE_PROCEDURES", "OBRIDGE", null, null);
 
         Procedure ppp = null;
 

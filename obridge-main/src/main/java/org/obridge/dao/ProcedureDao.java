@@ -38,6 +38,9 @@ import java.util.List;
  */
 public class ProcedureDao {
 
+    private static String SOURCES_TABLE = "%sourcesTable%";
+    private static String PROJECT_NAME = "%projectName%";
+
     private static final String GET_ALL_PROCEDURE =
             "Select object_name,\n" +
                     "       procedure_name,\n" +
@@ -55,6 +58,7 @@ public class ProcedureDao {
                     "   And object_type = 'PACKAGE'\n" +
                     "   And object_name Like ?\n" +
                     "   And procedure_name Like ?\n" +
+                    SOURCES_TABLE +
                     "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
                     "        (Select package_name, object_name, nvl(overload, -1)\n" +
                     "               From all_arguments\n" +
@@ -63,7 +67,7 @@ public class ProcedureDao {
                     "                 Or (data_type = 'PL/SQL RECORD' " +
                     (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
                     ")))\n" +
-                    "    Or procedure_name = 'ASSERT'";
+                    (OBridgeConfiguration.ADD_ASSERT ? "Or procedure_name = 'ASSERT'" : "") ;
 
 
     private static final String GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE =
@@ -81,6 +85,7 @@ public class ProcedureDao {
                     "  From all_procedures t\n" +
                     " Where owner = ? and procedure_name Is Null\n" +
                     "   And object_type In ('PROCEDURE', 'FUNCTION')\n" +
+                    SOURCES_TABLE +
                     "   And Not ((object_name, procedure_name, nvl(overload, -1)) In\n" +
                     "        (Select object_name, package_name, nvl(overload, -1)\n" +
                     "               From all_arguments\n" +
@@ -89,7 +94,7 @@ public class ProcedureDao {
                     "                 Or (data_type = 'PL/SQL RECORD' " +
                     (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES ? "And type_name Is Null" : "") +
                     "))))\n" +
-                    "    Or procedure_name = 'ASSERT'";
+                    (OBridgeConfiguration.ADD_ASSERT ? "Or procedure_name = 'ASSERT'" : "") ;
 
 
     private static final String GET_PROCEDURE_ARGUMENTS = "  select argument_name," +
@@ -107,7 +112,7 @@ public class ProcedureDao {
             + "         And not(pls_type is null and argument_name is null and data_type is null)"
             + "       Order By t.sequence) p\n";
 
-    private static final String GET_ALL_REAL_ORACLE_PACKAGE = "select object_name from all_objects where object_type = 'PACKAGE' and object_name like ? and owner = ?";
+    private static final String GET_ALL_REAL_ORACLE_PACKAGE = "select object_name from all_objects where object_type = 'PACKAGE' and object_name like ? and owner = ? " + SOURCES_TABLE;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -115,15 +120,53 @@ public class ProcedureDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<Procedure> getAllProcedure(String nameFilter, String owner) {
-        List<Procedure> allProcedures = getAllProcedure(nameFilter, "", owner);
-        allProcedures.addAll(getAllSimpleFunctionAndProcedure(owner));
+    private String replaceVariables(String query, String projectName, String sourcesTableWhere) {
+        String result = query;
+        String projectNameValue = projectName == null ? "" : projectName;
+        String sourcesTableWhereValue = sourcesTableWhere == null ? "" : sourcesTableWhere;
+        result = result.replace(SOURCES_TABLE, sourcesTableWhereValue).replace(PROJECT_NAME, "'" + projectNameValue + "'");
+        return result;
+    }
+
+    private String getAllProcedureQuery(String projectName, String sourcesTable) {
+        String result = GET_ALL_PROCEDURE;
+        String sourcesTableWhere = null;
+        if (sourcesTable != null) {
+            sourcesTableWhere = " AND (procedure_name in (select object_name from " + sourcesTable + " where project_name = " + PROJECT_NAME + " and object_type = 'PROCEDURE') " +
+                                " OR object_name in (select object_name from " + sourcesTable + " where  project_name = " + PROJECT_NAME + " and object_type = 'PACKAGE') )";
+        }
+        result = replaceVariables(result, projectName, sourcesTableWhere);
+        return result;
+    }
+
+    private String getAllRealOraclePackageQuery(String projectName, String sourcesTable) {
+        String result = GET_ALL_REAL_ORACLE_PACKAGE;
+        String sourcesTableWhere = null;
+        if (sourcesTable != null) {
+            sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where project_name = " + PROJECT_NAME + " and object_type = 'PACKAGE') ";
+        }
+        result = replaceVariables(result, projectName, sourcesTableWhere);
+        return result;
+    }
+
+    private String getAllSimpleFunctionAndProcedureQuery(String projectName, String sourcesTable) {
+        String result = GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE;
+        String sourcesTableWhere = null;
+        if (sourcesTable != null) {
+            sourcesTableWhere = " AND object_name in (select object_name from " + sourcesTable + " where  project_name = " + PROJECT_NAME + " and object_type = 'PROCEDURE') ";
+        }
+        return replaceVariables(result, projectName, sourcesTableWhere);
+    }
+
+    public List<Procedure> getAllProcedure(String nameFilter, String owner, String projectName, String sourcesTable) {
+        List<Procedure> allProcedures = getAllProcedure(nameFilter, "", owner, projectName, sourcesTable);
+        allProcedures.addAll(getAllSimpleFunctionAndProcedure(owner, projectName, sourcesTable));
         return allProcedures;
     }
 
-    public List<Procedure> getAllSimpleFunctionAndProcedure(String owner) {
+    public List<Procedure> getAllSimpleFunctionAndProcedure(String owner, String projectName, String sourcesTable) {
         return jdbcTemplate.query(
-                GET_ALL_SIMPLE_FUNCTION_AND_PROCEDURE,
+                getAllSimpleFunctionAndProcedureQuery(projectName, sourcesTable),
                 (resultSet, i) -> new Procedure.Builder()
                         .objectName("")
                         .procedureName(resultSet.getString("object_name"))
@@ -137,7 +180,7 @@ public class ProcedureDao {
 
     }
 
-    public List<Procedure> getAllProcedure(String packageName, String procedureName, String owner) {
+    public List<Procedure> getAllProcedure(String packageName, String procedureName, String owner, String projectName, String sourcesTable) {
         String packageNameFilter;
         String procedureNameFilter;
 
@@ -155,7 +198,7 @@ public class ProcedureDao {
 
 
         return jdbcTemplate.query(
-                GET_ALL_PROCEDURE,
+                getAllProcedureQuery(projectName, sourcesTable),
                 (resultSet, i) -> new Procedure.Builder()
                         .objectName(resultSet.getString("object_name"))
                         .procedureName(resultSet.getString("procedure_name"))
@@ -184,11 +227,11 @@ public class ProcedureDao {
 
     }
 
-    public List<OraclePackage> getAllPackages(String nameFilter, String owner) {
+    public List<OraclePackage> getAllPackages(String nameFilter, String owner, String projectName, String sourcesTable) {
         String realNameFilter = getNameFilter(nameFilter);
 
-        List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter, owner);
-        allPackage.add(getAllStandaloneProcedureAndFunction(owner));
+        List<OraclePackage> allPackage = getAllRealOraclePackage(realNameFilter, owner, projectName, sourcesTable);
+        allPackage.add(getAllStandaloneProcedureAndFunction(owner, projectName, sourcesTable));
         return allPackage;
     }
 
@@ -200,18 +243,18 @@ public class ProcedureDao {
         return realNameFilter;
     }
 
-    private OraclePackage getAllStandaloneProcedureAndFunction(String owner) {
+    private OraclePackage getAllStandaloneProcedureAndFunction(String owner, String projectName, String sourcesTable) {
         OraclePackage oraclePackage = new OraclePackage();
         oraclePackage.setName("PROCEDURES_AND_FUNCTIONS");
-        oraclePackage.setProcedureList(getAllSimpleFunctionAndProcedure(owner));
+        oraclePackage.setProcedureList(getAllSimpleFunctionAndProcedure(owner, projectName, sourcesTable));
         return oraclePackage;
     }
 
-    protected List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner) {
-        return jdbcTemplate.query(GET_ALL_REAL_ORACLE_PACKAGE, (resultSet, i) -> {
+    protected List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner, String projectName, String sourcesTable) {
+        return jdbcTemplate.query(getAllRealOraclePackageQuery(projectName, sourcesTable), (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
-            p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), "", owner));
+            p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), owner, projectName, sourcesTable));
             return p;
         }, getNameFilter(nameFilter), owner);
     }

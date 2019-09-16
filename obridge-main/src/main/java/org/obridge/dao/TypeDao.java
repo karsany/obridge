@@ -24,6 +24,7 @@
 
 package org.obridge.dao;
 
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.util.jdbc.JdbcTemplate;
 
@@ -39,7 +40,7 @@ public class TypeDao {
     private static final String GET_TYPE_ATTRIBUTES = "Select attr_name,\n" +
             "       attr_type_name,\n" +
             "       attr_no,\n" +
-            "       nvl(nvl(scale, (Select scale From user_coll_types t Where t.type_name = aa.attr_type_name)), -1) data_scale,\n" +
+            "       nvl(nvl(scale, (Select scale From all_coll_types t Where t.type_name = aa.attr_type_name and t.owner=aa.owner)), -1) data_scale,\n" +
             "       Case\n" +
             "         When attr_type_owner Is Not Null Then\n" +
             "          1\n" +
@@ -47,9 +48,10 @@ public class TypeDao {
             "          0\n" +
             "       End multi_type,\n" +
             "       bb.typecode,\n" +
-            "       (Select elem_type_name From user_coll_types t Where t.type_name = aa.attr_type_name) collection_base_type\n" +
-            "  From user_type_attrs aa, user_types bb\n" +
+            "       (Select elem_type_name From all_coll_types t Where t.type_name = aa.attr_type_name and t.owner=aa.owner) collection_base_type\n" +
+            "  From all_type_attrs aa, all_types bb\n" +
             " Where upper(aa.type_name) = ?\n" +
+            " and aa.owner = bb.owner(+) and aa.owner = ?\n" +
             "   And aa.attr_type_name = bb.type_name(+)\n" +
             " Order By attr_no Asc";
 
@@ -63,15 +65,17 @@ public class TypeDao {
                     "                        bb.typecode typecode,\n" +
                     "                        Null collection_base_type\n" +
                     "          From (Select t.*\n" +
-                    "                  From user_arguments t\n" +
+                    "                  From all_arguments t\n" +
                     "                 Where t.type_name || '_' || t.type_subname = ?\n" +
+                    "                   AND t.owner = ?\n" +
                     "                   And rownum < 2) m\n" +
-                    "          Left Join (Select * From user_arguments t Where data_level = 1) d\n" +
+                    "          Left Join (Select * From all_arguments t Where data_level = 1 and t.owner=?) d\n" +
                     "            On m.object_name = d.object_name\n" +
                     "           And m.package_name = d.package_name\n" +
                     "           And nvl(m.overload, -1) = nvl(d.overload, -1)\n" +
-                    "          Left Join user_types bb\n" +
+                    "          Left Join all_types bb\n" +
                     "            On d.data_type = bb.type_name)\n" +
+                    "          where bb.owner=?\n" +
                     " Order By attr_no";
 
 
@@ -81,15 +85,30 @@ public class TypeDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<String> getTypeList() {
-        return jdbcTemplate.queryForList("SELECT type_name FROM user_types WHERE typecode = 'OBJECT'");
+    public List<String> getTypeList(OBridgeConfiguration c) {
+        assert c != null;
+
+        String sourcesTable = c.getSourcesTable() != null ? c.getSourcesTable() : null;
+
+        String query = "SELECT type_name FROM all_types WHERE typecode = 'OBJECT'";
+
+        if (c.getSourceOwner() != null) {
+            query += "and owner = '" + c.getSourceOwner() + "'";
+        } else {
+            query += "and owner = user";
+        }
+
+        if (sourcesTable != null) {
+            query += " AND type_name in (SELECT object_name from " + sourcesTable + " where object_type = 'TYPE' and project_name='" + c.getProjectName() + "')";
+        }
+        return jdbcTemplate.queryForList(query);
     }
 
-    public List<TypeAttribute> getTypeAttributes(String typeName) {
+    public List<TypeAttribute> getTypeAttributes(String typeName, String owner) {
 
         return jdbcTemplate.query(
                 GET_TYPE_ATTRIBUTES,
-                new Object[]{typeName.toUpperCase()}, (resultSet, i) -> new TypeAttribute(
+                new Object[]{typeName.toUpperCase(), owner}, (resultSet, i) -> new TypeAttribute(
                         resultSet.getString("attr_name"),
                         resultSet.getString("attr_type_name"),
                         resultSet.getInt("attr_no"),
@@ -101,16 +120,16 @@ public class TypeDao {
         );
     }
 
-    public List<String> getEmbeddedTypeList() {
+    public List<String> getEmbeddedTypeList(String owner) {
         return jdbcTemplate.queryForList("Select Distinct type_name || '_' || type_subname\n" +
-                "  From user_arguments t\n" +
-                " Where type_subname Is Not Null");
+                "  From all_arguments t\n" +
+                " Where type_subname Is Not Null and owner = '" + owner + "'");
     }
 
-    public List<TypeAttribute> getEmbeddedTypeAttributes(String typeName) {
+    public List<TypeAttribute> getEmbeddedTypeAttributes(String typeName, String owner) {
 
         return jdbcTemplate.query(GET_EMBEDDED_TYPE_ATTRIBUTES,
-                new Object[]{typeName.toUpperCase()}, (resultSet, i) -> new TypeAttribute(
+                new Object[]{typeName.toUpperCase(), owner, owner, owner}, (resultSet, i) -> new TypeAttribute(
                         resultSet.getString("attr_name"),
                         resultSet.getString("attr_type_name"),
                         resultSet.getInt("attr_no"),

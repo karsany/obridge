@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.obridge.BaseTest;
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.model.data.Type;
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.util.MustacheRunner;
@@ -27,7 +28,11 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testGetTypeList() {
-        List<String> typeList = typeDao.getTypeList();
+
+        OBridgeConfiguration oBridgeConfiguration = new OBridgeConfiguration();
+
+
+        List<String> typeList = typeDao.getTypeList(oBridgeConfiguration);
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_ONE));
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_TWO));
         Assert.assertFalse(typeList.contains(SAMPLE_TYPE_ONE_LIST));
@@ -36,7 +41,7 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testGetTypeAttributes() {
-        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE);
+        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE, "OBRIDGE");
         Assert.assertEquals(9, typeAttributes.size());
         Assert.assertEquals("attrVarchar", typeAttributes.get(0).getJavaPropertyName());
         Assert.assertEquals("String", typeAttributes.get(0).getJavaDataType());
@@ -45,7 +50,7 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testConverterMustache() {
-        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE);
+        List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(SAMPLE_TYPE_ONE, "OBRIDGE");
         Type t = new Type();
         t.setTypeName(SAMPLE_TYPE_ONE);
         t.setAttributeList(typeAttributes);
