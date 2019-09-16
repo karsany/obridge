@@ -86,8 +86,18 @@ public class TypeDao {
     }
 
     public List<String> getTypeList(OBridgeConfiguration c) {
-        String sourcesTable = c != null ? c.getSourcesTable() : null;
-        String query = "SELECT type_name FROM all_types WHERE typecode = 'OBJECT' and owner = '" + c.getSourceOwner() + "'";
+        assert c != null;
+
+        String sourcesTable = c.getSourcesTable() != null ? c.getSourcesTable() : null;
+
+        String query = "SELECT type_name FROM all_types WHERE typecode = 'OBJECT'";
+
+        if (c.getSourceOwner() != null) {
+            query += "and owner = '" + c.getSourceOwner() + "'";
+        } else {
+            query += "and owner = user";
+        }
+
         if (sourcesTable != null) {
             query += " AND type_name in (SELECT object_name from " + sourcesTable + " where object_type = 'TYPE' and project_name='" + c.getProjectName() + "')";
         }

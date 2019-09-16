@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.obridge.BaseTest;
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.model.data.Type;
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.util.MustacheRunner;
@@ -27,7 +28,11 @@ public class TypeDaoTest extends BaseTest {
 
     @Test
     public void testGetTypeList() {
-        List<String> typeList = typeDao.getTypeList(null);
+
+        OBridgeConfiguration oBridgeConfiguration = new OBridgeConfiguration();
+
+
+        List<String> typeList = typeDao.getTypeList(oBridgeConfiguration);
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_ONE));
         Assert.assertTrue(typeList.contains(SAMPLE_TYPE_TWO));
         Assert.assertFalse(typeList.contains(SAMPLE_TYPE_ONE_LIST));
