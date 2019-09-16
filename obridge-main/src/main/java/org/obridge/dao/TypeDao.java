@@ -89,7 +89,7 @@ public class TypeDao {
         String sourcesTable = c != null ? c.getSourcesTable() : null;
         String query = "SELECT type_name FROM all_types WHERE typecode = 'OBJECT' and owner = '" + c.getSourceOwner() + "'";
         if (sourcesTable != null) {
-            query += " AND type_name in (SELECT object_name from " + sourcesTable + " where object_type = 'TYPE')";
+            query += " AND type_name in (SELECT object_name from " + sourcesTable + " where object_type = 'TYPE' and project_name='" + c.getProjectName() + "')";
         }
         return jdbcTemplate.queryForList(query);
     }

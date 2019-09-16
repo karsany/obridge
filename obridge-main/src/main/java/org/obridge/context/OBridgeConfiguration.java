@@ -43,6 +43,7 @@ public class OBridgeConfiguration {
     private Logging logging;
     private String packagesLike;
     private String sourceOwner;
+    private String projectName;
     private String sourcesTableProc;
     private String sourcesTable;
 
@@ -116,4 +117,8 @@ public class OBridgeConfiguration {
     public String getSourcesTableProc() {
         return sourcesTableProc;
     }
+
+    public String getProjectName() { return projectName == null ? "default": projectName; }
+
+    public void setProjectName(String projectName) { this.projectName = projectName; }
 }

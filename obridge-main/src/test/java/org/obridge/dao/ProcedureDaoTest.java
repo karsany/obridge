@@ -24,7 +24,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllProcedures() {
-        List<Procedure> allProcedures = procedureDao.getAllProcedure("", "OBRIDGE", null);
+        List<Procedure> allProcedures = procedureDao.getAllProcedure("", "OBRIDGE", null, null);
         Collection<String> procedureNames = FuncUtils.pluck("storedProcedureClassName", String.class, allProcedures);
         Assert.assertTrue(procedureNames.contains("SimpleProceduresA"));
         Assert.assertTrue(procedureNames.contains("SimpleProceduresOverload1"));
@@ -33,7 +33,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetProcedureArguments() {
-        List<OraclePackage> allPackages = procedureDao.getAllPackages(null, "OBRIDGE", null);
+        List<OraclePackage> allPackages = procedureDao.getAllPackages(null, "OBRIDGE", null, null);
         Assert.assertTrue(allPackages.size() > 0);
 
         for (OraclePackage p : allPackages) {
@@ -44,13 +44,13 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void testGetAllSimpleProcedureAndFunction() {
-        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedure("OBRIDGE", "");
+        List<Procedure> procs = procedureDao.getAllSimpleFunctionAndProcedure("OBRIDGE", null, null);
         System.out.println(procs);
     }
 
     @Test
     public void testAllPckNoFilter() {
-        List<OraclePackage> allPackages = procedureDao.getAllPackages("ABCDE", "OBRIDGE", "");
+        List<OraclePackage> allPackages = procedureDao.getAllPackages("ABCDE", "OBRIDGE", null, null);
         Assert.assertTrue(allPackages.size() == 1);
 
     }
@@ -64,7 +64,7 @@ public class ProcedureDaoTest extends BaseTest {
 
     @Test
     public void getAllPackage() {
-        List<OraclePackage> obridge = procedureDao.getAllPackages("", "OBRIDGE", null);
+        List<OraclePackage> obridge = procedureDao.getAllPackages("", "OBRIDGE", null, null);
         Assert.assertTrue(obridge.size() > 0);
 
     }
