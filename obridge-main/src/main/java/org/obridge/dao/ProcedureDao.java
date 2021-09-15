@@ -251,7 +251,9 @@ public class ProcedureDao {
     }
 
     protected List<OraclePackage> getAllRealOraclePackage(String nameFilter, String owner, String projectName, String sourcesTable) {
-        return jdbcTemplate.query(getAllRealOraclePackageQuery(projectName, sourcesTable), (resultSet, i) -> {
+        String qry = getAllRealOraclePackageQuery(projectName, sourcesTable);
+
+        return jdbcTemplate.query(qry, (resultSet, i) -> {
             OraclePackage p = new OraclePackage();
             p.setName(resultSet.getString("object_name"));
             p.setProcedureList(getAllProcedure(resultSet.getString("object_name"), owner, projectName, sourcesTable));
