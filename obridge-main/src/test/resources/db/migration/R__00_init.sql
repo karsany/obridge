@@ -4,6 +4,7 @@ Begin
                     decode(object_type, 'TABLE', ' CASCADE CONSTRAINTS PURGE', 'TYPE', ' FORCE') As v_sql
                From user_objects
               Where object_type In ('TABLE', 'VIEW', 'PACKAGE', 'TYPE', 'PROCEDURE', 'FUNCTION', 'TRIGGER', 'SEQUENCE')
+              and object_name not in ('flyway_schema_history')
               Order By object_type,
                        object_name)
   Loop

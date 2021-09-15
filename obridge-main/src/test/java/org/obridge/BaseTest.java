@@ -1,6 +1,7 @@
 package org.obridge;
 
 import oracle.jdbc.pool.OracleDataSource;
+import org.flywaydb.core.Flyway;
 import org.junit.Before;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Properties;
 
 public abstract class BaseTest {
 
+    private static boolean flywayInitialized = false;
     protected OracleDataSource ds;
     protected String connectionString;
     private Properties p;
@@ -26,6 +28,14 @@ public abstract class BaseTest {
             ds = new OracleDataSource();
             ds.setURL(connectionString);
         }
+
+        if (!flywayInitialized) {
+            Flyway load = Flyway.configure().dataSource(this.ds).load();
+            load.clean();
+            load.migrate();
+            flywayInitialized = true;
+        }
+
     }
 
 }

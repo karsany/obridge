@@ -24,6 +24,7 @@
 
 package org.obridge.generators;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.ProcedureDao;
@@ -41,6 +42,7 @@ import java.util.List;
 /**
  * Created by fkarsany on 2015.01.28..
  */
+@Log4j2
 public final class PackageObjectGenerator {
 
     private PackageObjectGenerator() {
@@ -48,6 +50,8 @@ public final class PackageObjectGenerator {
 
     public static void generate(OBridgeConfiguration c) {
         try {
+
+            log.info("Package Object Generator");
 
             String packageName = c.getRootPackageName() + "." + c.getPackages().getPackageObjects();
             String contextPackage = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
@@ -94,13 +98,17 @@ public final class PackageObjectGenerator {
 
     private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) throws IOException {
         String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
-        FileUtils.writeStringToFile(new File(outputDir + oraclePackage.getJavaClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
+        String pathname = outputDir + oraclePackage.getJavaClassName() + ".java";
+        FileUtils.writeStringToFile(new File(pathname), CodeFormatter.format(javaSource), "utf-8");
+        log.info(" ... " + oraclePackage.getJavaClassName());
     }
 
     private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir) throws IOException {
         OraclePackage op = new OraclePackage();
         op.setJavaPackageName(packageName);
         String javaSource = MustacheRunner.build("StoredProcedureCallException.java.mustache", op);
-        FileUtils.writeStringToFile(new File(outputDir + "StoredProcedureCallException.java"), CodeFormatter.format(javaSource), "utf-8");
+        String pathname = outputDir + "StoredProcedureCallException.java";
+        FileUtils.writeStringToFile(new File(pathname), CodeFormatter.format(javaSource), "utf-8");
+        log.info(" ... StoredProcedureCallException");
     }
 }
