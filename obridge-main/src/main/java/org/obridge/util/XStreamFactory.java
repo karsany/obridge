@@ -40,6 +40,10 @@ public class XStreamFactory {
 
         xStream.alias("configuration", OBridgeConfiguration.class);
 
+        xStream.allowTypesByWildcard(new String[]{
+                "org.obridge.context.**"
+        });
+
         return xStream;
     }
 
