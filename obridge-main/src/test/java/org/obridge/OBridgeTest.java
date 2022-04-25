@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.context.Packages;
+import org.obridge.dao.ProcedureDao;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class OBridgeTest {
 
     public OBridgeTest() {
     }
-
+    
     @Test
     public void testMain() {
 
@@ -47,7 +48,6 @@ public class OBridgeTest {
         oBridgeConfiguration.setPackages(new Packages());
         oBridgeConfiguration.setRootPackageName("org.obridge.test");
         oBridgeConfiguration.setSourceRoot(tempdir.getRoot().getAbsolutePath());
-        oBridgeConfiguration.setSourceOwner("OBRIDGE");
 
         new OBridge().generate(oBridgeConfiguration);
 

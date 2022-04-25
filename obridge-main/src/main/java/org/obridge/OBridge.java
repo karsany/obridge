@@ -110,8 +110,6 @@ public class OBridge {
     }
 
     public void generate(OBridgeConfiguration c) {
-        // populate objects table
-        PopulateObjectsTable.run(c);
 
         // generate objects
         EntityObjectGenerator.generate(c);

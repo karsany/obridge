@@ -25,6 +25,7 @@
 package org.obridge.util;
 
 import com.thoughtworks.xstream.XStream;
+import org.obridge.context.DbObject;
 import org.obridge.context.OBridgeConfiguration;
 
 /**
@@ -40,9 +41,13 @@ public class XStreamFactory {
 
         xStream.alias("configuration", OBridgeConfiguration.class);
 
-        xStream.allowTypesByWildcard(new String[]{
-                "org.obridge.context.**"
-        });
+        xStream.aliasField("dbObjects",OBridgeConfiguration.class, "dbObjects");
+
+        xStream.alias("dbObject", DbObject.class);
+        xStream.useAttributeFor(DbObject.class, "owner");
+        xStream.useAttributeFor(DbObject.class, "name");
+
+        xStream.allowTypesByWildcard(new String[]{"org.obridge.context.**"});
 
         return xStream;
     }

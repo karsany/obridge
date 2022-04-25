@@ -1,6 +1,5 @@
 package org.obridge.mappers;
 
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +7,7 @@ import org.obridge.BaseTest;
 import org.obridge.dao.ProcedureDao;
 import org.obridge.dao.TypeDao;
 import org.obridge.model.data.Procedure;
+import org.obridge.model.dto.TypeIdDto;
 import org.obridge.model.generator.Pojo;
 import org.obridge.model.generator.PojoField;
 import org.obridge.util.MustacheRunner;
@@ -16,9 +16,9 @@ import java.util.List;
 
 public class PojoMapperTest extends BaseTest {
 
-    private static final String SAMPLE_TYPE_ONE = "SAMPLE_TYPE_ONE";
-    private TypeDao typeDao;
-    private ProcedureDao procedureDao;
+    private static final String       SAMPLE_TYPE_ONE = "SAMPLE_TYPE_ONE";
+    private              TypeDao      typeDao;
+    private              ProcedureDao procedureDao;
 
     @Before
     public void init2() {
@@ -28,7 +28,8 @@ public class PojoMapperTest extends BaseTest {
 
     @Test
     public void testToPojo() {
-        Pojo pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(SAMPLE_TYPE_ONE, "OBRIDGE"));
+        TypeIdDto t    = new TypeIdDto("OBRIDGE", SAMPLE_TYPE_ONE);
+        Pojo      pojo = PojoMapper.typeToPojo(SAMPLE_TYPE_ONE, typeDao.getTypeAttributes(t));
         Assert.assertEquals("SampleTypeOne", pojo.getClassName());
         Assert.assertEquals(9, pojo.getFields().size());
         for (PojoField f : pojo.getFields()) {
@@ -40,7 +41,7 @@ public class PojoMapperTest extends BaseTest {
     @Test
     public void testToPojo2() {
 
-        List<Procedure> simple_procedures = procedureDao.getAllProcedure("SIMPLE_PROCEDURES", "OBRIDGE", null, null);
+        List<Procedure> simple_procedures = procedureDao.getAllProcedure("OBRIDGE", "SIMPLE_PROCEDURES");
 
         Procedure ppp = null;
 
@@ -58,7 +59,7 @@ public class PojoMapperTest extends BaseTest {
 
     @Test
     public void testToPojo3() {
-        List<Procedure> simple_procedures = procedureDao.getAllProcedure("SIMPLE_PROCEDURES", "OBRIDGE", null, null);
+        List<Procedure> simple_procedures = procedureDao.getAllProcedure("OBRIDGE", "SIMPLE_PROCEDURES");
 
         Procedure ppp = null;
 

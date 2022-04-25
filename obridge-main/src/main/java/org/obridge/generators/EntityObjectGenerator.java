@@ -29,6 +29,7 @@ import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.mappers.PojoMapper;
 import org.obridge.model.data.TypeAttribute;
+import org.obridge.model.dto.TypeIdDto;
 import org.obridge.model.generator.Pojo;
 import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
@@ -52,34 +53,35 @@ public final class EntityObjectGenerator {
     public static void generate(OBridgeConfiguration c) {
         try {
             String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-            String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+            String outputDir   = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = typeDao.getTypeList(c);
-            for (String typeName : types) {
-                generateEntityObject(packageName, outputDir, typeName, typeDao.getTypeAttributes(typeName, c.getSourceOwner()));
+            List<TypeIdDto> types = typeDao.getTypeList(c);
+            for (TypeIdDto type : types) {
+                generateEntityObject(packageName, outputDir, type.getTypeName(), typeDao.getTypeAttributes(type));
             }
 
             if (types.size() == 0) {
                 generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>());
             }
 
-            if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
+            /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
                 List<String> embeddedTypes = typeDao.getEmbeddedTypeList(c.getSourceOwner());
                 for (String typeName : embeddedTypes) {
                     generateEntityObject(packageName, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
                 }
-            }
-
+            }*/
 
         } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }
 
-
-    private static void generateEntityObject(String packageName, String outputDir, String typeName, List<TypeAttribute> typeAttributes) throws IOException {
+    private static void generateEntityObject(String packageName,
+                                             String outputDir,
+                                             String typeName,
+                                             List<TypeAttribute> typeAttributes) throws IOException {
         Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");

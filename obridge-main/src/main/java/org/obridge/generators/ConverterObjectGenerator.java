@@ -29,6 +29,7 @@ import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.model.data.Type;
 import org.obridge.model.data.TypeAttribute;
+import org.obridge.model.dto.TypeIdDto;
 import org.obridge.model.generator.Pojo;
 import org.obridge.util.CodeFormatter;
 import org.obridge.util.DataSourceProvider;
@@ -50,23 +51,24 @@ public final class ConverterObjectGenerator {
 
     public static void generate(OBridgeConfiguration c) {
         try {
-            String packageName = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
+            String packageName   = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
             String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-            String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+            String outputDir     = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
             TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
 
-            List<String> types = typeDao.getTypeList(c);
-            for (String typeName : types) {
-                generateType(packageName, objectPackage, outputDir, typeName, typeDao.getTypeAttributes(typeName, c.getSourceOwner()));
+            List<TypeIdDto> types = typeDao.getTypeList(c);
+            for (TypeIdDto t : types) {
+                generateType(packageName, objectPackage, outputDir, t, typeDao.getTypeAttributes(t));
             }
 
-            if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
+            /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
                 List<String> embeddedTypes = typeDao.getEmbeddedTypeList(c.getSourceOwner());
                 for (String typeName : embeddedTypes) {
-                    generateType(packageName, objectPackage, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
+                    generateType(packageName, objectPackage, outputDir, typeName,
+                                 typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
                 }
-            }
+            }*/
 
             generatePrimitiveTypeConverter(packageName, outputDir);
 
@@ -82,15 +84,20 @@ public final class ConverterObjectGenerator {
         FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource), "utf-8");
     }
 
-    private static void generateType(String packageName, String objectPackage, String outputDir, String typeName, List<TypeAttribute> typeAttributes) throws IOException {
+    private static void generateType(String packageName,
+                                     String objectPackage,
+                                     String outputDir,
+                                     TypeIdDto type,
+                                     List<TypeAttribute> typeAttributes) throws IOException {
         Type t = new Type();
-        t.setTypeName(typeName);
+        t.setOwner(type.getOwner());
+        t.setTypeName(type.getTypeName());
         t.setAttributeList(typeAttributes);
         t.setConverterPackageName(packageName);
         t.setObjectPackage(objectPackage);
         String javaSource = MustacheRunner.build("converter.mustache", t);
-        FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource), "utf-8");
+        FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource),
+                                    "utf-8");
     }
-
 
 }

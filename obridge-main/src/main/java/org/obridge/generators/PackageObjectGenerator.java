@@ -53,25 +53,24 @@ public final class PackageObjectGenerator {
 
             log.info("Package Object Generator");
 
-            String packageName = c.getRootPackageName() + "." + c.getPackages().getPackageObjects();
-            String contextPackage = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
-            String converterPackage = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
-            String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-            String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+            String packageName             = c.getRootPackageName() + "." + c.getPackages().getPackageObjects();
+            String contextPackage          = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
+            String converterPackage        = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
+            String objectPackage           = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
+            String outputDir               = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
             String loggingClassInitializer = "";
-            String loggingMethod = "";
+            String loggingMethod           = "";
 
             if (c.getLogging() != null) {
-                if (c.getLogging().getInitializer() != null
-                        && !c.getLogging().getInitializer().isEmpty()
-                        && c.getLogging().getMethod() != null
-                        && !c.getLogging().getMethod().isEmpty()) {
+                if (c.getLogging().getInitializer() != null && !c.getLogging().getInitializer().isEmpty() && c
+                        .getLogging()
+                        .getMethod() != null && !c.getLogging().getMethod().isEmpty()) {
                     loggingClassInitializer = c.getLogging().getInitializer();
                     loggingMethod = c.getLogging().getMethod();
                 }
             }
 
-            List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages(c.getPackagesLike(), c.getSourceOwner(), c.getProjectName(), c.getSourcesTable());
+            List<OraclePackage> allPackages = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl())).getAllPackages(c.getDbObjects());
 
             for (OraclePackage oraclePackage : allPackages) {
                 oraclePackage.setJavaPackageName(packageName);
@@ -98,7 +97,7 @@ public final class PackageObjectGenerator {
 
     private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) throws IOException {
         String javaSource = MustacheRunner.build("package.mustache", oraclePackage);
-        String pathname = outputDir + oraclePackage.getJavaClassName() + ".java";
+        String pathname   = outputDir + oraclePackage.getJavaClassName() + ".java";
         FileUtils.writeStringToFile(new File(pathname), CodeFormatter.format(javaSource), "utf-8");
         log.info(" ... " + oraclePackage.getJavaClassName());
     }
@@ -107,7 +106,7 @@ public final class PackageObjectGenerator {
         OraclePackage op = new OraclePackage();
         op.setJavaPackageName(packageName);
         String javaSource = MustacheRunner.build("StoredProcedureCallException.java.mustache", op);
-        String pathname = outputDir + "StoredProcedureCallException.java";
+        String pathname   = outputDir + "StoredProcedureCallException.java";
         FileUtils.writeStringToFile(new File(pathname), CodeFormatter.format(javaSource), "utf-8");
         log.info(" ... StoredProcedureCallException");
     }

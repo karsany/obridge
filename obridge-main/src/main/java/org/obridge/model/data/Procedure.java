@@ -35,15 +35,24 @@ import java.util.List;
  */
 public class Procedure {
 
-    private String objectName;
-    private String procedureName;
-    private String overload;
-    private String methodType;
+    private String                  owner;
+    private String                  objectName;
+    private String                  procedureName;
+    private String                  overload;
+    private String                  methodType;
     private List<ProcedureArgument> argumentList;
-    private List<BindParam> bindParams = null;
-    private String callString;
+    private List<BindParam>         bindParams = null;
+    private String                  callString;
 
     private Procedure() {
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public List<ProcedureArgument> getArgumentList() {
@@ -103,11 +112,17 @@ public class Procedure {
         return this.callString;
     }
 
+    public void setCallString(String callString) {
+        this.callString = callString;
+    }
 
     public List<BindParam> getBindParams() {
         return bindParams;
     }
 
+    public void setBindParams(List<BindParam> bindParams) {
+        this.bindParams = bindParams;
+    }
 
     public boolean hasResultSetParam() {
         for (ProcedureArgument pa : this.argumentList) {
@@ -120,13 +135,16 @@ public class Procedure {
 
     @Override
     public String toString() {
-        return "Procedure{" +
-                "procedureName='" + procedureName + '\'' +
-                '}';
+        return "Procedure{" + "procedureName='" + procedureName + '\'' + '}';
     }
 
     public static class Builder {
         Procedure p = new Procedure();
+
+        public Builder owner(String owner) {
+            this.p.setOwner(owner);
+            return this;
+        }
 
         public Builder objectName(String objectName) {
             this.p.setObjectName(objectName);

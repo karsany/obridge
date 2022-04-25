@@ -24,6 +24,9 @@
 
 package org.obridge.context;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * OBridge Configuration package.
  *
@@ -33,38 +36,12 @@ package org.obridge.context;
  */
 public class OBridgeConfiguration {
 
-    public static final boolean GENERATE_SOURCE_FOR_PLSQL_TYPES = false;
-    public static final boolean ADD_ASSERT = false;
-
-    private String jdbcUrl;
-    private String sourceRoot;
-    private String rootPackageName;
-    private Packages packages;
-    private Logging logging;
-    private String packagesLike;
-    private String sourceOwner;
-    private String projectName;
-    private String sourcesTableProc;
-    private String sourcesTable;
-
-    public String getPackagesLike() {
-        if (packagesLike == null) {
-            return "%";
-        }
-        return packagesLike;
-    }
-
-    public void setPackagesLike(String packagesLike) {
-        this.packagesLike = packagesLike;
-    }
-
-    public String getSourceOwner() {
-        return sourceOwner;
-    }
-
-    public void setSourceOwner(String sourceOwner) {
-        this.sourceOwner = sourceOwner;
-    }
+    private String         jdbcUrl;
+    private String         sourceRoot;
+    private String         rootPackageName;
+    private Packages       packages;
+    private Logging        logging;
+    private List<DbObject> dbObjects;
 
     public String getJdbcUrl() {
         return jdbcUrl;
@@ -106,19 +83,15 @@ public class OBridgeConfiguration {
         this.logging = logging;
     }
 
-    public String getSourcesTable() {
-        return sourcesTable;
+    public List<DbObject> getDbObjects() {
+        return dbObjects;
     }
 
-    public void setSourcesTable(String sourcesTable) {
-        this.sourcesTable = sourcesTable;
+    public void setDbObjects(List<DbObject> dbObjects) {
+        this.dbObjects = dbObjects;
     }
 
-    public String getSourcesTableProc() {
-        return sourcesTableProc;
+    public String toFilterString() {
+        return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL"));
     }
-
-    public String getProjectName() { return projectName == null ? "default": projectName; }
-
-    public void setProjectName(String projectName) { this.projectName = projectName; }
 }

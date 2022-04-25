@@ -82,6 +82,7 @@ public class JdbcTemplate {
 
         } catch (SQLException e) {
             tryCloseConnection(connection, ps, resultSet);
+            System.out.println(sql);
             throw new JdbcTemplateException(e);
         }
     }
