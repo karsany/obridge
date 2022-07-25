@@ -92,6 +92,6 @@ public class OBridgeConfiguration {
     }
 
     public String toFilterString() {
-        return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL"));
+        return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL "));
     }
 }

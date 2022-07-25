@@ -27,7 +27,7 @@ public class OBridgeTest {
 
     public OBridgeTest() {
     }
-    
+
     @Test
     public void testMain() {
 

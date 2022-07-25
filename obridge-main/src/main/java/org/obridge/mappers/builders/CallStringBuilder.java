@@ -37,9 +37,9 @@ import java.util.List;
  */
 public class CallStringBuilder {
 
-    private Procedure procedure;
+    private Procedure       procedure;
     private List<BindParam> bindParams;
-    private int bindParamId = 1;
+    private int             bindParamId = 1;
 
     public CallStringBuilder(Procedure procedure) {
         this.procedure = procedure;
@@ -91,13 +91,13 @@ public class CallStringBuilder {
         generateOutReturnVariable(callString);
 
         if (procedure.getObjectName() != null && !"".equals(procedure.getObjectName())) {
-            addLine(callString, "  \\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
+            addLine(callString,
+                    "  \\\"" + procedure.getOwner() + "\\\"" + "." + "\\\"" + procedure.getObjectName() + "\\\".\\\"" + procedure.getProcedureName() + "\\\"( ");
         } else {
-            addLine(callString, "  \\\"" + procedure.getProcedureName() + "\\\"( ");
+            addLine(callString, "  \\\"" + procedure.getOwner() + "\\\"" + "." + "\\\"" + procedure.getProcedureName() + "\\\"( ");
         }
 
         generateParameters(callString);
-
 
         if ("FUNCTION".equals(procedure.getMethodType()) && TypeMapper.JAVA_BOOLEAN.equals(procedure.getReturnJavaType())) {
             addLine(callString, "  ) ");

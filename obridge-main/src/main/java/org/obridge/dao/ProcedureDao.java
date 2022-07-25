@@ -55,7 +55,7 @@ public class ProcedureDao {
         String qry = ResourceUtils.load("queries/GET_ALL_PROCEDURES_OUTSIDE_PACKAGE.sql");
 
         if (objs != null && objs.size() > 0) {
-            String s = objs.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL"));
+            String s = objs.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL "));
             qry += " AND (owner, object_name) IN (" + s + ")";
         } else {
             qry += " and owner = user";
@@ -110,7 +110,7 @@ public class ProcedureDao {
         String qry = ResourceUtils.load("queries/GET_ALL_PACKAGES.sql");
 
         if (objs != null && objs.size() > 0) {
-            String s = objs.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL"));
+            String s = objs.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL "));
             qry += " AND (owner, object_name) IN (" + s + ")";
         } else {
             qry += " and owner = user";
