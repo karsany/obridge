@@ -78,7 +78,9 @@ public final class PackageObjectGenerator {
                 oraclePackage.setLoggingMethod(loggingMethod);
             }
 
-            oraclePackage.setCurrentDateTime(LocalDateTime.now());
+            if(c.isGenerateGenerationDates()) {
+                oraclePackage.setCurrentDateTime(LocalDateTime.now());
+            }
             log.trace("FullOraclePackage: {}", oraclePackage);
             oraclePackage.getProcedureList().forEach(procedure -> {
                 log.trace("BindParams: {}", procedure.getBindParams());
@@ -86,7 +88,7 @@ public final class PackageObjectGenerator {
             generatePackageObject(outputDir, oraclePackage);
         }
 
-        generateStoredProcedureCallExceptionClass(packageName, outputDir);
+        generateStoredProcedureCallExceptionClass(packageName, outputDir, c.isGenerateGenerationDates());
     }
 
     private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) {
@@ -94,10 +96,12 @@ public final class PackageObjectGenerator {
         log.debug(" ... " + oraclePackage.getJavaClassName());
     }
 
-    private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir) {
+    private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir, boolean generateGenerationDates) {
         OraclePackage op = new OraclePackage();
         op.setJavaPackageName(packageName);
-        op.setCurrentDateTime(LocalDateTime.now());
+        if(generateGenerationDates) {
+            op.setCurrentDateTime(LocalDateTime.now());
+        }
         MustacheRunner.build("StoredProcedureCallException.java.mustache", op, Path.of(outputDir + "StoredProcedureCallException.java"));
         log.debug(" ... StoredProcedureCallException");
     }

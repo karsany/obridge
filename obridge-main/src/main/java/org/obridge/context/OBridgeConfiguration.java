@@ -61,6 +61,11 @@ public class OBridgeConfiguration {
      */
     @NonNull
     boolean generateNestedTypes;
+    /**
+     * Flag for generate generation dates.
+     */
+    @NonNull
+    boolean generateGenerationDates;
     Packages packages;
     Logging logging;
 

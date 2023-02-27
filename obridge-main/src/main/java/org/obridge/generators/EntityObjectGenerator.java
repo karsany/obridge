@@ -56,20 +56,20 @@ public final class EntityObjectGenerator {
 
 
         List<TypeIdDto> rootTypes = typeDao.getTypeList(c);
-        findAndGenTypes(packageName, outputDir, rootTypes, c.isGenerateNestedTypes());
+        findAndGenTypes(packageName, outputDir, rootTypes, c.isGenerateNestedTypes(), c.isGenerateGenerationDates());
 
         if (rootTypes.size() == 0) {
-            generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>());
+            generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>(), c.isGenerateGenerationDates());
         }
     }
 
-    private void findAndGenTypes(String packageName, String outputDir, List<TypeIdDto> types, boolean generateNestedTypes) {
+    private void findAndGenTypes(String packageName, String outputDir, List<TypeIdDto> types, boolean generateNestedTypes, boolean generateGenerationDates) {
         for (TypeIdDto type : types) {
             List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(type);
 
             log.trace("EntityObjectGenerator.generate.typeAttributes {}", typeAttributes);
 
-            generateEntityObject(packageName, outputDir, type.getTypeName(), typeAttributes);
+            generateEntityObject(packageName, outputDir, type.getTypeName(), typeAttributes, generateGenerationDates);
             if (generateNestedTypes) {
                 for (TypeAttribute typeAttribute : typeAttributes) {
                     if (1 == typeAttribute.getMultiType() && !typeAttribute.isPrimitiveList())
@@ -78,7 +78,7 @@ public final class EntityObjectGenerator {
                                         typeAttribute.getOwner(),
                                         "COLLECTION".equals(typeAttribute.getTypeCode())
                                                 ? typeAttribute.getCollectionBaseType()
-                                                : typeAttribute.getAttrTypeName())), true);
+                                                : typeAttribute.getAttrTypeName())), true, generateGenerationDates);
                 }
             } else {
                 log.info("Nested type generation skipped.");
@@ -89,12 +89,15 @@ public final class EntityObjectGenerator {
     private static void generateEntityObject(String packageName,
                                              String outputDir,
                                              String typeName,
-                                             List<TypeAttribute> typeAttributes) {
+                                             List<TypeAttribute> typeAttributes,
+                                             boolean generateGenerationDates) {
         Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");
-        pojo.setCurrentDateTime(LocalDateTime.now());
         pojo.getImports().add("javax.annotation.processing.Generated");
+        if(generateGenerationDates) {
+            pojo.setCurrentDateTime(LocalDateTime.now());
+        }
         MustacheRunner.build("pojo.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
     }
 

@@ -12,8 +12,8 @@ import {{.}};
 */
 {{/comment}}
 @Generated(
-    value = "{{generatorName}}",
-    date = "{{currentDateTime}}"{{#comment}},
+    value = "{{generatorName}}"{{#currentDateTime}},
+    date = "{{currentDateTime}}"{{/currentDateTime}}{{#comment}},
     comments = "{{comment}}"
     {{/comment}}
 )
