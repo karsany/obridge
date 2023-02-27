@@ -126,19 +126,11 @@ public class TypeMapper {
             return JAVA_BIGDECIMAL;
         }
 
-        if (oracleToJavaMapping.containsKey(oracleTypeName)) {
-            return oracleToJavaMapping.get(oracleTypeName);
-        } else {
-            return "Object";
-        }
+        return oracleToJavaMapping.getOrDefault(oracleTypeName, "Object");
     }
 
     public String getJDBCType(String oracleTypeName) {
-        if (oracleToJDBCMapping.containsKey(oracleTypeName)) {
-            return oracleToJDBCMapping.get(oracleTypeName);
-        } else {
-            return oracleTypeName;
-        }
+        return oracleToJDBCMapping.getOrDefault(oracleTypeName, oracleTypeName);
     }
 
 }

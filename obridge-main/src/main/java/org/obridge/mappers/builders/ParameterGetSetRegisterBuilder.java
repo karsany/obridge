@@ -24,6 +24,7 @@
 
 package org.obridge.mappers.builders;
 
+import lombok.RequiredArgsConstructor;
 import org.obridge.model.data.ProcedureArgument;
 import org.obridge.util.MustacheRunner;
 import org.obridge.util.TypeMapper;
@@ -31,12 +32,11 @@ import org.obridge.util.TypeMapper;
 /**
  * Created by fkarsany on 2015.03.06..
  */
-public class ParameterGetSetRegisterBuilder {
-    private ProcedureArgument pa;
 
-    public ParameterGetSetRegisterBuilder(ProcedureArgument pa) {
-        this.pa = pa;
-    }
+@RequiredArgsConstructor
+public class ParameterGetSetRegisterBuilder {
+
+    private final ProcedureArgument pa;
 
     public String setParameter(int sequenceNumber) {
 

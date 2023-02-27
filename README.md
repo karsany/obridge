@@ -27,32 +27,41 @@ The following types cannot be implemented, because JDBC driver does not supports
   * Types declared in source code
   * %ROWTYPE parameters
   
-Generated code compiles with Java 1.6.
+Generated code compiles with Java 17.
 
 Usage
 -----
 
 Download the latest version from [releases](https://github.com/karsany/obridge/releases).
 
-After downloading, create an XML configuration file:
+After downloading, create a `yml` or `properties` configuration file:
 
-```xml
-<configuration>
-	<jdbcUrl>jdbc:oracle:thin:scott/tiger@localhost:1521:xe</jdbcUrl> <!-- jdbc connection string for obridge -->
-	<sourceOwner>SCOTT</sourceOwner> <!-- owner of the database objects -->
-	<sourceRoot>.</sourceRoot> <!-- where to generate sources - related to this configuration file -->
-	<rootPackageName>hu.obridge.test</rootPackageName> <!-- root Java package, generator builds the directory structure -->
-	<packages>
-		<entityObjects>objects</entityObjects> <!-- object types are going to this package -->
-		<converterObjects>converters</converterObjects> <!-- converter util classes are going to this package -->
-		<procedureContextObjects>context</procedureContextObjects> <!-- procedure parameter entities are going to this package -->
-		<packageObjects>packages</packageObjects> <!-- procedure calling utility classes are going to this package -->
-	</packages>
-</configuration>
+```yaml
+spring:
+  datasource:
+    url: jdbc:oracle:thin:EXAMPLE/EXAMPLE@//10.0.5.1:1521/EXAMPLE
+
+obridge:
+  # Defaults
+  generate-nested-types: true
+  packages:
+    converter-objects: converters
+    procedure-context-objects: context
+    package-objects: packages
+    entity-objects: objects
+  logging:
+    initializer: private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(%s.class.getName());
+    method: LOGGER.info
+  # Required
+  source-root: ./src/main/java
+  root-package-name: org.obridge.generated
+  includes:
+    - owner: PACKAGE_OWNER
+      name: PK_EXAMPLE
 ```
 Run the generator:
 
-	java -jar obridge.jar -c <obridge-config.xml>
+	java -jar obridge.jar
 		
 OBridge connects to the specified database and generates the required classes.
 

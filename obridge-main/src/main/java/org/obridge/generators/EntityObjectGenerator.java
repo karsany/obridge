@@ -24,70 +24,78 @@
 
 package org.obridge.generators;
 
-import org.apache.commons.io.FileUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.mappers.PojoMapper;
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.model.dto.TypeIdDto;
 import org.obridge.model.generator.Pojo;
-import org.obridge.util.CodeFormatter;
-import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
-import org.obridge.util.OBridgeException;
+import org.springframework.stereotype.Component;
 
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by fkarsany on 2015.01.28..
  */
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public final class EntityObjectGenerator {
 
-    private EntityObjectGenerator() {
+    private final TypeDao typeDao;
+
+    public void generate(OBridgeConfiguration c) {
+        String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
+        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+
+
+        List<TypeIdDto> rootTypes = typeDao.getTypeList(c);
+        findAndGenTypes(packageName, outputDir, rootTypes, c.isGenerateNestedTypes());
+
+        if (rootTypes.size() == 0) {
+            generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>());
+        }
     }
 
-    public static void generate(OBridgeConfiguration c) {
-        try {
-            String packageName = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-            String outputDir   = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+    private void findAndGenTypes(String packageName, String outputDir, List<TypeIdDto> types, boolean generateNestedTypes) {
+        for (TypeIdDto type : types) {
+            List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(type);
 
-            TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
+            log.trace("EntityObjectGenerator.generate.typeAttributes {}", typeAttributes);
 
-            List<TypeIdDto> types = typeDao.getTypeList(c);
-            for (TypeIdDto type : types) {
-                generateEntityObject(packageName, outputDir, type.getTypeName(), typeDao.getTypeAttributes(type));
-            }
-
-            if (types.size() == 0) {
-                generateEntityObject(packageName, outputDir, "Dummy", new ArrayList<>());
-            }
-
-            /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
-                List<String> embeddedTypes = typeDao.getEmbeddedTypeList(c.getSourceOwner());
-                for (String typeName : embeddedTypes) {
-                    generateEntityObject(packageName, outputDir, typeName, typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
+            generateEntityObject(packageName, outputDir, type.getTypeName(), typeAttributes);
+            if (generateNestedTypes) {
+                for (TypeAttribute typeAttribute : typeAttributes) {
+                    if (1 == typeAttribute.getMultiType() && !typeAttribute.isPrimitiveList())
+                        findAndGenTypes(packageName, outputDir, List.of(
+                                new TypeIdDto(
+                                        typeAttribute.getOwner(),
+                                        "COLLECTION".equals(typeAttribute.getTypeCode())
+                                                ? typeAttribute.getCollectionBaseType()
+                                                : typeAttribute.getAttrTypeName())), true);
                 }
-            }*/
-
-        } catch (PropertyVetoException | IOException e) {
-            throw new OBridgeException(e);
+            } else {
+                log.info("Nested type generation skipped.");
+            }
         }
     }
 
     private static void generateEntityObject(String packageName,
                                              String outputDir,
                                              String typeName,
-                                             List<TypeAttribute> typeAttributes) throws IOException {
+                                             List<TypeAttribute> typeAttributes) {
         Pojo pojo = PojoMapper.typeToPojo(typeName, typeAttributes);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.EntityObjectGenerator");
-        pojo.getImports().add("javax.annotation.Generated");
-        String javaSource = MustacheRunner.build("pojo.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
+        pojo.setCurrentDateTime(LocalDateTime.now());
+        pojo.getImports().add("javax.annotation.processing.Generated");
+        MustacheRunner.build("pojo.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
     }
 
 }

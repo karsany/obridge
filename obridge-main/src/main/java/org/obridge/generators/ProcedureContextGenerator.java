@@ -24,56 +24,65 @@
 
 package org.obridge.generators;
 
-import org.apache.commons.io.FileUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.ProcedureDao;
 import org.obridge.mappers.PojoMapper;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.generator.Pojo;
-import org.obridge.util.CodeFormatter;
-import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
-import org.obridge.util.OBridgeException;
+import org.springframework.stereotype.Component;
 
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Created by fkarsany on 2015.01.28..
  */
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public final class ProcedureContextGenerator {
 
-    private ProcedureContextGenerator() {
-    }
+    private final ProcedureDao procedureDao;
 
-    public static void generate(OBridgeConfiguration c) {
+    public void generate(OBridgeConfiguration c) {
+        String packageName = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
+        String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
+        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
-        try {
-            String packageName = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
-            String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-            String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+        List<Procedure> allProcedures = procedureDao.getAllProcedure(c.getIncludes());
 
-            ProcedureDao procedureDao = new ProcedureDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
-
-            List<Procedure> allProcedures = procedureDao.getAllProcedure(c.getDbObjects());
-
-            for (Procedure p : allProcedures) {
-                generateProcedureContext(packageName, objectPackage, outputDir, p);
+        for (Procedure p : allProcedures) {
+            if (c.isGenerateNestedTypes()) {
+                p.getArgumentList().forEach(procedureArgument -> {
+                    if (procedureArgument.getTypeName() != null) {
+                        boolean notFound = c.getIncludes().stream().noneMatch(dbObject -> dbObject.getName().equals(procedureArgument.getTypeName()));
+                        if (notFound) {
+                            log.trace("NOT FOUND proc arg in include list. {}", procedureArgument.getTypeName());
+                            c.getIncludes().add(new OBridgeConfiguration.DbObject(p.getOwner(), procedureArgument.getTypeName()));
+                        } else {
+                            log.trace("Include list already contains proc arg {}", procedureArgument.getTypeName());
+                        }
+                    } else {
+                        log.trace("procedureArgument.getTypeName() is null. Skipped. {}", procedureArgument);
+                    }
+                });
             }
-        } catch (PropertyVetoException | IOException e) {
-            throw new OBridgeException(e);
+
+            generateProcedureContext(packageName, objectPackage, outputDir, p);
         }
     }
 
-    private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p) throws IOException {
+    private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p) {
         Pojo pojo = PojoMapper.procedureToPojo(p);
         pojo.setPackageName(packageName);
         pojo.setGeneratorName("org.obridge.generators.ProcedureContextGenerator");
+        pojo.setCurrentDateTime(LocalDateTime.now());
         pojo.getImports().add(objectPackage + ".*");
-        pojo.getImports().add("javax.annotation.Generated");
-        String javaSource = MustacheRunner.build("pojo.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + pojo.getClassName() + ".java"), CodeFormatter.format(javaSource), "utf-8");
+        pojo.getImports().add("javax.annotation.processing.Generated");
+        MustacheRunner.build("pojo.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
     }
 }

@@ -24,6 +24,7 @@
 
 package org.obridge.model.data;
 
+import lombok.ToString;
 import org.obridge.mappers.builders.ParameterGetSetRegisterBuilder;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
@@ -31,6 +32,7 @@ import org.obridge.util.TypeMapper;
 /**
  * User: fkarsany Date: 2013.11.18.
  */
+@ToString
 public class ProcedureArgument {
 
     public static final String TABLE_DATATYPE_NAME = "TABLE";
@@ -88,7 +90,7 @@ public class ProcedureArgument {
             r = "P_" + r;
         }
 
-        return StringHelper.unJavaKeyword(StringHelper.toCamelCaseSmallBegin(r));
+        return StringHelper.unJavaKeyword(StringHelper.toCamelCase(r));
 
     }
 
@@ -101,12 +103,12 @@ public class ProcedureArgument {
         if (isList()) {
             String mappedType = new TypeMapper().getJavaType(typeName, 0);
             if ("Object".equals(mappedType)) {
-                return "List<" + StringHelper.toCamelCase(typeName) + ">";
+                return "List<" + StringHelper.toPascalCase(typeName) + ">";
             } else {
                 return "List<" + mappedType + ">";
             }
         } else {
-            return StringHelper.toCamelCase(typeName);
+            return StringHelper.toPascalCase(typeName);
         }
     }
 
@@ -122,7 +124,7 @@ public class ProcedureArgument {
         if (isPrimitiveList()) {
             return new TypeMapper().getJavaType(typeName, 0);
         } else {
-            return StringHelper.toCamelCase(typeName);
+            return StringHelper.toPascalCase(typeName);
         }
     }
 
@@ -188,6 +190,10 @@ public class ProcedureArgument {
 
     public String getOrigTypeName() {
         return origTypeName;
+    }
+
+    public String getTypeName() {
+        return typeName;
     }
 
 

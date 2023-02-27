@@ -2,6 +2,12 @@ package {{javaPackageName}};
 
 import java.sql.SQLException;
 
+@Generated(
+        value = "org.obridge.generators.PackageObjectGenerator",
+        date = "{{currentDateTime}}"{{#comment}},
+            comments = "{{comment}}"
+    {{/comment}}
+)
 public class StoredProcedureCallException extends RuntimeException {
     public StoredProcedureCallException(SQLException e) {
         super(e);

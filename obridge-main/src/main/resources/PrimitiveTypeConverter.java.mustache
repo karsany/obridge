@@ -3,7 +3,7 @@ package {{packageName}};
 import oracle.jdbc.OracleConnection;
 import java.sql.Array;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
@@ -12,7 +12,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Generated("org.obridge.generators.ConverterObjectGenerator")
+@Generated(
+    value = "org.obridge.generators.ConverterObjectGenerator",
+    date = "{{currentDateTime}}"{{#comment}},
+    comments = "{{comment}}"
+    {{/comment}}
+)
 public final class PrimitiveTypeConverter {
     
     private PrimitiveTypeConverter() {
@@ -48,7 +53,5 @@ public final class PrimitiveTypeConverter {
         } else {
             return Arrays.asList((T[]) array.getArray());
         }
-
     }
-
 }

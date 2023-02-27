@@ -25,13 +25,12 @@
 package org.obridge.model.data;
 
 import lombok.Data;
-import lombok.ToString;
 import org.obridge.util.StringHelper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@ToString
 public class OraclePackage {
 
     private String          owner;
@@ -43,9 +42,10 @@ public class OraclePackage {
     private String          objectPackage;
     private String          loggingInitializer;
     private String          loggingMethod;
+    private LocalDateTime   currentDateTime;
 
     public String getJavaClassName() {
-        return StringHelper.toCamelCase(name);
+        return StringHelper.toPascalCase(name);
     }
 
 }
