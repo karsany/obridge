@@ -27,7 +27,7 @@ The following types cannot be implemented, because JDBC driver does not supports
   * Types declared in source code
   * %ROWTYPE parameters
   
-Generated code compiles with Java 17.
+Generated code compiles with Java 8.
 
 Usage
 -----
@@ -44,6 +44,7 @@ spring:
 obridge:
   # Defaults
   generate-nested-types: true
+  generate-generation-dates: false
   packages:
     converter-objects: converters
     procedure-context-objects: context
