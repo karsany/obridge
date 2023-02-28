@@ -24,6 +24,11 @@
 
 package org.obridge.context;
 
+import lombok.NonNull;
+import lombok.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,64 +39,98 @@ import java.util.stream.Collectors;
  * @version $Id$
  * @since 1.0
  */
+@Value
+@Validated
+@ConfigurationProperties(prefix = "obridge")
 public class OBridgeConfiguration {
 
-    private String         jdbcUrl;
-    private String         sourceRoot;
-    private String         rootPackageName;
-    private Packages       packages;
-    private Logging        logging;
-    private List<DbObject> dbObjects;
+    /**
+     * Root of the java sources.
+     */
+    @NonNull
+    String sourceRoot;
 
-    public String getJdbcUrl() {
-        return jdbcUrl;
-    }
+    /**
+     * Root package structure. Eg: hu.obridge.test.
+     */
+    @NonNull
+    String rootPackageName;
 
-    public void setJdbcUrl(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
-    }
+    /**
+     * Flag for generate nested types. Default true.
+     */
+    @NonNull
+    boolean generateNestedTypes;
+    /**
+     * Flag for generate generation dates.
+     */
+    @NonNull
+    boolean generateGenerationDates;
+    Packages packages;
+    Logging logging;
 
-    public String getSourceRoot() {
-        return sourceRoot;
-    }
 
-    public void setSourceRoot(String sourceRoot) {
-        this.sourceRoot = sourceRoot;
-    }
-
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
-    }
-
-    public Packages getPackages() {
-        return packages;
-    }
-
-    public void setPackages(Packages packages) {
-        this.packages = packages;
-    }
-
-    public Logging getLogging() {
-        return logging;
-    }
-
-    public void setLogging(Logging logging) {
-        this.logging = logging;
-    }
-
-    public List<DbObject> getDbObjects() {
-        return dbObjects;
-    }
-
-    public void setDbObjects(List<DbObject> dbObjects) {
-        this.dbObjects = dbObjects;
-    }
+    /**
+     * Description for obridge.includes. If empty, include all.
+     */
+    List<DbObject> includes;
 
     public String toFilterString() {
-        return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL"));
+        return this.includes.stream().map(DbObject::toSQL).collect(Collectors.joining(" UNION ALL "));
+    }
+
+    @Value
+    public static class DbObject {
+
+        /**
+         * Owner of the resource.
+         */
+        String owner;
+
+        /**
+         * Name of the resource.
+         */
+        String name;
+
+        public String toSQL() {
+            assert this.owner != null;
+            assert this.name != null;
+
+            return "SELECT '"
+                    .concat(this.owner)
+                    .concat("', '")
+                    .concat(this.name)
+                    .concat("' FROM dual ");
+        }
+
+    }
+
+    @Value
+    public static class Packages {
+
+        /**
+         * Description for obridge.packages.entityObjects. Default: objects.
+         */
+        String entityObjects;
+        /**
+         * Description for obridge.packages.converterObjects. Default: converters.
+         */
+        String converterObjects;
+        /**
+         * Description for obridge.packages.procedureContextObjects. Default: context.
+         */
+        String procedureContextObjects;
+        /**
+         * Description for obridge.packages.packageObjects. Default: packages.
+         */
+        String packageObjects;
+
+    }
+
+    @Value
+    public static class Logging {
+        String initializer;
+        String method;
+        Boolean enabled;
     }
 }

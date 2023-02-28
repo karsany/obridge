@@ -25,6 +25,8 @@
 package org.obridge.mappers;
 
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.data.ProcedureArgument;
 import org.obridge.model.data.TypeAttribute;
@@ -35,20 +37,18 @@ import org.obridge.util.StringHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PojoMapper {
-
-    private PojoMapper() {
-    }
 
     public static Pojo typeToPojo(String typeName, List<TypeAttribute> typeAttributes) {
         Pojo p = new Pojo();
-        p.setClassName(StringHelper.toCamelCase(typeName));
+        p.setClassName(StringHelper.toPascalCase(typeName));
 
         p.setFields(new ArrayList<PojoField>());
 
         for (TypeAttribute t : typeAttributes) {
             PojoField field = new PojoField();
-            field.setFieldName(StringHelper.toCamelCaseSmallBegin(t.getAttrName()));
+            field.setFieldName(StringHelper.toCamelCase(t.getAttrName()));
             field.setFieldType(t.getJavaDataType());
             field.setReadonly(false);
             p.getFields().add(field);

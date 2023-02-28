@@ -4,14 +4,19 @@ import {{objectPackage}}.*;
 import oracle.jdbc.OracleConnection;
 import java.sql.Array;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
-@Generated("org.obridge.generators.ConverterObjectGenerator")
+@Generated(
+    value = "org.obridge.generators.ConverterObjectGenerator"{{#currentDateTime}},
+    date = "{{currentDateTime}}"{{/currentDateTime}}{{#comment}},
+    comments = "{{comment}}"
+    {{/comment}}
+)
 public final class {{javaClassName}}Converter {
 
     public static final String TYPE_NAME = "{{typeName}}";

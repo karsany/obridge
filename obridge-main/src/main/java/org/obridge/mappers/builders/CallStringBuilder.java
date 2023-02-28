@@ -24,6 +24,7 @@
 
 package org.obridge.mappers.builders;
 
+import lombok.RequiredArgsConstructor;
 import org.obridge.model.data.BindParam;
 import org.obridge.model.data.Procedure;
 import org.obridge.model.data.ProcedureArgument;
@@ -35,18 +36,15 @@ import java.util.List;
 /**
  * Created by fkarsany on 2015.03.06..
  */
+@RequiredArgsConstructor
 public class CallStringBuilder {
 
-    private Procedure procedure;
+    private final Procedure procedure;
     private List<BindParam> bindParams;
     private int bindParamId = 1;
 
-    public CallStringBuilder(Procedure procedure) {
-        this.procedure = procedure;
-    }
-
     private void addLine(StringBuilder sb, String line) {
-        sb.append("                \"" + line + "\" + \n");
+        sb.append("                \"").append(line).append("\" + \n");
     }
 
     private void addBindParam(ProcedureArgument pa, boolean inParam, boolean outParam) {
@@ -113,9 +111,9 @@ public class CallStringBuilder {
                 StringBuilder ln = new StringBuilder("  ");
                 ln.append(!first ? " ," : "  ");
                 if (pa.isJDBCTypeBoolean()) {
-                    ln.append("\\\"" + pa.getArgumentName() + "\\\" => " + pa.getArgumentName());
+                    ln.append("\\\"").append(pa.getArgumentName()).append("\\\" => ").append(pa.getArgumentName());
                 } else {
-                    ln.append("\\\"" + pa.getArgumentName() + "\\\" => :" + pa.getArgumentName());
+                    ln.append("\\\"").append(pa.getArgumentName()).append("\\\" => :").append(pa.getArgumentName());
                     addBindParam(pa, pa.isInParam(), pa.isOutParam());
                 }
                 first = false;
@@ -140,7 +138,7 @@ public class CallStringBuilder {
             if (pa.isJDBCTypeBoolean() && pa.getArgumentName() != null) {
                 StringBuilder ln = new StringBuilder("  " + pa.getArgumentName() + " BOOLEAN");
                 if (pa.isInParam()) {
-                    ln.append(" := sys.diutil.int_to_bool(:i" + pa.getArgumentName() + ")");
+                    ln.append(" := sys.diutil.int_to_bool(:i").append(pa.getArgumentName()).append(")");
                     addBindParam(pa, true, false);
                 }
                 ln.append("; ");

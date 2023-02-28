@@ -1,32 +1,32 @@
 package org.obridge.util;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class StringHelperTest {
+class StringHelperTest {
 
     @Test
-    public void testToCamelCase() {
-        Assert.assertEquals("HelloWorld", StringHelper.toCamelCase("hello_world"));
-        Assert.assertEquals("", StringHelper.toCamelCase(null));
+    public void shouldConvertToPascalCase() {
+        Assertions.assertEquals("HelloWorld", StringHelper.toPascalCase("hello_world"));
+        Assertions.assertEquals("", StringHelper.toPascalCase(null));
     }
 
     @Test
-    public void testToCamelCaseSmallBegin() {
-        Assert.assertEquals("helloWorld", StringHelper.toCamelCaseSmallBegin("hello_world"));
-        Assert.assertEquals("", StringHelper.toCamelCaseSmallBegin(null));
+    public void shouldConvertToCamelCase() {
+        Assertions.assertEquals("helloWorld", StringHelper.toCamelCase("hello_world"));
+        Assertions.assertEquals("", StringHelper.toCamelCase(null));
     }
 
     @Test
     public void testToOracleName() {
-        Assert.assertEquals("HELLO_WORLD", StringHelper.toOracleName("hello_world"));
-        Assert.assertEquals("HELLO_WORLD", StringHelper.toOracleName("HelloWorld"));
-        Assert.assertEquals("HELLO_WORLD", StringHelper.toOracleName("helloWorld"));
+        Assertions.assertEquals("HELLO_WORLD", StringHelper.toCapitalizedSnakeCase("hello_world"));
+        Assertions.assertEquals("HELLO_WORLD", StringHelper.toCapitalizedSnakeCase("HelloWorld"));
+        Assertions.assertEquals("HELLO_WORLD", StringHelper.toCapitalizedSnakeCase("helloWorld"));
     }
 
     @Test
     public void unJavaKeyword() {
-        Assert.assertEquals("pASSERT", StringHelper.unJavaKeyword("ASSERT"));
+        Assertions.assertEquals("pASSERT", StringHelper.unJavaKeyword("ASSERT"));
     }
 
 

@@ -1,26 +1,26 @@
 package org.obridge.util;
 
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.obridge.model.generator.Pojo;
 import org.obridge.model.generator.PojoField;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class MustacheRunnerTest {
 
 
     public static final String COMMENT = "This is a comment";
-    public static final String PACKAGE_NAME = "hu.karsany.tesztpackage";
+    public static final String PACKAGE_NAME = "hu.karsany.testpackage";
     private final static String CLASS_NAME = "ExampleClass";
 
-    @Test
-    public void pojoMustacheTest() {
+    private Pojo pojo;
 
-
-        Pojo pojo = new Pojo();
+    @BeforeEach
+    public void fillPojo() {
+        pojo = new Pojo();
         pojo.setClassName(CLASS_NAME);
         pojo.setComment(COMMENT);
         pojo.setPackageName(PACKAGE_NAME);
@@ -38,18 +38,20 @@ public class MustacheRunnerTest {
         f2.setReadonly(true);
         pojo.getFields().add(f2);
 
-        pojo.setImports(new ArrayList<String>());
+        pojo.setImports(new ArrayList<>());
         pojo.getImports().add("java.math.BigDecimal");
+    }
 
+    @Test
+    public void pojoMustacheTest() {
         String s = MustacheRunner.build("pojo.mustache", pojo);
 
-        Assert.assertTrue(s.contains(CLASS_NAME));
-        Assert.assertTrue(s.contains(COMMENT));
-        Assert.assertTrue(s.contains("package " + PACKAGE_NAME));
-        Assert.assertTrue(s.contains("getField1"));
-        Assert.assertTrue(s.contains("setField1"));
-        Assert.assertTrue(s.contains("getField2"));
-        Assert.assertFalse(s.contains("setField2"));
-
+        Assertions.assertTrue(s.contains(CLASS_NAME));
+        Assertions.assertTrue(s.contains(COMMENT));
+        Assertions.assertTrue(s.contains("package " + PACKAGE_NAME));
+        Assertions.assertTrue(s.contains("getField1"));
+        Assertions.assertTrue(s.contains("setField1"));
+        Assertions.assertTrue(s.contains("getField2"));
+        Assertions.assertFalse(s.contains("setField2"));
     }
 }

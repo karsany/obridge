@@ -25,30 +25,27 @@
 package org.obridge.model.data;
 
 
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import org.obridge.util.StringHelper;
 import org.obridge.util.TypeMapper;
+import org.springframework.util.ObjectUtils;
 
+import java.util.Objects;
+
+@AllArgsConstructor
+@ToString
 public class TypeAttribute {
 
-    private String attrName;
-    private String attrTypeName;
-    private int attrNo;
-    private int dataScale;
-    private int multiType;
-    private String typeCode;
-    private String collectionBaseType;
+    private final String attrName;
+    private final String attrTypeName;
+    private final String owner;
+    private final int attrNo;
+    private final int dataScale;
+    private final int multiType;
+    private final String typeCode;
+    private final String collectionBaseType;
 
-    public TypeAttribute(String attrName, String attrTypeName, int attrNo, int dataScale, int multiType, String typeCode, String collectionBaseType) {
-        this.attrName = attrName;
-        this.attrTypeName = attrTypeName;
-        this.attrNo = attrNo;
-        this.dataScale = dataScale;
-        this.multiType = multiType;
-        this.typeCode = typeCode;
-        this.collectionBaseType = collectionBaseType;
-
-
-    }
 
     public String getAttrName() {
         return attrName;
@@ -56,6 +53,19 @@ public class TypeAttribute {
 
     public String getAttrTypeName() {
         return attrTypeName;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+    public String getTypeCode() {
+        return typeCode;
+    }
+    public String getCollectionBaseType() {
+        return collectionBaseType;
+    }
+    public int getMultiType() {
+        return multiType;
     }
 
     public String getJavaDataType() {
@@ -67,7 +77,7 @@ public class TypeAttribute {
                     return "List<" + getJavaCollectionBaseTypeNameBig() + ">";
                 }
             } else {
-                return StringHelper.toCamelCase(attrTypeName);
+                return StringHelper.toPascalCase(attrTypeName);
             }
         } else {
             return new TypeMapper().getJavaType(this.attrTypeName, this.dataScale);
@@ -76,20 +86,24 @@ public class TypeAttribute {
     }
 
     public boolean isPrimitiveList() {
-        return !("Object".equals(new TypeMapper().getJavaType(collectionBaseType, 0)));
+        if(!Objects.isNull(collectionBaseType)) {
+            return !("Object".equals(new TypeMapper().getJavaType(collectionBaseType, 0)));
+        } else {
+            return false;
+        }
     }
 
 
     public String getJavaPropertyName() {
-        return StringHelper.toCamelCaseSmallBegin(this.attrName);
-    }
-
-    public String getJavaPropertyNameBig() {
         return StringHelper.toCamelCase(this.attrName);
     }
 
+    public String getJavaPropertyNameBig() {
+        return StringHelper.toPascalCase(this.attrName);
+    }
+
     public String getJavaCollectionBaseTypeNameBig() {
-        return StringHelper.toCamelCase(this.collectionBaseType);
+        return StringHelper.toPascalCase(this.collectionBaseType);
     }
 
     public int getAttrNoIndex() {
@@ -104,13 +118,15 @@ public class TypeAttribute {
         } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("struct.add(%d, %sConverter.getStruct(o.get%s(), connection)); // %s", getAttrNoIndex(), getJavaDataType(), getJavaPropertyNameBig(), attrName);
         } else if (TypeMapper.ORACLE_CLOB.equals(attrTypeName)) {
-            return String.format("Clob cl%d = connection.createClob();\n" +
-                    "        cl%d.setString(1, o.get%s());\n" +
-                    "        struct.add(%d, cl%d); // %s", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
+            return String.format("""
+                    Clob cl%d = connection.createClob();
+                            cl%d.setString(1, o.get%s());
+                            struct.add(%d, cl%d); // %s""", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_BLOB.equals(attrTypeName)) {
-            return String.format("Blob bl%d = connection.createBlob();\n" +
-                    "        bl%d.setBytes(1, o.get%s());\n" +
-                    "        struct.add(%d, bl%d); // %s", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
+            return String.format("""
+                    Blob bl%d = connection.createBlob();
+                            bl%d.setBytes(1, o.get%s());
+                            struct.add(%d, bl%d); // %s""", getAttrNoIndex(), getAttrNoIndex(), getJavaPropertyNameBig(), getAttrNoIndex(), getAttrNoIndex(), attrName);
         } else {
             return String.format("struct.add(%d, o.get%s()); // %s", getAttrNoIndex(), getJavaPropertyNameBig(), attrName);
         }
@@ -149,7 +165,7 @@ public class TypeAttribute {
                     return getJavaCollectionBaseTypeNameBig();
                 }
             } else {
-                return StringHelper.toCamelCase(attrTypeName);
+                return StringHelper.toPascalCase(attrTypeName);
             }
         } else {
             return new TypeMapper().getJavaType(this.attrTypeName, this.dataScale);
