@@ -18,6 +18,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mainClass>org.obridge.OBridge</mainClass>
     </properties>
 
     <dependencies>
@@ -107,6 +108,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
@@ -132,6 +136,45 @@
                     </includeOnlyProperties>
                     <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${mainClass}</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>obridge-${version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
         <resources>
