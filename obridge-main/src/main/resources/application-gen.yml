@@ -1,0 +1,10 @@
+# spring:
+#  datasource:
+#    url: jdbc:oracle:thin:EXAMPLE/EXAMPLE@//10.0.5.1:1521/EXAMPLE
+
+# obridge:
+#   source-root: ./src/main/java
+#   root-package-name: org.obridge.generated
+#   includes:
+#     - owner: PACKAGE_OWNER
+#       name: PK_EXAMPLE

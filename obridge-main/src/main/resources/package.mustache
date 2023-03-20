@@ -4,14 +4,19 @@ import {{contextPackage}}.*;
 import {{converterPackage}}.*;
 import {{objectPackage}}.*;
 
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.List;
 import java.util.Arrays;
 
-@Generated("org.obridge.generators.PackageObjectGenerator")
+@Generated(
+    value = "org.obridge.generators.PackageObjectGenerator"{{#currentDateTime}},
+    date = "{{currentDateTime}}"{{/currentDateTime}}{{#comment}},
+    comments = "{{comment}}"
+{{/comment}}
+)
 public final class {{javaClassName}} {
 
     {{#loggingInitializer}}
@@ -23,7 +28,7 @@ public final class {{javaClassName}} {
 
     {{#procedureList}}
 
-    public static void {{javaProcedureName}}({{contextPackage}}.{{storedProcedureClassName}} ctx, Connection connection) {
+    public static void {{javaProcedureName}}({{storedProcedureClassName}} ctx, Connection connection) {
         try {
             final CallableStatement ocs = connection.prepareCall({{& callString}});
             try {
@@ -60,8 +65,8 @@ public final class {{javaClassName}} {
         }
     }
 
-    public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) {
-        final {{contextPackage}}.{{storedProcedureClassName}} ctx = new {{contextPackage}}.{{storedProcedureClassName}}();
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} Connection connection) {
+        final {{storedProcedureClassName}} ctx = new {{storedProcedureClassName}}();
         {{#argumentList}}
         {{#inParam}}
         ctx.set{{javaPropertyNameBig}}({{javaPropertyName}});
@@ -74,7 +79,7 @@ public final class {{javaClassName}} {
     }
 
     {{^hasResultSetParam}}
-    public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
+    public static {{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
         try {
             final Connection conn = dataSource.getConnection();
             try {
@@ -90,7 +95,7 @@ public final class {{javaClassName}} {
 
 
     {{^hasResultSetParam}}
-    public static void {{javaProcedureName}}(DataSource dataSource, {{contextPackage}}.{{storedProcedureClassName}} ctx) {
+    public static void {{javaProcedureName}}(DataSource dataSource, {{storedProcedureClassName}} ctx) {
         try {
             final Connection conn = dataSource.getConnection();
             try {

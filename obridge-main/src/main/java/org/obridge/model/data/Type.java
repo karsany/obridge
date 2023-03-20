@@ -27,6 +27,7 @@ package org.obridge.model.data;
 import lombok.Data;
 import org.obridge.util.StringHelper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -35,14 +36,15 @@ import java.util.List;
 @Data
 public class Type {
 
-    private String              owner;
-    private String              typeName;
+    private String owner;
+    private String typeName;
     private List<TypeAttribute> attributeList;
-    private String              converterPackageName;
-    private String              objectPackage;
+    private String converterPackageName;
+    private String objectPackage;
+    private LocalDateTime currentDateTime;
 
     public String getJavaClassName() {
-        return StringHelper.toCamelCase(typeName);
+        return StringHelper.toPascalCase(typeName);
     }
 
 }

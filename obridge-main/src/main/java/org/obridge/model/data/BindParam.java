@@ -24,22 +24,20 @@
 
 package org.obridge.model.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
  * Created by fkarsany on 2015.03.06..
  */
+@AllArgsConstructor
+@Data
 public class BindParam {
 
     private ProcedureArgument procedureArgument;
     private int sequenceNumber;
     private boolean inParam;
     private boolean outParam;
-
-    public BindParam(ProcedureArgument procedureArgument, int sequenceNumber, boolean inParam, boolean outParam) {
-        this.procedureArgument = procedureArgument;
-        this.sequenceNumber = sequenceNumber;
-        this.inParam = inParam;
-        this.outParam = outParam;
-    }
 
     public String getParamSet() {
         return procedureArgument.getParamSet(sequenceNumber);
@@ -51,14 +49,6 @@ public class BindParam {
 
     public String getRegOutput() {
         return procedureArgument.getRegOutput(sequenceNumber);
-    }
-
-    public boolean isInParam() {
-        return inParam;
-    }
-
-    public boolean isOutParam() {
-        return outParam;
     }
 
 }

@@ -11,7 +11,12 @@ import {{.}};
 {{& comment}}
 */
 {{/comment}}
-@Generated("{{generatorName}}")
+@Generated(
+    value = "{{generatorName}}"{{#currentDateTime}},
+    date = "{{currentDateTime}}"{{/currentDateTime}}{{#comment}},
+    comments = "{{comment}}"
+    {{/comment}}
+)
 public class {{className}} {
 
 {{#fields}}

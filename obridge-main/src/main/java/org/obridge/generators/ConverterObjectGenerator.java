@@ -24,80 +24,96 @@
 
 package org.obridge.generators;
 
-import org.apache.commons.io.FileUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.dao.TypeDao;
 import org.obridge.model.data.Type;
 import org.obridge.model.data.TypeAttribute;
 import org.obridge.model.dto.TypeIdDto;
 import org.obridge.model.generator.Pojo;
-import org.obridge.util.CodeFormatter;
-import org.obridge.util.DataSourceProvider;
 import org.obridge.util.MustacheRunner;
-import org.obridge.util.OBridgeException;
+import org.springframework.stereotype.Component;
 
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * Created by fkarsany on 2015.01.28..
  */
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public final class ConverterObjectGenerator {
 
-    private ConverterObjectGenerator() {
+    private final TypeDao typeDao;
+
+
+    public void generate(OBridgeConfiguration c) {
+        log.trace("ConverterObjectGenerator.generate {}", c);
+        String packageName = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
+        String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
+        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/" ;
+
+        generatePrimitiveTypeConverter(packageName, outputDir, c.isGenerateGenerationDates());
+
+        List<TypeIdDto> types = typeDao.getTypeList(c);
+        findAndGenTypeConverter(packageName, objectPackage, outputDir, types, c.isGenerateNestedTypes(), c.isGenerateGenerationDates());
     }
 
-    public static void generate(OBridgeConfiguration c) {
-        try {
-            String packageName   = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
-            String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-            String outputDir     = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+    private void findAndGenTypeConverter(String packageName, String objectPackage, String outputDir, List<TypeIdDto> types, boolean generateNestedTypes, boolean generateGenerationDates) {
+        log.trace("ConverterObjectGenerator.generate.types {}", types);
+        for (TypeIdDto t : types) {
+            List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(t);
+            log.trace("ConverterObjectGenerator.generate.typeAttributes {}", typeAttributes);
 
-            TypeDao typeDao = new TypeDao(DataSourceProvider.getDataSource(c.getJdbcUrl()));
-
-            List<TypeIdDto> types = typeDao.getTypeList(c);
-            for (TypeIdDto t : types) {
-                generateType(packageName, objectPackage, outputDir, t, typeDao.getTypeAttributes(t));
-            }
-
-            /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
-                List<String> embeddedTypes = typeDao.getEmbeddedTypeList(c.getSourceOwner());
-                for (String typeName : embeddedTypes) {
-                    generateType(packageName, objectPackage, outputDir, typeName,
-                                 typeDao.getEmbeddedTypeAttributes(typeName, c.getSourceOwner()));
+            generateType(packageName, objectPackage, outputDir, t, typeAttributes, generateGenerationDates);
+            if (generateNestedTypes) {
+                for (TypeAttribute typeAttribute : typeAttributes) {
+                    if (1 == typeAttribute.getMultiType() && !typeAttribute.isPrimitiveList())
+                        findAndGenTypeConverter(packageName, objectPackage, outputDir, List.of(new TypeIdDto(
+                                typeAttribute.getOwner(),
+                                "COLLECTION".equals(typeAttribute.getTypeCode())
+                                        ? typeAttribute.getCollectionBaseType()
+                                        : typeAttribute.getAttrTypeName())), true, generateGenerationDates);
                 }
-            }*/
-
-            generatePrimitiveTypeConverter(packageName, outputDir);
-
-        } catch (PropertyVetoException | IOException e) {
-            throw new OBridgeException(e);
+            } else {
+                log.info("Nested typeconverter generation skipped.");
+            }
         }
     }
 
-    private static void generatePrimitiveTypeConverter(String packageName, String outputDir) throws IOException {
+    private static void generatePrimitiveTypeConverter(String packageName, String outputDir, boolean generateGenerationDates) {
         Pojo pojo = new Pojo();
         pojo.setPackageName(packageName);
-        String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
-        FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource), "utf-8");
+        pojo.setClassName("PrimitiveTypeConverter");
+
+        if (generateGenerationDates) {
+            pojo.setCurrentDateTime(LocalDateTime.now());
+        }
+
+        MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
     }
 
     private static void generateType(String packageName,
                                      String objectPackage,
                                      String outputDir,
                                      TypeIdDto type,
-                                     List<TypeAttribute> typeAttributes) throws IOException {
+                                     List<TypeAttribute> typeAttributes,
+                                     boolean generateGenerationDates) {
         Type t = new Type();
         t.setOwner(type.getOwner());
         t.setTypeName(type.getTypeName());
         t.setAttributeList(typeAttributes);
         t.setConverterPackageName(packageName);
         t.setObjectPackage(objectPackage);
-        String javaSource = MustacheRunner.build("converter.mustache", t);
-        FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource),
-                                    "utf-8");
+        if (generateGenerationDates) {
+            t.setCurrentDateTime(LocalDateTime.now());
+        }
+
+
+        MustacheRunner.build("converter.mustache", t, Path.of(outputDir + t.getJavaClassName() + "Converter.java"));
     }
 
 }

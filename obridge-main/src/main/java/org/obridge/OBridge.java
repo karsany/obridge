@@ -24,20 +24,44 @@
 
 package org.obridge;
 
-import com.thoughtworks.xstream.XStream;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 import org.obridge.context.OBridgeConfiguration;
-import org.obridge.generators.*;
+import org.obridge.generators.ConverterObjectGenerator;
+import org.obridge.generators.EntityObjectGenerator;
+import org.obridge.generators.PackageObjectGenerator;
+import org.obridge.generators.ProcedureContextGenerator;
 import org.obridge.util.OBridgeException;
-import org.obridge.util.XStreamFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.util.ObjectUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-public class OBridge {
+@ConfigurationPropertiesScan
+@SpringBootApplication
+@Slf4j
+@RequiredArgsConstructor
+public class OBridge implements CommandLineRunner {
 
-    public static void main(String... args) {
+    private final ProcedureContextGenerator procedureContextGenerator;
+    private final ConverterObjectGenerator converterObjectGenerator;
+    private final EntityObjectGenerator entityObjectGenerator;
+    private final PackageObjectGenerator packageObjectGenerator;
+    private final OBridgeConfiguration oBridgeConfiguration;
+
+    public static void main(String[] args) {
+        log.info("STARTING THE APPLICATION");
+        SpringApplication.run(OBridge.class, args);
+        log.info("APPLICATION FINISHED");
+    }
+
+    @Override
+    public void run(String... args) {
 
         try {
 
@@ -54,32 +78,44 @@ public class OBridge {
                 return;
             }
 
-            if (cmd.hasOption("c")) {
-                new OBridge().generate(new File(cmd.getOptionValue("c")));
+            if (!ObjectUtils.isEmpty(oBridgeConfiguration)) {
+                generate(oBridgeConfiguration);
             } else {
                 printHelp(o);
             }
 
         } catch (ParseException e) {
             throw new OBridgeException("Exception in OBridge Main progam", e);
-        } catch (IOException e) {
-            throw new OBridgeException("Exception in OBridge Main progam", e);
         }
 
     }
 
-    private static void printVersion() throws IOException {
-        final Properties properties = new Properties();
-        properties.load(OBridge.class.getResourceAsStream("obridge-project.properties"));
-        System.out.println("OBridge version " + properties.getProperty("version"));
+    private void printVersion() {
+        try {
+            Properties properties = new Properties();
+            properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
+            log.info("""
+                                                        
+                            OBridge Version {}
+                            OBridge BuildTime {}
+                            OBridge Abbrev {}
+                            OBridge Remote {}""",
+                    properties.get("git.build.version"),
+                    properties.get("git.build.time"),
+                    properties.get("git.commit.id.abbrev"),
+                    properties.get("git.remote.origin.url"));
+        } catch (IOException e) {
+            log.error("Error occurred when loading version informations.");
+            throw new OBridgeException(e);
+        }
     }
 
-    private static void printHelp(Options o) {
+    private void printHelp(Options o) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("obridge", o, true);
     }
 
-    private static CommandLine getCommandLine(Options o, String[] args) throws ParseException {
+    private CommandLine getCommandLine(Options o, String[] args) throws ParseException {
 
 
         o.addOption(
@@ -96,41 +132,25 @@ public class OBridge {
                         .required(false)
                         .build()
         );
-        o.addOption(
-                Option.builder("c")
-                        .desc("OBridge XML config file")
-                        .longOpt("config")
-                        .hasArg()
-                        .argName("file")
-                        .build()
-        );
 
-        CommandLineParser parser = new PosixParser();
+        CommandLineParser parser = new DefaultParser();
         return parser.parse(o, args);
     }
 
     public void generate(OBridgeConfiguration c) {
 
-        // generate objects
-        EntityObjectGenerator.generate(c);
-
-        // generate converters
-        ConverterObjectGenerator.generate(c);
-
         // generate contexts
-        ProcedureContextGenerator.generate(c);
+        procedureContextGenerator.generate(c);
 
         // generate packages
-        PackageObjectGenerator.generate(c);
+        packageObjectGenerator.generate(c);
+
+        // generate objects
+        entityObjectGenerator.generate(c);
+
+        // generate converters
+        converterObjectGenerator.generate(c);
+
     }
 
-    public OBridgeConfiguration loadConfiguration(File f) {
-        XStream xs = XStreamFactory.createXStream();
-        Object config = xs.fromXML(f);
-        return (OBridgeConfiguration) config;
-    }
-
-    public void generate(File f) {
-        this.generate(loadConfiguration(f));
-    }
 }

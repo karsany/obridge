@@ -27,24 +27,43 @@ package org.obridge.util;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Created by fkarsany on 2015.01.03..
  */
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MustacheRunner {
-
-    private MustacheRunner() {
-
-    }
 
     public static String build(String templateName, Object backingObject) {
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(templateName);
         Writer execute = mustache.execute(new StringWriter(), backingObject);
         return execute.toString();
+    }
+
+    public static void build(String templateName, Object backingObject, Path toFilePath) {
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(templateName);
+        try {
+            Files.createDirectories(toFilePath.getParent());
+            mustache.execute(Files.newBufferedWriter(toFilePath, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE), backingObject).close();
+        } catch (IOException e) {
+            log.error("Error occured when compile mustache.");
+            throw new OBridgeException(e);
+        }
     }
 
 }
