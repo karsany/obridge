@@ -53,7 +53,7 @@ public class OBridge {
     public static void main(String[] args) {
         log.info("STARTING THE APPLICATION");
 
-        ApplicationContext ac = new AnnotationConfigApplicationContext(OBridge.class);
+        ApplicationContext ac = new AnnotationConfigApplicationContext("org.obridge.**");
 
         OBridge bean = ac.getBean(OBridge.class);
         bean.run(args);
