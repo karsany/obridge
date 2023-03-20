@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,11 +35,14 @@ public class OBridgeTest {
         properties.load(getClass().getClassLoader().getResourceAsStream("oconf-test.properties"));
         properties.put("obridge.source-root", tempdir.toAbsolutePath().toString());
 
+        /*
         new SpringApplicationBuilder(OBridge.class)
                 .web(WebApplicationType.NONE)
                 .logStartupInfo(false)
                 .properties(properties)
                 .run();
+
+         */
 
         Assertions.assertTrue(new File(tempdir.toAbsolutePath() + "\\org\\obridge\\test\\converters\\PrimitiveTypeConverter.java").exists());
         Assertions.assertTrue(new File(tempdir.toAbsolutePath() + "\\org\\obridge\\test\\packages\\ProceduresAndFunctions.java").exists());

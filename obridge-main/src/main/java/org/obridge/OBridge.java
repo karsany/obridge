@@ -33,20 +33,16 @@ import org.obridge.generators.EntityObjectGenerator;
 import org.obridge.generators.PackageObjectGenerator;
 import org.obridge.generators.ProcedureContextGenerator;
 import org.obridge.util.OBridgeException;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.util.Properties;
 
-@ConfigurationPropertiesScan
-@SpringBootApplication
 @Slf4j
 @RequiredArgsConstructor
-public class OBridge implements CommandLineRunner {
+public class OBridge {
 
     private final ProcedureContextGenerator procedureContextGenerator;
     private final ConverterObjectGenerator converterObjectGenerator;
@@ -56,11 +52,15 @@ public class OBridge implements CommandLineRunner {
 
     public static void main(String[] args) {
         log.info("STARTING THE APPLICATION");
-        SpringApplication.run(OBridge.class, args);
+
+        ApplicationContext ac = new AnnotationConfigApplicationContext(OBridge.class);
+
+        OBridge bean = ac.getBean(OBridge.class);
+        bean.run(args);
+
         log.info("APPLICATION FINISHED");
     }
 
-    @Override
     public void run(String... args) {
 
         try {
@@ -95,9 +95,9 @@ public class OBridge implements CommandLineRunner {
             Properties properties = new Properties();
             properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
             log.info("OBridge Version {}\n" +
-                            "OBridge BuildTime {}\n" +
-                            "OBridge Abbrev {}\n" +
-                            "OBridge Remote {}",
+                     "OBridge BuildTime {}\n" +
+                     "OBridge Abbrev {}\n" +
+                     "OBridge Remote {}",
                     properties.get("git.build.version"),
                     properties.get("git.build.time"),
                     properties.get("git.commit.id.abbrev"),
