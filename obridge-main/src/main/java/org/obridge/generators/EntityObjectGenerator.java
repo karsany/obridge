@@ -36,8 +36,10 @@ import org.obridge.util.MustacheRunner;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -73,7 +75,7 @@ public final class EntityObjectGenerator {
             if (generateNestedTypes) {
                 for (TypeAttribute typeAttribute : typeAttributes) {
                     if (1 == typeAttribute.getMultiType() && !typeAttribute.isPrimitiveList())
-                        findAndGenTypes(packageName, outputDir, List.of(
+                        findAndGenTypes(packageName, outputDir, Arrays.asList(
                                 new TypeIdDto(
                                         typeAttribute.getOwner(),
                                         "COLLECTION".equals(typeAttribute.getTypeCode())
@@ -98,7 +100,7 @@ public final class EntityObjectGenerator {
         if(generateGenerationDates) {
             pojo.setCurrentDateTime(LocalDateTime.now());
         }
-        MustacheRunner.build("pojo.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
+        MustacheRunner.build("pojo.mustache", pojo, Paths.get(outputDir + pojo.getClassName() + ".java"));
     }
 
 }

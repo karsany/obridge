@@ -32,7 +32,7 @@ import org.obridge.model.data.OraclePackage;
 import org.obridge.util.MustacheRunner;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,6 +46,21 @@ public final class PackageObjectGenerator {
 
     private final ProcedureDao procedureDao;
 
+    private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) {
+        MustacheRunner.build("package.mustache", oraclePackage, Paths.get(outputDir + oraclePackage.getJavaClassName() + ".java"));
+        log.debug(" ... " + oraclePackage.getJavaClassName());
+    }
+
+    private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir, boolean generateGenerationDates) {
+        OraclePackage op = new OraclePackage();
+        op.setJavaPackageName(packageName);
+        if (generateGenerationDates) {
+            op.setCurrentDateTime(LocalDateTime.now());
+        }
+        MustacheRunner.build("StoredProcedureCallException.java.mustache", op, Paths.get(outputDir + "StoredProcedureCallException.java"));
+        log.debug(" ... StoredProcedureCallException");
+    }
+
     public void generate(OBridgeConfiguration c) {
         String packageName = c.getRootPackageName() + "." + c.getPackages().getPackageObjects();
         String contextPackage = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
@@ -57,8 +72,8 @@ public final class PackageObjectGenerator {
 
         if (c.getLogging() != null) {
             if (c.getLogging().getInitializer() != null && !c.getLogging().getInitializer().isEmpty() && c
-                    .getLogging()
-                    .getMethod() != null && !c.getLogging().getMethod().isEmpty()) {
+                                                                                                                 .getLogging()
+                                                                                                                 .getMethod() != null && !c.getLogging().getMethod().isEmpty()) {
                 loggingClassInitializer = c.getLogging().getInitializer();
                 loggingMethod = c.getLogging().getMethod();
             }
@@ -78,7 +93,7 @@ public final class PackageObjectGenerator {
                 oraclePackage.setLoggingMethod(loggingMethod);
             }
 
-            if(c.isGenerateGenerationDates()) {
+            if (c.isGenerateGenerationDates()) {
                 oraclePackage.setCurrentDateTime(LocalDateTime.now());
             }
             log.trace("FullOraclePackage: {}", oraclePackage);
@@ -89,20 +104,5 @@ public final class PackageObjectGenerator {
         }
 
         generateStoredProcedureCallExceptionClass(packageName, outputDir, c.isGenerateGenerationDates());
-    }
-
-    private static void generatePackageObject(String outputDir, OraclePackage oraclePackage) {
-        MustacheRunner.build("package.mustache", oraclePackage, Path.of(outputDir + oraclePackage.getJavaClassName() + ".java"));
-        log.debug(" ... " + oraclePackage.getJavaClassName());
-    }
-
-    private static void generateStoredProcedureCallExceptionClass(String packageName, String outputDir, boolean generateGenerationDates) {
-        OraclePackage op = new OraclePackage();
-        op.setJavaPackageName(packageName);
-        if(generateGenerationDates) {
-            op.setCurrentDateTime(LocalDateTime.now());
-        }
-        MustacheRunner.build("StoredProcedureCallException.java.mustache", op, Path.of(outputDir + "StoredProcedureCallException.java"));
-        log.debug(" ... StoredProcedureCallException");
     }
 }

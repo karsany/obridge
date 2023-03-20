@@ -73,7 +73,7 @@ public class TypeDao {
                 resultSet.getString("typecode"),
                 resultSet.getString("collection_base_type"));
 
-        var load = ResourceUtils.load("queries/GET_TYPE_ATTRIBUTES.sql");
+        String load = ResourceUtils.load("queries/GET_TYPE_ATTRIBUTES.sql");
         return jdbcTemplate.query(load, typeAttributeRowMapper, t.getTypeName(), t.getOwner());
     }
 }

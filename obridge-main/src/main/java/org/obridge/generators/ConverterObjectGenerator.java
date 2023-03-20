@@ -36,7 +36,9 @@ import org.obridge.util.MustacheRunner;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -49,41 +51,6 @@ public final class ConverterObjectGenerator {
 
     private final TypeDao typeDao;
 
-
-    public void generate(OBridgeConfiguration c) {
-        log.trace("ConverterObjectGenerator.generate {}", c);
-        String packageName = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
-        String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/" ;
-
-        generatePrimitiveTypeConverter(packageName, outputDir, c.isGenerateGenerationDates());
-
-        List<TypeIdDto> types = typeDao.getTypeList(c);
-        findAndGenTypeConverter(packageName, objectPackage, outputDir, types, c.isGenerateNestedTypes(), c.isGenerateGenerationDates());
-    }
-
-    private void findAndGenTypeConverter(String packageName, String objectPackage, String outputDir, List<TypeIdDto> types, boolean generateNestedTypes, boolean generateGenerationDates) {
-        log.trace("ConverterObjectGenerator.generate.types {}", types);
-        for (TypeIdDto t : types) {
-            List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(t);
-            log.trace("ConverterObjectGenerator.generate.typeAttributes {}", typeAttributes);
-
-            generateType(packageName, objectPackage, outputDir, t, typeAttributes, generateGenerationDates);
-            if (generateNestedTypes) {
-                for (TypeAttribute typeAttribute : typeAttributes) {
-                    if (1 == typeAttribute.getMultiType() && !typeAttribute.isPrimitiveList())
-                        findAndGenTypeConverter(packageName, objectPackage, outputDir, List.of(new TypeIdDto(
-                                typeAttribute.getOwner(),
-                                "COLLECTION".equals(typeAttribute.getTypeCode())
-                                        ? typeAttribute.getCollectionBaseType()
-                                        : typeAttribute.getAttrTypeName())), true, generateGenerationDates);
-                }
-            } else {
-                log.info("Nested typeconverter generation skipped.");
-            }
-        }
-    }
-
     private static void generatePrimitiveTypeConverter(String packageName, String outputDir, boolean generateGenerationDates) {
         Pojo pojo = new Pojo();
         pojo.setPackageName(packageName);
@@ -93,7 +60,7 @@ public final class ConverterObjectGenerator {
             pojo.setCurrentDateTime(LocalDateTime.now());
         }
 
-        MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
+        MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo, Paths.get(outputDir + pojo.getClassName() + ".java"));
     }
 
     private static void generateType(String packageName,
@@ -113,7 +80,41 @@ public final class ConverterObjectGenerator {
         }
 
 
-        MustacheRunner.build("converter.mustache", t, Path.of(outputDir + t.getJavaClassName() + "Converter.java"));
+        MustacheRunner.build("converter.mustache", t, Paths.get(outputDir + t.getJavaClassName() + "Converter.java"));
+    }
+
+    public void generate(OBridgeConfiguration c) {
+        log.trace("ConverterObjectGenerator.generate {}", c);
+        String packageName = c.getRootPackageName() + "." + c.getPackages().getConverterObjects();
+        String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
+        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
+
+        generatePrimitiveTypeConverter(packageName, outputDir, c.isGenerateGenerationDates());
+
+        List<TypeIdDto> types = typeDao.getTypeList(c);
+        findAndGenTypeConverter(packageName, objectPackage, outputDir, types, c.isGenerateNestedTypes(), c.isGenerateGenerationDates());
+    }
+
+    private void findAndGenTypeConverter(String packageName, String objectPackage, String outputDir, List<TypeIdDto> types, boolean generateNestedTypes, boolean generateGenerationDates) {
+        log.trace("ConverterObjectGenerator.generate.types {}", types);
+        for (TypeIdDto t : types) {
+            List<TypeAttribute> typeAttributes = typeDao.getTypeAttributes(t);
+            log.trace("ConverterObjectGenerator.generate.typeAttributes {}", typeAttributes);
+
+            generateType(packageName, objectPackage, outputDir, t, typeAttributes, generateGenerationDates);
+            if (generateNestedTypes) {
+                for (TypeAttribute typeAttribute : typeAttributes) {
+                    if (1 == typeAttribute.getMultiType() && !typeAttribute.isPrimitiveList())
+                        findAndGenTypeConverter(packageName, objectPackage, outputDir, Arrays.asList(new TypeIdDto(
+                                typeAttribute.getOwner(),
+                                "COLLECTION".equals(typeAttribute.getTypeCode())
+                                        ? typeAttribute.getCollectionBaseType()
+                                        : typeAttribute.getAttrTypeName())), true, generateGenerationDates);
+                }
+            } else {
+                log.info("Nested typeconverter generation skipped.");
+            }
+        }
     }
 
 }

@@ -34,7 +34,7 @@ import org.obridge.model.generator.Pojo;
 import org.obridge.util.MustacheRunner;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,10 +48,22 @@ public final class ProcedureContextGenerator {
 
     private final ProcedureDao procedureDao;
 
+    private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p, boolean generateGenerationDates) {
+        Pojo pojo = PojoMapper.procedureToPojo(p);
+        pojo.setPackageName(packageName);
+        pojo.setGeneratorName("org.obridge.generators.ProcedureContextGenerator");
+        pojo.getImports().add(objectPackage + ".*");
+        pojo.getImports().add("javax.annotation.processing.Generated");
+        if (generateGenerationDates) {
+            pojo.setCurrentDateTime(LocalDateTime.now());
+        }
+        MustacheRunner.build("pojo.mustache", pojo, Paths.get(outputDir + pojo.getClassName() + ".java"));
+    }
+
     public void generate(OBridgeConfiguration c) {
         String packageName = c.getRootPackageName() + "." + c.getPackages().getProcedureContextObjects();
         String objectPackage = c.getRootPackageName() + "." + c.getPackages().getEntityObjects();
-        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/" ;
+        String outputDir = c.getSourceRoot() + "/" + packageName.replace(".", "/") + "/";
 
         List<Procedure> allProcedures = procedureDao.getAllProcedure(c.getIncludes());
 
@@ -74,17 +86,5 @@ public final class ProcedureContextGenerator {
 
             generateProcedureContext(packageName, objectPackage, outputDir, p, c.isGenerateGenerationDates());
         }
-    }
-
-    private static void generateProcedureContext(String packageName, String objectPackage, String outputDir, Procedure p, boolean generateGenerationDates) {
-        Pojo pojo = PojoMapper.procedureToPojo(p);
-        pojo.setPackageName(packageName);
-        pojo.setGeneratorName("org.obridge.generators.ProcedureContextGenerator");
-        pojo.getImports().add(objectPackage + ".*");
-        pojo.getImports().add("javax.annotation.processing.Generated");
-        if (generateGenerationDates) {
-            pojo.setCurrentDateTime(LocalDateTime.now());
-        }
-        MustacheRunner.build("pojo.mustache", pojo, Path.of(outputDir + pojo.getClassName() + ".java"));
     }
 }

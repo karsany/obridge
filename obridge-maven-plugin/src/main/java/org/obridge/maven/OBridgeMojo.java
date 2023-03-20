@@ -39,11 +39,10 @@ import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.PathResource;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -52,12 +51,13 @@ import java.util.stream.IntStream;
 @Mojo(name = "obridge", requiresProject = true, defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class OBridgeMojo extends AbstractMojo {
 
+    @Parameter(property = "project", required = true, readonly = true)
+    protected MavenProject project;
     /**
      * The path of the file to operate on.
      */
     @Parameter(property = "obridge.plugin.path", defaultValue = "src/main/resources/application.yml")
     private String configPath = "src/main/resources/application.yml";
-
     @Parameter(property = "obridge.jdbcUrl")
     private String jdbcUrl;
     @Parameter(property = "obridge.generateNestedTypes", defaultValue = "false")
@@ -70,10 +70,6 @@ public class OBridgeMojo extends AbstractMojo {
     private String rootPackageName;
     @Parameter(property = "obridge.includes")
     private List<Include> includes;
-
-    @Parameter(property = "project", required = true, readonly = true)
-    protected MavenProject project;
-
     /**
      * <p>Getter for the field <code>environment</code>.</p>
      *
@@ -89,7 +85,7 @@ public class OBridgeMojo extends AbstractMojo {
         try {
             Properties configProperties;
             String extension = FilenameUtils.getExtension(configPath);
-            PathResource resource = new PathResource(Path.of(configPath).toAbsolutePath());
+            PathResource resource = new PathResource(Paths.get(configPath).toAbsolutePath());
             if (resource.exists()) {
                 getLog().debug("Resource exists, trying to load.");
                 switch (extension) {
@@ -154,10 +150,7 @@ public class OBridgeMojo extends AbstractMojo {
 
         getLog().debug("Obridge startup properties " + applicationStartupProperties);
 
-        SpringApplicationBuilder application = new SpringApplicationBuilder(OBridge.class)
-                .web(WebApplicationType.NONE)
-                .logStartupInfo(false)
-                .properties(applicationStartupProperties);
+        SpringApplicationBuilder application = new SpringApplicationBuilder(OBridge.class).web(WebApplicationType.NONE).logStartupInfo(false).properties(applicationStartupProperties);
 
         application.run();
 

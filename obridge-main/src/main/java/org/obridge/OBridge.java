@@ -94,12 +94,10 @@ public class OBridge implements CommandLineRunner {
         try {
             Properties properties = new Properties();
             properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
-            log.info("""
-                                                        
-                            OBridge Version {}
-                            OBridge BuildTime {}
-                            OBridge Abbrev {}
-                            OBridge Remote {}""",
+            log.info("OBridge Version {}\n" +
+                            "OBridge BuildTime {}\n" +
+                            "OBridge Abbrev {}\n" +
+                            "OBridge Remote {}",
                     properties.get("git.build.version"),
                     properties.get("git.build.time"),
                     properties.get("git.commit.id.abbrev"),
