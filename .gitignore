@@ -32,3 +32,4 @@ tmp/
 _ReSharper*/
 [Tt]est[Rr]esult*
 obridge-generator-test/database_connection.cmd
+/.mvn/wrapper/maven-wrapper.jar
