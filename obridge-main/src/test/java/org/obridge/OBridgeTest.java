@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.obridge.context.OBridgeConfiguration;
 import org.obridge.context.Packages;
-import org.obridge.dao.ProcedureDao;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +29,9 @@ public class OBridgeTest {
 
     @Test
     public void testMain() {
-
         OBridge.main("-h");
         OBridge.main("-v");
-
     }
-
 
     @Test
     public void fullTest() throws IOException, InterruptedException {
