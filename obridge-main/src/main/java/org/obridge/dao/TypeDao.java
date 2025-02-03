@@ -32,10 +32,6 @@ import org.obridge.util.jdbc.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
-/**
- * User: fkarsany
- * Date: 2013.11.14.
- */
 public class TypeDao {
 
     private static final String GET_TYPE_ATTRIBUTES = "Select attr_name,\n" +//

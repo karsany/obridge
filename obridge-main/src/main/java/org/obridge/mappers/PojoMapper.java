@@ -57,7 +57,7 @@ public final class PojoMapper {
         p.setImports(new ArrayList<String>());
 
         p.getImports().add("java.sql.Timestamp");
-        p.getImports().add("java.sql.Date");
+        p.getImports().add("java.time.LocalDate");
         p.getImports().add("java.util.List");
         p.getImports().add("java.math.BigDecimal");
 
@@ -81,7 +81,7 @@ public final class PojoMapper {
         p.setImports(new ArrayList<String>());
 
         p.getImports().add("java.sql.Timestamp");
-        p.getImports().add("java.sql.Date");
+        p.getImports().add("java.time.LocalDate");
         p.getImports().add("java.util.List");
         p.getImports().add("java.math.BigDecimal");
         p.getImports().add("java.sql.ResultSet");

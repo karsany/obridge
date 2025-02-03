@@ -58,6 +58,10 @@ public class ParameterGetSetRegisterBuilder {
             return MustacheRunner.build("sniplets/BOOLEAN-GET.mustache", pa);
         }
 
+        if (TypeMapper.JAVA_DATE.equals(pa.getJavaDataType())) {
+            return MustacheRunner.build("sniplets/DATE-GET.mustache", pa);
+        }
+
         if (TypeMapper.JAVA_INTEGER.equals(pa.getJavaDataType())) {
             return MustacheRunner.build("sniplets/INTEGER-GET.mustache", pa);
         }

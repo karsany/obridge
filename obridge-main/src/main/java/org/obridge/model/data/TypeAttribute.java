@@ -125,7 +125,7 @@ public class TypeAttribute {
         } else if (TypeMapper.ORACLE_OBJECT.equals(typeCode)) {
             return String.format("result.set%s(%sConverter.getObject((Struct)attr[%d])); // %s", getJavaPropertyNameBig(), getJavaDataType(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_DATE.equals(attrTypeName)) {
-            return String.format("result.set%s(new Date(((Timestamp)attr[%d]).getTime())); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
+            return String.format("result.set%s(((Date)attr[%d]).toLocalDate()); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_TIMESTAMP.equals(attrTypeName)) {
             return String.format("result.set%s((Timestamp)attr[%d]); // %s", getJavaPropertyNameBig(), getAttrNoIndex(), attrName);
         } else if (TypeMapper.ORACLE_CLOB.equals(attrTypeName)) {

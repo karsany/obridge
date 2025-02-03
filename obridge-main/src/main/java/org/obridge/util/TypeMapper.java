@@ -54,7 +54,7 @@ public class TypeMapper {
     public static final String JAVA_INTEGER = "Integer";
     public static final String JAVA_BIGDECIMAL = "BigDecimal";
     public static final String JAVA_RESULTSET = "ResultSet";
-    public static final String JAVA_DATE = "Date";
+    public static final String JAVA_DATE = "LocalDate";
     public static final String JAVA_TIMESTAMP = "Timestamp";
     public static final String JAVA_BOOLEAN = "Boolean";
     public static final String JAVA_BYTEARRAY = "byte[]";
