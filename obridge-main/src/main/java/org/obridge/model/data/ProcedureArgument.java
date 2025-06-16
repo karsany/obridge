@@ -33,14 +33,14 @@ import org.obridge.util.TypeMapper;
  */
 public class ProcedureArgument {
 
-    public static final String  TABLE_DATATYPE_NAME = "TABLE";
-    private             String  argumentName;
-    private             String  dataType;
-    private             String  typeName;
-    private             boolean inParam;
-    private             boolean outParam;
-    private             String  origTypeName;
-    private             int     sequenceNumber;
+    public static final String TABLE_DATATYPE_NAME = "TABLE";
+    private String argumentName;
+    private String dataType;
+    private String typeName;
+    private boolean inParam;
+    private boolean outParam;
+    private String origTypeName;
+    private int sequenceNumber;
 
     public ProcedureArgument(String argumentName, String dataType, String typeName, boolean inParam, boolean outParam, String origTypeName) {
         this.argumentName = argumentName;
@@ -173,7 +173,7 @@ public class ProcedureArgument {
         } else if (TypeMapper.JAVA_BYTEARRAY.equals(getJavaDataType())) {
             return String.format("ctx.set%s(ocs.getBytes(%d)); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
         } else if (TypeMapper.JAVA_DATE.equals(getJavaDataType())) {
-            return String.format("ctx.set%s(ocs.getDate(%d).toLocalDate()); // %s", getJavaPropertyNameBig(), sequenceNumber, argumentName);
+            return String.format("ctx.set%s(ocs.getDate(%d) == null ? null : ocs.getDate(%d).toLocalDate()); // %s", getJavaPropertyNameBig(), sequenceNumber, sequenceNumber, argumentName);
         } else {
             return String.format("ctx.set%s(ocs.get%s(%d)); // %s", getJavaPropertyNameBig(), getJavaDataType(), sequenceNumber, argumentName);
         }
