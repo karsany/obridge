@@ -4,7 +4,12 @@ import {{contextPackage}}.*;
 import {{converterPackage}}.*;
 import {{objectPackage}}.*;
 
+{{#configuration.jakarta}}
+import jakarta.annotation.Generated;
+{{/configuration.jakarta}}
+{{^configuration.jakarta}}
 import javax.annotation.Generated;
+{{/configuration.jakarta}}
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;

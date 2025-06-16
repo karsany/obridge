@@ -59,7 +59,7 @@ public final class ConverterObjectGenerator {
 
             List<TypeIdDto> types = typeDao.getTypeList(c);
             for (TypeIdDto t : types) {
-                generateType(packageName, objectPackage, outputDir, t, typeDao.getTypeAttributes(t));
+                generateType(packageName, objectPackage, outputDir, t, typeDao.getTypeAttributes(t), c);
             }
 
             /*if (OBridgeConfiguration.GENERATE_SOURCE_FOR_PLSQL_TYPES) {
@@ -70,16 +70,17 @@ public final class ConverterObjectGenerator {
                 }
             }*/
 
-            generatePrimitiveTypeConverter(packageName, outputDir);
+            generatePrimitiveTypeConverter(packageName, outputDir, c);
 
         } catch (PropertyVetoException | IOException e) {
             throw new OBridgeException(e);
         }
     }
 
-    private static void generatePrimitiveTypeConverter(String packageName, String outputDir) throws IOException {
+    private static void generatePrimitiveTypeConverter(String packageName, String outputDir, OBridgeConfiguration c) throws IOException {
         Pojo pojo = new Pojo();
         pojo.setPackageName(packageName);
+        pojo.setConfiguration(c);
         String javaSource = MustacheRunner.build("PrimitiveTypeConverter.java.mustache", pojo);
         FileUtils.writeStringToFile(new File(outputDir + "PrimitiveTypeConverter.java"), CodeFormatter.format(javaSource), "utf-8");
     }
@@ -88,13 +89,14 @@ public final class ConverterObjectGenerator {
                                      String objectPackage,
                                      String outputDir,
                                      TypeIdDto type,
-                                     List<TypeAttribute> typeAttributes) throws IOException {
+                                     List<TypeAttribute> typeAttributes, OBridgeConfiguration c) throws IOException {
         Type t = new Type();
         t.setOwner(type.getOwner());
         t.setTypeName(type.getTypeName());
         t.setAttributeList(typeAttributes);
         t.setConverterPackageName(packageName);
         t.setObjectPackage(objectPackage);
+        t.setConfiguration(c);
         String javaSource = MustacheRunner.build("converter.mustache", t);
         FileUtils.writeStringToFile(new File(outputDir + t.getJavaClassName() + "Converter.java"), CodeFormatter.format(javaSource),
                                     "utf-8");

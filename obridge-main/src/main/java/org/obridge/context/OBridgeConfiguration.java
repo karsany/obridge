@@ -24,6 +24,8 @@
 
 package org.obridge.context;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,62 +36,16 @@ import java.util.stream.Collectors;
  * @version $Id$
  * @since 1.0
  */
+@Data
 public class OBridgeConfiguration {
 
-    private String         jdbcUrl;
-    private String         sourceRoot;
-    private String         rootPackageName;
-    private Packages       packages;
-    private Logging        logging;
+    private String jdbcUrl;
+    private String sourceRoot;
+    private String rootPackageName;
+    private Packages packages;
+    private Logging logging;
     private List<DbObject> dbObjects;
-
-    public String getJdbcUrl() {
-        return jdbcUrl;
-    }
-
-    public void setJdbcUrl(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
-    }
-
-    public String getSourceRoot() {
-        return sourceRoot;
-    }
-
-    public void setSourceRoot(String sourceRoot) {
-        this.sourceRoot = sourceRoot;
-    }
-
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
-    }
-
-    public Packages getPackages() {
-        return packages;
-    }
-
-    public void setPackages(Packages packages) {
-        this.packages = packages;
-    }
-
-    public Logging getLogging() {
-        return logging;
-    }
-
-    public void setLogging(Logging logging) {
-        this.logging = logging;
-    }
-
-    public List<DbObject> getDbObjects() {
-        return dbObjects;
-    }
-
-    public void setDbObjects(List<DbObject> dbObjects) {
-        this.dbObjects = dbObjects;
-    }
+    private boolean jakarta = false;
 
     public String toFilterString() {
         return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL "));

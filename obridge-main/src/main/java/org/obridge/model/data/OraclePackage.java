@@ -26,6 +26,7 @@ package org.obridge.model.data;
 
 import lombok.Data;
 import lombok.ToString;
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.util.StringHelper;
 
 import java.util.List;
@@ -34,15 +35,16 @@ import java.util.List;
 @ToString
 public class OraclePackage {
 
-    private String          owner;
-    private String          name;
+    private String owner;
+    private String name;
     private List<Procedure> procedureList;
-    private String          javaPackageName;
-    private String          contextPackage;
-    private String          converterPackage;
-    private String          objectPackage;
-    private String          loggingInitializer;
-    private String          loggingMethod;
+    private String javaPackageName;
+    private String contextPackage;
+    private String converterPackage;
+    private String objectPackage;
+    private String loggingInitializer;
+    private String loggingMethod;
+    private OBridgeConfiguration configuration;
 
     public String getJavaClassName() {
         return StringHelper.toCamelCase(name);

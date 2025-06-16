@@ -83,6 +83,8 @@ public final class PackageObjectGenerator {
                     oraclePackage.setLoggingMethod(loggingMethod);
                 }
 
+                oraclePackage.setConfiguration(c);
+
                 generatePackageObject(outputDir, oraclePackage);
             }
 

@@ -3,7 +3,12 @@ package {{packageName}};
 import oracle.jdbc.OracleConnection;
 import java.sql.Array;
 
+{{#configuration.jakarta}}
+import jakarta.annotation.Generated;
+{{/configuration.jakarta}}
+{{^configuration.jakarta}}
 import javax.annotation.Generated;
+{{/configuration.jakarta}}
 import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;

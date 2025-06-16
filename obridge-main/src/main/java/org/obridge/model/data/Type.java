@@ -25,21 +25,20 @@
 package org.obridge.model.data;
 
 import lombok.Data;
+import org.obridge.context.OBridgeConfiguration;
 import org.obridge.util.StringHelper;
 
 import java.util.List;
 
-/**
- * Created by fkarsany on 2015.01.11..
- */
 @Data
 public class Type {
 
-    private String              owner;
-    private String              typeName;
+    private String owner;
+    private String typeName;
     private List<TypeAttribute> attributeList;
-    private String              converterPackageName;
-    private String              objectPackage;
+    private String converterPackageName;
+    private String objectPackage;
+    private OBridgeConfiguration configuration;
 
     public String getJavaClassName() {
         return StringHelper.toCamelCase(typeName);
