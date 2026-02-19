@@ -81,32 +81,41 @@ public final class {{javaClassName}} {
 
     {{^hasResultSetParam}}
     public static {{contextPackage}}.{{storedProcedureClassName}} {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{&javaDataType}} {{javaPropertyName}}, {{/inParam}}{{/argumentList}} DataSource dataSource) {
-        try {
-            final Connection conn = dataSource.getConnection();
-            try {
+
+
+        {{#configuration.useSpringTransactionManager}}
+             Connection conn = org.springframework.jdbc.datasource.DataSourceUtils.getConnection(dataSource);
+             {{contextPackage}}.{{storedProcedureClassName}} x = {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
+             org.springframework.jdbc.datasource.DataSourceUtils.releaseConnection(conn, dataSource);
+             return x;
+        {{/configuration.useSpringTransactionManager}}
+        {{^configuration.useSpringTransactionManager}}
+            try (Connection conn = dataSource.getConnection()) {
                 return {{javaProcedureName}}({{#argumentList}}{{#inParam}}{{javaPropertyName}}, {{/inParam}}{{/argumentList}} conn);
-            } finally {
-                conn.close();
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
             }
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        }
+        {{/configuration.useSpringTransactionManager}}
     }
     {{/hasResultSetParam}}
 
 
     {{^hasResultSetParam}}
     public static void {{javaProcedureName}}(DataSource dataSource, {{contextPackage}}.{{storedProcedureClassName}} ctx) {
-        try {
-            final Connection conn = dataSource.getConnection();
-            try {
+
+
+        {{#configuration.useSpringTransactionManager}}
+            Connection conn = org.springframework.jdbc.datasource.DataSourceUtils.getConnection(dataSource);
+            {{javaProcedureName}}(ctx, conn);
+            org.springframework.jdbc.datasource.DataSourceUtils.releaseConnection(conn, dataSource);
+        {{/configuration.useSpringTransactionManager}}
+        {{^configuration.useSpringTransactionManager}}
+            try (Connection conn = dataSource.getConnection()) {
                 {{javaProcedureName}}(ctx, conn);
-            } finally {
-                conn.close();
+            } catch (SQLException e) {
+                throw new StoredProcedureCallException(e);
             }
-        } catch (SQLException e) {
-            throw new StoredProcedureCallException(e);
-        }
+        {{/configuration.useSpringTransactionManager}}
     }
     {{/hasResultSetParam}}
 

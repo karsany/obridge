@@ -46,6 +46,7 @@ public class OBridgeConfiguration {
     private Logging logging;
     private List<DbObject> dbObjects;
     private boolean jakarta = false;
+    private boolean useSpringTransactionManager = false;
 
     public String toFilterString() {
         return this.dbObjects.stream().map(dbObject -> dbObject.toSQL()).collect(Collectors.joining(" UNION ALL "));
